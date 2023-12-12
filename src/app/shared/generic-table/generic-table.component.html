@@ -1,7 +1,7 @@
-<p-toolbar>
+<p-toolbar styleClass="mb-1">
     <div class="p-toolbar-group-start">
-        <p-button label="Nuevo" icon="pi pi-plus" class="mr-2" (onClick)="emitter.emit({ type: 'create' })"></p-button>
-    </div>
+        <p-button label="Nuevo" icon="pi pi-plus" class="mr-2" (onClick)="emitter.emit({ type: 'create' })" size="small"></p-button>
+    </div> 
 </p-toolbar>
 <p-table #table responsiveLayout="stack" [columns]="headers" [value]="rows" [globalFilterFields]="filters"
     [rows]="3" [paginator]="true">
@@ -9,7 +9,7 @@
         <div class="flex">
             <span class="p-input-icon-left ml-auto">
                 <i class="pi pi-search"></i>
-                <input #search pInputText type="text" (input)="table.filterGlobal(search.value, 'contains')" placeholder="Search keyword" />
+                <input #search pInputText type="text" (input)="table.filterGlobal(search.value, 'contains')" placeholder="Buscar..." />
             </span>
         </div>
     </ng-template>
@@ -21,7 +21,6 @@
             @if(buttons.length) {
                 <th>Opciones</th>
             }
-            <th></th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-data let-columns="columns">
