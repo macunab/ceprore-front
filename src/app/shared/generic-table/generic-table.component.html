@@ -5,6 +5,14 @@
 </p-toolbar>
 <p-table #table responsiveLayout="stack" [columns]="headers" [value]="rows" [globalFilterFields]="filters"
     [rows]="3" [paginator]="true">
+    <ng-template pTemplate="caption">
+        <div class="flex">
+            <span class="p-input-icon-left ml-auto">
+                <i class="pi pi-search"></i>
+                <input #search pInputText type="text" (input)="table.filterGlobal(search.value, 'contains')" placeholder="Search keyword" />
+            </span>
+        </div>
+    </ng-template>
     <ng-template pTemplate="header" let-column>
         <tr>
             @for(col of headers; track $index) {

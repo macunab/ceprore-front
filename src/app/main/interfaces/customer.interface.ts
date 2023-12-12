@@ -6,10 +6,10 @@ export interface Customer {
     name: string;
     address: string;
     email: string;
-    discountsByFactory?: Array<CustomerDiscount>;
+    discountsByFactory?: Array<CustomerFactory>;
 }
 
-export interface CustomerDiscount {
+export interface CustomerFactory {
     factory: Factory;
     delivery: Delivery;
     discounts: Array<number>;

@@ -1,1 +1,69 @@
-<p>customer-form works!</p>
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
+<p-card [header]="title">
+    <form autocomplete="off"
+    [formGroup]="customerForm"
+    (ngSubmit)="onSubmit()">
+        <div class="flex flex-column md:flex-row">
+            <span class="p-float-label input-position">
+                <input pInputText type="text" id="name" formControlName="name" />
+                <label for="name">Nombre</label>
+            </span>
+            <span class="p-float-label input-position">
+                <input pInputText id="address" formControlName="address" />
+                <label for="address">Direccion</label>
+            </span>
+        </div>
+        <div class="flex flex-column md:flex-row">
+            <span class="p-float-label input-position">
+                <input pInputText id="email" formControlName="email" />
+                <label for="email">Correo</label>
+            </span>
+            <span class="input-position">
+                <p-dropdown formControlName="ivaCondition" [options]="ivaCondition" placeholder="Condicion IVA"></p-dropdown>
+            </span>
+        </div>
+        <div class="flex flex-column md:flex-row">
+            <span class="input-position">
+                <p-dropdown formControlName="priceList" [options]="priceList" optionLabel="name" placeholder="List de precio"></p-dropdown>
+            </span>
+        </div>
+        <div class="mb-3">    
+            <button pButton type="button" icon='pi pi-plus' label="Fabrica" class="p-button-success p-button-sm" (click)="addFactoryDiscount()"></button>
+        </div>
+        <div class="mb-3">
+            @if(customerFactories.length > 0) {
+            <p-table [value]="customerFactories" [tableStyle]="{ 'min-width': '50rem' }">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Fabrica</th>
+                            <th>Descuento Cascada</th>
+                            <th>Remover</th>
+                        </tr>
+                    </ng-template>
+                <ng-template pTemplate="body" let-factory>
+                    <tr>
+                        <td>{{ factory.factory.name }}</td>
+                        <td>{{ factory.cascadeDiscount | percent: '0.0-4'}}</td>
+                        <td><button type="button" pButton icon="pi pi-times" class="p-button-sm p-button-danger p-button-rounded p-button-text mr-2"
+                            (click)="removeCustomerFactory(factory)"></button></td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        }
+            <!-- @for(factory of customerFactories; track $index) {
+                <label>{{factory.factory.name}}</label>
+                <br/>
+                <label>{{factory.cascadeDiscount | percent:'0.0-4'}}</label>
+                <button type="button" pButton icon="pi pi-times" class="p-button-sm p-button-danger p-button-rounded p-button-text mr-2"
+                (click)="removeCustomerFactory(factory)"></button> 
+            } -->
+        </div>
+            <button pButton label="Guardar" type="submit"></button>
+    </form>
+</p-card>
+
+<p-dialog header="Agregar Fabricar y descuentos" [modal]="true" [(visible)]="showDialog" 
+    [breakpoints]="{ '960px': '95vw' }" [style]="{ width: '60vw', height: '300px' }">
+    <app-customer-factory-dialog (onClose)="onDialogClose($event)"></app-customer-factory-dialog>
+</p-dialog>
+

@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { CustomersComponent } from './main/pages/customers/customers.component';
 
 export const routes: Routes = [
     {   path: 'main',

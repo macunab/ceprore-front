@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Customer } from '../../interfaces/customer.interface';
 import { ButtonConfig, Column, TableEvent } from '../../../shared/interfaces/genericTable.interface';
 import { GenericTableComponent } from '../../../shared/generic-table/generic-table.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-customers',
@@ -20,14 +21,14 @@ export class CustomersComponent implements OnInit{
     { class: 'p-button-sm p-button-info p-button-rounded p-button-text mr-2', functionType: 'edit', icon: 'pi pi-pencil', tooltipText: 'Editar' },
     { class: 'p-button-sm p-button-danger p-button-rounded p-button-text mr-2', functionType: 'delete', icon: 'pi pi-trash', tooltipText: 'Eliminar' }
   ];
-  filters: Array<string> = ['name', 'email'];
+  filters: Array<string> = ['name', 'email', 'address'];
   headers: Array<Column<Customer>> = [
     { field: 'name', title: 'Nombre' },
     { field: 'email', title: 'Correo' },
     { field: 'address', title: 'Direccion' }
   ];
 
-  constructor() {}
+  constructor(private router: Router) {}
 
   ngOnInit(): void {}
 
@@ -35,12 +36,14 @@ export class CustomersComponent implements OnInit{
     switch(action.type) {
       case 'edit':
         console.log('EDIT');
+        this.router.navigateByUrl('main/customer', { state: action.data });
       break;
       case 'delete':
         console.log('DELETE');
       break;
       case 'create':
-        console.log('CREATE');
+        console.log('CREATE EDIT');
+        this.router.navigateByUrl('main/customer');
       break;
     }
   }

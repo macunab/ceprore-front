@@ -5,11 +5,12 @@ import { TitleCasePipe } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { ToolbarModule } from 'primeng/toolbar';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-generic-table',
   standalone: true,
-  imports: [ TableModule, ButtonModule, TooltipModule, ToolbarModule, TitleCasePipe ],
+  imports: [ TableModule, ButtonModule, TooltipModule, ToolbarModule, InputTextModule, TitleCasePipe ],
   templateUrl: './generic-table.component.html',
   styleUrl: './generic-table.component.css'
 })
