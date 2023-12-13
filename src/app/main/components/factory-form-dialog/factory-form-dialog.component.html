@@ -1,0 +1,43 @@
+<form autocomplete="off"
+    [formGroup]="factoryForm"
+    (ngSubmit)="onSubmit()">
+    <div class="formgrid grid">
+        <div class="field col-12 md:col">
+            <input pInputText class="w-full" type="text" formControlName="name" placeholder="Nombre" 
+                [ngClass]="isValid('name') ? 'ng-invalid ng-dirty' : ''" id="name" aria-describedby="name-help">
+            @if(isValid('name')) {
+                <small id="name-help" class="form-error">El nombre es requerido.</small>
+            }
+        </div>
+        <div class="field col-12 md:col">
+            <input pInputText class="w-full" type="email" formControlName="email" placeholder="Correo"
+                [ngClass]="isValid('email') ? 'ng-invalid ng-dirty' : ''" id="email" id="email" aria-describedby="email-help">
+            @if(isValid('email')) {
+                <small id="email-help" class="form-error">Ingrese un email valido</small>
+            }      
+        </div>
+    </div>
+    <div class="formgrid grid">
+        <div class="field col-12 md:col">
+            <input pInputText class="w-full" type="text" formControlName="province" placeholder="Provincia">
+        </div>
+        <div class="field col-12 md:col">
+            <input pInputText class="w-full" type="text" formControlName="provincialTown" placeholder="Localidad">
+        </div>
+    </div>
+    <div class="formgrid grid">
+        <div class="field col-12 md:col">
+            <input pInputText class="w-full" type="text" formControlName="address" placeholder="Direccion">
+        </div>
+        <div class="field col-12 md:col">
+            <input pInputText class="w-full" type="number" formControlName="limitDays" placeholder="Limite de entrega">
+        </div>
+    </div>
+    <div class="formgrid grid">
+        <div class=" flex align-items-center gap-1">
+            <p-checkbox styleClass="" formControlName="retainCommision" [binary]="true" inputId="checkbox"></p-checkbox>
+            <label for="checkbox">Retiene comision?</label>
+        </div>
+    </div>
+    <button pButton class="mt-4" label="Guardar" type="submit"></button>
+</form>

@@ -3,4 +3,8 @@ export interface Factory {
     name: string;
     address: string;
     email: string;
+    province?: string;
+    provincialTown?: string;
+    retainCommission?: boolean;
+    limitDays?: number;
 }

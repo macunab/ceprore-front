@@ -3,13 +3,19 @@ import { Customer } from '../../interfaces/customer.interface';
 import { ButtonConfig, Column, TableEvent } from '../../../shared/interfaces/genericTable.interface';
 import { GenericTableComponent } from '../../../shared/generic-table/generic-table.component';
 import { Router } from '@angular/router';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+
 
 @Component({
   selector: 'app-customers',
   standalone: true,
-  imports: [GenericTableComponent],
+  imports: [GenericTableComponent, ConfirmDialogModule, ToastModule],
   templateUrl: './customers.component.html',
-  styleUrl: './customers.component.css'
+  styleUrl: './customers.component.css',
+  providers: [ConfirmationService, MessageService]
 })
 export class CustomersComponent implements OnInit{
 
@@ -28,7 +34,8 @@ export class CustomersComponent implements OnInit{
     { field: 'address', title: 'Direccion' }
   ];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private confirmationService: ConfirmationService, 
+      private messageService: MessageService) {}
 
   ngOnInit(): void {}
 
@@ -40,12 +47,27 @@ export class CustomersComponent implements OnInit{
       break;
       case 'delete':
         console.log('DELETE');
+        this.deleteCustomer(action.data);
       break;
       case 'create':
         console.log('CREATE EDIT');
         this.router.navigateByUrl('main/customer');
       break;
     }
+  }
+
+  deleteCustomer(customer: Customer) {
+    this.confirmationService.confirm({
+      message: `Desea eliminar el cliente: ${customer.name}`,
+      header: 'Confirmar Eliminacion',
+      icon: 'pi pi-info-delete',
+      accept: () => {
+        // try/catch delete customer service if ok ...
+        this.customers = this.customers.filter(val => val.id !== customer.id);
+        this.messageService.add({ severity: 'info', summary: 'Informacion', 
+          detail: `El cliente: "${customer.name}", se ha eliminado exitosamente`});
+      }
+    })
   }
 
 

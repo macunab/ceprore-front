@@ -1,0 +1,9 @@
+<p-confirmDialog [style]="{width: '50vw'}" [breakpoints]="{ '960px': '95vw' }"></p-confirmDialog>
+<p-toast position="top-center"></p-toast>
+<app-generic-table [headers]="headers" [rows]="factories" [buttons]="buttons" [filters]="filters"
+    (onAction)="onActions($event)"></app-generic-table>
+
+<p-dialog [header]="formTitle" [modal]="true" [(visible)]="showCreateFactory" 
+    [breakpoints]="{ '960px': '95vw' }" [style]="{ width: '60vw', height: '400px' }">
+    <app-factory-form-dialog (onClose)="onDialogClose($event)" [factoryUpdate]="factoryUpdate"></app-factory-form-dialog>
+</p-dialog>

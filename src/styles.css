@@ -4,3 +4,7 @@
 body {
     background-color: #f5f9ff;
 }
+
+.form-error {
+    color: #f27f88;
+}

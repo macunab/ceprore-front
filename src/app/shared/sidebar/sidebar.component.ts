@@ -23,18 +23,18 @@ export class SidebarComponent {
   }
 
   items: MenuItem[] = [
-    { label: 'Home', icon: 'pi pi-home', routerLink: 'main/customers' },
+    { label: 'Home', icon: 'pi pi-home', routerLink: 'main/home', command: () => { this.hideSidebar() }},
     { label: 'Ordenes', icon: 'pi pi-shopping-cart', items: [
-      { label: 'Pendientes', command: () => { this.hideSidebar() }},
-      { label: 'Facturadas', command: () => { this.hideSidebar() }},
-      { label: 'Cobradas', command: () => { this.hideSidebar() } }
+      { label: 'Pendientes', routerLink: '/main/pending', command: () => { this.hideSidebar() }},
+      { label: 'Facturadas', routerLink: '/main/invoiced', command: () => { this.hideSidebar() }},
+      { label: 'Cobradas', routerLink: '/main/paid', command: () => { this.hideSidebar() } }
     ]},
-    { label: 'Clientes', icon: 'pi pi-users', routerLink: 'main/customers', command: () => { this.hideSidebar() } },
-    { label: 'Fabricas', icon: 'pi pi-building', command: () => { this.hideSidebar() }},
-    { label: 'Productos', icon: 'pi pi-gift', command: () => { this.hideSidebar() }},
-    { label: 'Listas de precio', icon: 'pi pi-book', command: () => { this.hideSidebar() }},
-    { label: 'Transportes', icon: 'pi pi-truck', command: () => { this.hideSidebar() }},
-    { label: 'Cuenta corriente', icon: 'pi pi-wallet', command: () => { this.hideSidebar() }}
+    { label: 'Clientes', icon: 'pi pi-users', routerLink: '/main/customers', command: () => { this.hideSidebar() }},
+    { label: 'Fabricas', icon: 'pi pi-building', routerLink: '/main/factories', command: () => { this.hideSidebar() }},
+    { label: 'Productos', icon: 'pi pi-gift', routerLink: '/main/products', command: () => { this.hideSidebar() }},
+    { label: 'Listas de precio', icon: 'pi pi-book', routerLink: '/main/priceLists', command: () => { this.hideSidebar() }},
+    { label: 'Transportes', icon: 'pi pi-truck', routerLink: '/main/deliveries', command: () => { this.hideSidebar() }},
+    { label: 'Cuenta corriente', icon: 'pi pi-wallet', routerLink: '/main/checking-accounts', command: () => { this.hideSidebar() }}
   ]
 
 }

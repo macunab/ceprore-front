@@ -33,8 +33,8 @@ export class CustomerFormComponent {
     name: ['', [Validators.required]],
     address: ['', [Validators.required]],
     email: [''],
-    ivaCondition: [''],
-    priceList: ['']
+    ivaCondition: ['', [Validators.required]],
+    priceList: ['', [Validators.required]]
   });
   ivaCondition: Array<string> = ['Responsable inscripto', 'Afiliado al gremio!'];
   priceList: Array<PriceList> = [
@@ -51,16 +51,24 @@ export class CustomerFormComponent {
     if(data) {
       this.title = 'Editar Cliente';
       this.customerForm.patchValue(data);
+      this.customer = data as Customer;
+      console.table(this.customer)
     }
   }
 
   onSubmit() {
-    console.log('PASO A SUBMIT');
     if(this.customerForm.invalid) {
       return;
     }
-    this.customer = { ...this.customerForm.value, discountsByFactory: this.customerFactories };
+    if(this.customer) {
+      // update
+      this.customer = { id: this.customer.id, discountsByFactory: this.customerFactories, ...this.customerForm.value }
+    } else {
+      // create
+      this.customer = { ...this.customerForm.value, discountsByFactory: this.customerFactories };
+    }
     console.table(this.customer);
+    this.router.navigateByUrl('main/customers');
   }
 
   addFactoryDiscount() {
