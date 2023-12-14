@@ -43,7 +43,12 @@ export class FactoryFormDialogComponent implements OnChanges {
       this.factoryForm.markAllAsTouched();
       return;
     }
-    this.emmiter.emit({ data: this.factoryForm.value });
+    if(this.factoryUpdate.id) {
+      this.factoryUpdate = { id: this.factoryUpdate.id, ...this.factoryForm.value };
+      this.emmiter.emit({ data: this.factoryUpdate });
+    } else {
+      this.emmiter.emit({ data: this.factoryForm.value });
+    }
   }
 
   isValid(field: string): boolean | null {

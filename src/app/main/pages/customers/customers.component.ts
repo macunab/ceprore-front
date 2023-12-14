@@ -33,6 +33,7 @@ export class CustomersComponent implements OnInit{
     { field: 'email', title: 'Correo' },
     { field: 'address', title: 'Direccion' }
   ];
+  tableTitle: string = 'Clientes';
 
   constructor(private router: Router, private confirmationService: ConfirmationService, 
       private messageService: MessageService) {}

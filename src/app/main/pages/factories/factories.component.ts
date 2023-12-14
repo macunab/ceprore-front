@@ -39,6 +39,7 @@ export class FactoriesComponent implements OnInit {
   showCreateFactory: boolean = false;
   formTitle: string = '';
   factoryUpdate: Factory = {} as Factory;
+  tableTitle: string = 'Fabricas';
 
   constructor(private messageService: MessageService, private confirmationService: ConfirmationService) {}
 
@@ -68,14 +69,14 @@ export class FactoriesComponent implements OnInit {
       accept: () => {
         // try/catch delete factory service. if ok...
         try {
-
+          // delete service
+          this.factories = this.factories.filter(value => value.id !== factory.id);
+          this.messageService.add({ severity: 'info', summary: 'Informacion',
+            detail: `La fabrica: "${factory.name}", se ha eliminado exitosamente!`});
         } catch(error) {
-          this.messageService.add({ severity: 'error', summary: 'Error', 
-            detail: `Ha ocurrido un error al intentar eliminar la fabrica: "${factory.name}"`});
+          this.messageService.add({ severity: 'error', summary: 'Error!', 
+            detail: `Ha ocurrido un error al intentar eliminar la fabrica: "${factory.name}"!!`});
         }
-        this.factories = this.factories.filter(value => value.id !== factory.id);
-        this.messageService.add({ severity: 'info', summary: 'Informacion',
-          detail: `La fabrica: "${factory.name}", se ha eliminado exitosamente`});
       }
     })
   }
@@ -94,11 +95,19 @@ export class FactoriesComponent implements OnInit {
 
   onDialogClose(dialogData: DialogData<Factory>): void {
     this.showCreateFactory = false;
-    console.table(dialogData.data);
     if(dialogData.data.id) {
       // update service - try/catch
+      const index = this.factories.findIndex( val => val.id === dialogData.data.id);
+      (index !== -1) ? this.factories[index] = dialogData.data : '';
+      this.factories = [...this.factories];
+      this.messageService.add({ severity: 'info', summary: 'Informacion', 
+        detail: `La fabrica: "${dialogData.data.name}", se ha modificado exitosamente!`});
     } else {
-      // create service - try/catch
+      // create service - try/catch /// id only for test
+      dialogData.data.id = '123123123';
+      this.factories.push(dialogData.data);
+      this.messageService.add({ severity: 'info', summary: 'Informacion', 
+        detail: `La fabrica: "${dialogData.data.name}", se ha creado exitosamente!`});
     }
   }
 

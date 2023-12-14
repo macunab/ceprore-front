@@ -13,7 +13,7 @@
             <input pInputText class="w-full" type="email" formControlName="email" placeholder="Correo"
                 [ngClass]="isValid('email') ? 'ng-invalid ng-dirty' : ''" id="email" id="email" aria-describedby="email-help">
             @if(isValid('email')) {
-                <small id="email-help" class="form-error">Ingrese un email valido</small>
+                <small id="email-help" class="form-error">Ingrese un email valido.</small>
             }      
         </div>
     </div>

@@ -1,0 +1,24 @@
+<form autocomplete="off"
+    [formGroup]="deliveryForm"
+    (ngSubmit)="onSubmit()">
+    <div class="formgrid grid">
+        <div class="field col-12">
+            <input pInputText class="w-full" type="text" formControlName="name" placeholder="Nombre"
+                [ngClass]="isValid('name') ? 'ng-invalid ng-dirty' : ''" id="name" aria-describedby="name-help">
+                @if(isValid('name')) {
+                    <small id="name-help" class="form-error">El nombre es requerido.</small>                
+                }
+        </div>
+        <div class="field col-12">
+            <input pInputText type="email" class="w-full" formControlName="email" placeholder="Correo"
+                [ngClass]="isValid('email') ? 'ng-invalid ng-dirty' : ''" id="email" aria-describedby="email-help">
+                @if(isValid('email')) {
+                    <small id="email-help" class="form-error">Ingrese un email valido.</small>
+                }
+        </div>
+        <div class="field col-12">
+            <input pInputText type="text" class="w-full" formControlName="address" placeholder="Direccion">
+        </div>
+    </div>
+    <button pButton class="mt-4" label="Guardar" type="submit"></button>
+</form>    

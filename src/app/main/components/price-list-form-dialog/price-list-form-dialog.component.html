@@ -1,0 +1,14 @@
+<form autocomplete="off"
+    [formGroup]="priceListForm"
+    (ngSubmit)="onSubmit()">
+    <div class="formgrid grid">
+        <div class="field col">
+            <input pInputText class="w-full" type="text" formControlName="name" placeholder="Nombre" 
+                [ngClass]="isValid('name') ? 'ng-invalid ng-dirty' : ''" id="name" aria-describedby="name-help">
+            @if(isValid('name')) {
+                <small id="name-help" class="form-error">El nombre es requerido.</small>
+            }    
+        </div>
+    </div>
+    <button pButton class="mt-4" label="Guardar" type="submit"></button>
+</form>

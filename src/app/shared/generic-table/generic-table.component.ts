@@ -20,6 +20,7 @@ export class GenericTableComponent<T> {
   @Input() rows: Array<T> = [];
   @Input() buttons: Array<ButtonConfig> = [];
   @Input() filters: Array<string> = [];
+  @Input() tableTitle: string = '';
   @Output('onAction') emitter = new EventEmitter();
 
 }
