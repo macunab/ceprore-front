@@ -5,6 +5,7 @@ import { Delivery } from '../../interfaces/delivery.interface';
 import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { CommonModule } from '@angular/common';
 
 //temporal fix
 export interface ArrayDiscount {
@@ -15,7 +16,7 @@ export interface ArrayDiscount {
   selector: 'app-customer-factory-dialog',
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, DropdownModule, ButtonModule, 
-    InputTextModule],
+    InputTextModule, CommonModule],
   templateUrl: './customer-factory-dialog.component.html',
   styleUrl: './customer-factory-dialog.component.css'
 })
@@ -54,13 +55,14 @@ export class CustomerFactoryDialogComponent {
   }
 
   removeDiscount(itemIndex: number): void {
-    console.log(this.discounts.at(itemIndex).value, itemIndex);
+    //console.log(this.discounts.at(itemIndex).value, itemIndex);
     this.discounts.removeAt(itemIndex);
   }
 
   // Perfomance fix todo
   onSubmit() {
     if(this.factoryDiscountForm.invalid) {
+      this.factoryDiscountForm.markAllAsTouched();
       return;
     }
     let toArray: Array<number> = this.discounts.value.map( function(val: any) {
@@ -82,5 +84,10 @@ export class CustomerFactoryDialogComponent {
   cleanForm() {
     this.discounts.clear();
     this.factoryDiscountForm.reset();
+  }
+
+  isValid(field: string): boolean | null {
+    return this.factoryDiscountForm.controls[field].errors 
+      && this.factoryDiscountForm.controls[field].touched;
   }
 }

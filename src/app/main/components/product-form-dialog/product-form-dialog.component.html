@@ -1,0 +1,58 @@
+<form autocomplete="off"
+    [formGroup]="productForm"
+    (ngSubmit)="onSubmit()">
+    <div class="formgrid grid">
+        <div class="field col-12 md:col-6">
+            <input pInputText class="w-full" type="text" formControlName="code" placeholder="Codigo"
+                [ngClass]="isValid('code') ? 'ng-invalid ng-dirty' : ''" id="code" aria-describedby="code-help">
+            @if(isValid('code')) {
+                <small class="form-error" id="code-help">El codigo es requerido.</small>
+            }    
+        </div>
+        <div class="field col-12 md:col-6">
+            <input pInputText class="w-full" type="text" formControlName="name" placeholder="Nombre"
+                [ngClass]="isValid('name') ? 'ng-invalid ng-dirty' : ''" id="name" aria-describedby="name-help">
+            @if(isValid('name')) {
+                <small class="form-error" id="name-help">El nombre es requerido.</small>
+            }                
+        </div>
+        <div class="field col-12">
+            <!-- change for textarea -->
+            <input pInputText class="w-full" type="text" formControlName="description" placeholder="Descripcion"
+                id="description">
+        </div>
+        <div class="field col-12">
+            <p-dropdown styleClass="w-full" formControlName="factory" [options]="factories" optionLabel="name"
+                placeholder="Fabrica" aria-describedby="factory-help"></p-dropdown>
+            @if(isValid('factory')) {
+                <small id="factory-help" class="form-error">Seleccione una fabrica.</small>
+            }
+        </div>
+        <div class="field col-12 md:col-6">
+            <input pInputText type="number" class="w-full" formControlName="boxesPallet" placeholder="Cajas x Pallet"
+                id="boxesPallet">                
+        </div>
+        <div class="field col-12 md:col-6">
+            <input pInputText type="number" class="w-full" formControlName="unitsBox" placeholder="Unidades x Caja"
+                id="unitsBox">
+        </div>
+    </div>
+    <p-divider align="left" type="dotted">Precios x Lista</p-divider>
+    <ng-container formArrayName="pricesByList">
+
+        @for( p of pricesByList.controls; track $index) {
+            <ng-container [formGroupName]="$index" class="field grid" >
+                <label for="price" class="col-fixed" style="width:100px">{{p.get('list')?.value.name}}</label>
+                <input pInputText type="number" class="w-full" formControlName="price">
+            </ng-container>
+        }
+        <!-- <ng-container *ngFor="let p of priceLists; let i = index"
+            [formGroupName]="i">
+            <div class="field grid">
+                <label for="price" class="col-fixed" style="width:100px">{{p.name}}</label>
+                <input pInputText type="number" class="w-full" formControlName="price">
+            </div>
+        </ng-container> -->
+    </ng-container>
+    <button pButton type="submit">Guardar</button>
+</form>

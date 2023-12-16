@@ -2,27 +2,34 @@
     [formGroup]="factoryDiscountForm"
     (ngSubmit)="onSubmit()">
     <div class="formgrid grid">
-        <div class="field col">
-            <p-dropdown styleClass="w-full" formControlName="factory" [options]="factories" optionLabel="name" placeholder="Fabrica"></p-dropdown>
-        </div>
-        <div class="field col">
-            <p-dropdown styleClass="w-full" formControlName="delivery" [options]="deliveries" optionLabel="name" placeholder="Transporte"></p-dropdown>
-        </div>
-    </div>
-       
-        <div class="mb-3">    
-            <button pButton icon='pi pi-plus' label="Descuento" type="button" 
-                class="p-button-success p-button-sm" (click)="addDiscount()"></button>
-        </div>
-        <ng-container formArrayName="discounts">
-            @for( d of discounts.controls; track $index){
-                <ng-container [formGroupName]="$index">
-                    <input pInputText type="number" formControlName="discount" >
-                    <button type="button" pButton icon="pi pi-trash" class="p-button-sm p-button-danger p-button-rounded p-button-text mr-2"
-                        (click)="removeDiscount($index)"></button> 
-                </ng-container>
-                
+        <div class="field col-12 md:col">
+            <p-dropdown styleClass="w-full" formControlName="factory" [options]="factories" optionLabel="name"
+                placeholder="Fabrica" aria-describedby="factory-help"></p-dropdown>
+            @if(isValid('factory')) {
+                <small id="factory-help" class="form-error">Seleccione una fabrica.</small>
             }
-        </ng-container>
-        <button pButton label="Guardar" type="submit"></button>
+        </div>
+        <div class="field col-12 md:col">
+            <p-dropdown styleClass="w-full" formControlName="delivery" [options]="deliveries" optionLabel="name" 
+                placeholder="Transporte" aria-describedby="delivery-help"></p-dropdown>
+            @if(isValid('delivery')) {
+                <small id="delivery-help" class="form-error">Seleccione un transporte.</small>
+            }
+        </div>
+    </div>    
+    <div class="mb-3">    
+        <button pButton icon='pi pi-plus' label="Descuento" type="button" 
+            class="p-button-success p-button-sm" (click)="addDiscount()"></button>
+    </div>
+    <ng-container formArrayName="discounts" class="flex flex-column">
+        @for( d of discounts.controls; track $index){
+            <ng-container [formGroupName]="$index" class="formgrid grid">
+                <input pInputText type="number" formControlName="discount" class="col-10">
+                <button type="button" pButton icon="pi pi-trash" class="col-1 p-button-sm p-button-danger p-button-rounded p-button-text mr-2"
+                    (click)="removeDiscount($index)"></button> 
+            </ng-container>
+                
+        }
+    </ng-container>
+    <button pButton label="Guardar" type="submit" class="mt-2"></button>
 </form>

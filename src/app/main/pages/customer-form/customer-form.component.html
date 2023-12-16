@@ -3,29 +3,43 @@
     <form autocomplete="off"
     [formGroup]="customerForm"
     (ngSubmit)="onSubmit()">
-        <div class="flex flex-column md:flex-row">
-            <span class="p-float-label input-position">
-                <input pInputText type="text" id="name" formControlName="name" />
-                <label for="name">Nombre</label>
-            </span>
-            <span class="p-float-label input-position">
-                <input pInputText id="address" formControlName="address" />
-                <label for="address">Direccion</label>
-            </span>
+        <div class="formgrid grid">
+            <div class="field col-12 md:col">
+                <input pInputText type="text" formControlName="name" class="w-full"
+                    aria-describedby="name-help" [ngClass]="isValid('name') ? 'ng-invalid ng-dirty' : ''"
+                    placeholder="Nombre" />
+                @if(isValid('name')) {
+                    <small id="name-help" class="form-error">El nombre es requerido.</small>
+                }
+            </div>
+            <div class="field col-12 md:col">
+                <input pInputText formControlName="address" class="w-full" placeholder="Direccion"
+                    aria-describedby="address-help" [ngClass]="isValid('address') ? 'ng-invalid ng-dirty' : ''"/>
+                @if(isValid('address')) {
+                    <small id="address-help" class="form-error">La direccion es requerida.</small>
+                }    
+            </div>
         </div>
-        <div class="flex flex-column md:flex-row">
-            <span class="p-float-label input-position">
-                <input pInputText id="email" formControlName="email" />
-                <label for="email">Correo</label>
-            </span>
-            <span class="input-position">
-                <p-dropdown formControlName="ivaCondition" [options]="ivaCondition" placeholder="Condicion IVA"></p-dropdown>
-            </span>
+        <div class="formgrid grid">
+            <div class="field col-12 md:col">
+                <input pInputText id="email" formControlName="email" class="w-full" placeholder="Correo"/>
+            </div>
+            <div class="field col-12 md:col">
+                <p-dropdown formControlName="ivaCondition" [options]="ivaCondition" placeholder="Condicion IVA"
+                    styleClass="w-full" aria-describedby="ivaCondition-help"></p-dropdown>
+                @if(isValid('ivaCondition')) {
+                    <small id="ivaCondition-help" class="form-error">Seleccione una condicion de iva.</small>
+                }                    
+            </div>
         </div>
-        <div class="flex flex-column md:flex-row">
-            <span class="input-position">
-                <p-dropdown formControlName="priceList" [options]="priceList" optionLabel="name" placeholder="List de precio"></p-dropdown>
-            </span>
+        <div class="formgrid grid">
+            <div class="field col md:col">
+                <p-dropdown formControlName="priceList" [options]="priceList" optionLabel="name" placeholder="List de precio"
+                    styleClass="w-full" aria-describedby="priceList-help"></p-dropdown>
+                @if(isValid('priceList')) {
+                    <small id="priceList-help" class="form-error">Seleccione un precio de lista.</small>
+                }                    
+            </div>
         </div>
         <div class="mb-3">    
             <button pButton type="button" icon='pi pi-plus' label="Fabrica" class="p-button-success p-button-sm" (click)="addFactoryDiscount()"></button>
@@ -50,14 +64,8 @@
                 </ng-template>
             </p-table>
         }
-            <!-- @for(factory of customerFactories; track $index) {
-                <label>{{factory.factory.name}}</label>
-                <br/>
-                <label>{{factory.cascadeDiscount | percent:'0.0-4'}}</label>
-                <button type="button" pButton icon="pi pi-times" class="p-button-sm p-button-danger p-button-rounded p-button-text mr-2"
-                (click)="removeCustomerFactory(factory)"></button> 
-            } -->
         </div>
+            <p-button icon="pi pi-arrow-left" type="button" severity="secondary" styleClass="mr-2" (onClick)="cancelSubmit()"></p-button>
             <button pButton label="Guardar" type="submit"></button>
     </form>
 </p-card>

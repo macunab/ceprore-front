@@ -13,14 +13,14 @@ import { MessageService } from 'primeng/api';
 import { PriceList } from '../../interfaces/priceList.interface';
 import { DialogData } from '../../interfaces/dialogData.interface';
 import { CustomerFactoryDialogComponent } from '../../components/customer-factory-dialog/customer-factory-dialog.component';
-import { PercentPipe } from '@angular/common';
+import { CommonModule, PercentPipe } from '@angular/common';
 import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-customer-form',
   standalone: true,
   imports: [ FormsModule, ReactiveFormsModule, InputTextModule, ButtonModule, CardModule, DropdownModule, DialogModule,
-    ToastModule, TableModule, PercentPipe, CustomerFactoryDialogComponent ],
+    ToastModule, TableModule, PercentPipe, CustomerFactoryDialogComponent, CommonModule],
   templateUrl: './customer-form.component.html',
   styleUrl: './customer-form.component.css',
   providers: [MessageService]
@@ -52,12 +52,18 @@ export class CustomerFormComponent {
       this.title = 'Editar Cliente';
       this.customerForm.patchValue(data);
       this.customer = data as Customer;
+      this.customerFactories = this.customer.discountsByFactory ? this.customer.discountsByFactory : [];
       console.table(this.customer)
     }
   }
 
   onSubmit() {
     if(this.customerForm.invalid) {
+      this.customerForm.markAllAsTouched();
+      return;
+    }
+    if(this.customerFactories.length < 1) {
+      this.messageService.add({ severity: 'warn', summary: 'Aviso', detail: 'Debe asignarle por lo menos una fabrica al cliente'});
       return;
     }
     if(this.customer) {
@@ -81,12 +87,20 @@ export class CustomerFormComponent {
   }
 
   onDialogClose(dialogData: DialogData<CustomerFactory>): void {
-    if(this.customerFactories.find( key => key.factory === dialogData.data.factory)) {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'La fabrica ya fue cargada al cliente' });
+    if(this.customerFactories.find( key => key.factory.id === dialogData.data.factory.id)) {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'La fabrica seleccionada ya fue cargada al cliente.' });
       return;
     }
     this.customerFactories.push(dialogData.data);
     this.showDialog = false;
   }
 
+  isValid(field: string): boolean | null {
+    return this.customerForm.controls[field].errors
+      && this.customerForm.controls[field].touched;
+  }
+
+  cancelSubmit(): void {
+    this.router.navigateByUrl('main/customers');
+  }
 }

@@ -20,7 +20,12 @@ import { ToastModule } from 'primeng/toast';
 export class CustomersComponent implements OnInit{
 
   customers: Array<Customer> = [
-    { id: '1111', name: 'Carlo Juarez', address: 'San juan 1234', email: 'carlos@gmail.com'},
+    { id: '1111', name: 'Carlo Juarez', address: 'San juan 1234', email: 'carlos@gmail.com', 
+      discountsByFactory: [
+        { factory: { id: '1111', name: 'Fabrica1', address: 'San juan 232', email: 'factory1@gmail.com'},
+        delivery: { id: '232323', name: 'Transporte1', address: 'Felipe boero 23', email: 'transporte1@gmail.com'},
+        discounts: [5, 5], cascadeDiscount: 0.0975}
+      ]},
     { id: '2222', name: 'Juan Garcias', address: 'Simon Bolivar 221', email: 'juan@gmail.com'}
   ];
   buttons: Array<ButtonConfig> = [
@@ -70,9 +75,5 @@ export class CustomersComponent implements OnInit{
       }
     })
   }
-
-
-
-
 
 }
