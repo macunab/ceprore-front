@@ -50,9 +50,8 @@ export class ProductFormDialogComponent implements OnChanges, OnInit{
     
     if(this.productUpdate.id) {
       //this.pricesByList.clear();
-      console.table(this.productUpdate);
       this.productForm.patchValue(this.productUpdate);
-      this.setUpdatePricesArray(this.productUpdate.pricesByList);
+      //this.setUpdatePricesArray(this.productUpdate.pricesByList);
       // this.priceLists.forEach(list => {
       //   let isCreated: boolean = false;
       //   this.productUpdate.pricesByList.forEach( value => {
@@ -66,9 +65,7 @@ export class ProductFormDialogComponent implements OnChanges, OnInit{
       //   }
       // });
     } else {
-      console.error('ENTRO AL CREATE');
-      //this.pricesByList.clear();
-     // this.pricesByList.clear();
+      this.pricesByList.clear();
       this.setInitialPriceByList();
     }
   }

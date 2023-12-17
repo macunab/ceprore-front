@@ -3,7 +3,7 @@
 <app-generic-table [headers]="headers" [rows]="products" [buttons]="buttons" [filters]="filters"
     (onAction)="onActions($event)" [tableTitle]="tableTitle"></app-generic-table>
 
-<p-dialog [header]="formTitle" [modal]="true" [(visible)]="showForm" (onHide)="onHide()"
+<p-dialog [header]="formTitle" [modal]="true" [(visible)]="showForm" (onHide)="onHide()" (onShow)="onShow()"
     [breakpoints]="{ '960px': '95vw' }" [style]="{ width: '60vw', height: '400px' }">
     <app-product-form-dialog (onClose)="onFormClose($event)" [productUpdate]="productUpdate"></app-product-form-dialog>
 </p-dialog>

@@ -119,4 +119,11 @@ export class ProductsComponent implements OnInit{
     this.formDialog.onHide();
   }
 
+  onShow(): void {
+    if(this.productUpdate.id) {
+      this.formDialog.productForm.patchValue(this.productUpdate);
+      this.formDialog.setUpdatePricesArray(this.productUpdate.pricesByList);
+    }
+  }
+
 }
