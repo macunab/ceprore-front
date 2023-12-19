@@ -47,26 +47,11 @@ export class ProductFormDialogComponent implements OnChanges, OnInit{
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    
     if(this.productUpdate.id) {
-      //this.pricesByList.clear();
-      this.productForm.patchValue(this.productUpdate);
-      //this.setUpdatePricesArray(this.productUpdate.pricesByList);
-      // this.priceLists.forEach(list => {
-      //   let isCreated: boolean = false;
-      //   this.productUpdate.pricesByList.forEach( value => {
-      //     if(list.id === value.list.id) {
-      //       this.pricesByList.push(this.createPrice(list, value.price));
-      //       isCreated = true;
-      //     }
-      //   });
-      //   if(!isCreated) {
-      //     this.pricesByList.push(this.createPrice(list));
-      //   }
-      // });
-    } else {
       this.pricesByList.clear();
-      this.setInitialPriceByList();
+      this.productForm.patchValue(this.productUpdate);
+    } else {
+      console.log('ENTRA EN EL CREATE');
     }
   }
 
@@ -82,7 +67,6 @@ export class ProductFormDialogComponent implements OnChanges, OnInit{
   }
 
   createPrice(priceList: PriceList, price?: number): FormGroup {
-    console.log('EL VALOR DE PRICE ES: ', price);
     return this.fb.group({
       list: [priceList],
       price: [price ? price : 0, [Validators.required]]
@@ -95,10 +79,11 @@ export class ProductFormDialogComponent implements OnChanges, OnInit{
       return;
     }
     if(this.productUpdate.id) {
+      //console.table(this.productUpdate);
       this.productUpdate = { id: this.productUpdate.id, ...this.productForm.value };
       this.emmiter.emit({ data: this.productUpdate });
     } else {
-      console.log(this.productForm.value);
+      //console.warn('ENTRA EN CREATE');
       this.emmiter.emit({ data: this.productForm.value });
     }
 }

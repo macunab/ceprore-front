@@ -101,6 +101,9 @@ export class ProductsComponent implements OnInit{
     if(dialogData.data.id) {
       // update service
       console.info('SE VA A INTERTAR EDITAR UN PRODUCTO');
+      const index = this.products.findIndex(value => value.id === dialogData.data.id);
+      (index !== -1) ? this.products[index] = dialogData.data : '';
+      this.products = [...this.products];
     } else {
       console.info('SE VA A INTENTAR CREAR UN PRODUCTO');
       try {
@@ -123,6 +126,9 @@ export class ProductsComponent implements OnInit{
     if(this.productUpdate.id) {
       this.formDialog.productForm.patchValue(this.productUpdate);
       this.formDialog.setUpdatePricesArray(this.productUpdate.pricesByList);
+    } else {
+      this.formDialog.pricesByList.clear();
+      this.formDialog.setInitialPriceByList();
     }
   }
 
