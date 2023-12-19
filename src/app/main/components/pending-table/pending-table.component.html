@@ -1,0 +1,57 @@
+<p-toolbar styleClass="mb-1">
+    <div class="p-toolbar-group-start">
+        <p-button label="Nuevo" icon="pi pi-plus" class="mr-2" (onClick)="emitter.emit({ type: 'create' })" size="small"></p-button>
+    </div> 
+</p-toolbar>
+<p-table #table responsiveLayout="stack" [value]="pendingOrders" [globalFilterFields]="filters"
+    [rows]="3" [paginator]="true">
+    <ng-template pTemplate="caption">
+        <div class="flex align-items-center justify-content-between">
+            <h3 class="m-0">Pendientes</h3>
+            <span class="p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input #search class="w-full" pInputText type="text" (input)="table.filterGlobal(search.value, 'contains')" placeholder="Buscar..." />
+            </span>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Fecha</th>
+            <th>Cliente</th>
+            <th>Fabrica</th>
+            <th>Total</th>
+            <th>Opciones</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-order>
+        <tr>
+            <td>{{ order.createAt | date:'shortDate' }}</td>
+            <td>{{ order.customer.name }}</td>
+            <td>{{ order.factory.name }}</td>
+            <td>{{ order.total | currency }}</td>
+            <td>
+                <button
+                    pButton icon="pi pi-print" class="p-button-sm p-button-secondary p-button-rounded p-button-text mr-2"
+                    pTooltip="Imprimir Orden" tooltipPosition="top" (click)="emitter.emit({ data: order, type: 'print' })">
+                </button>
+                <button
+                    pButton icon="pi pi-ticket" class="p-button-sm p-button-help p-button-rounded p-button-text mr-2"
+                    pTooltip="Crear Factura" tooltipPosition="top" (click)="emitter.emit({ data: order, type: 'invoiced' })">
+                </button>
+                <button
+                    pButton icon="pi pi-pencil" class="p-button-sm p-button-info p-button-rounded p-button-text mr-2"
+                    pTooltip="Editar" tooltipPosition="top" (click)="emitter.emit({ data: order, type: 'edit' })">
+                </button>
+                <button
+                    pButton icon="pi pi-trash" class="p-button-sm p-button-danger p-button-rounded p-button-text mr-2"
+                    pTooltip="Eliminar" tooltipPosition="top" (click)="emitter.emit({ data: order, type: 'delete' })">
+                </button>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td [colSpan]="5">No se encontraron registros.</td>
+        </tr>
+    </ng-template>
+</p-table>

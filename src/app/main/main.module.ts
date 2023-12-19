@@ -7,6 +7,6 @@ import { MainRoutingModule } from './main-routing.module';
   imports: [
     CommonModule,
     MainRoutingModule
-  ]
+  ],
 })
 export class MainModule { }

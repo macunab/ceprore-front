@@ -25,7 +25,7 @@ export class SidebarComponent {
   items: MenuItem[] = [
     { label: 'Home', icon: 'pi pi-home', routerLink: 'main/home', command: () => { this.hideSidebar() }},
     { label: 'Ordenes', icon: 'pi pi-shopping-cart', items: [
-      { label: 'Pendientes', routerLink: '/main/pending', command: () => { this.hideSidebar() }},
+      { label: 'Pendientes', routerLink: '/main/pending-orders', command: () => { this.hideSidebar() }},
       { label: 'Facturadas', routerLink: '/main/invoiced', command: () => { this.hideSidebar() }},
       { label: 'Cobradas', routerLink: '/main/paid', command: () => { this.hideSidebar() } }
     ]},

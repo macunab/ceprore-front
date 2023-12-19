@@ -12,6 +12,7 @@ import { CheckingAccountsComponent } from "./pages/checking-accounts/checking-ac
 import { PendingComponent } from "./pages/pending/pending.component";
 import { InvoicedComponent } from "./pages/invoiced/invoiced.component";
 import { PaidComponent } from "./pages/paid/paid.component";
+import { PendingFormComponent } from "./pages/pending-form/pending-form.component";
 
 
 const routes: Routes = [
@@ -27,7 +28,8 @@ const routes: Routes = [
             { path: 'priceLists', component: PriceListsComponent },
             { path: 'deliveries', component: DeliveriesComponent },
             { path: 'checking-accounts', component: CheckingAccountsComponent },
-            { path: 'pending', component: PendingComponent },
+            { path: 'pending-orders', component: PendingComponent },
+            { path: 'pending-order', component: PendingFormComponent },
             { path: 'invoiced', component: InvoicedComponent },
             { path: 'paid', component: PaidComponent },
             { path: '**', redirectTo: 'home' }

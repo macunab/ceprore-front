@@ -1,0 +1,53 @@
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
+<p-card [header]="formTitle">
+    <form autocomplete="off"
+    [formGroup]="orderForm"
+    (ngSubmit)="onSubmit()">
+    <div class="formgrid grid">
+        <div class="field col-10 md:col-11">
+            <input class="w-full"type="text" pInputText formControlName="customer" placeholder="Cliente" >
+        </div>
+        <div class="field col-2 md:col-1">
+            <button pButton icon="pi pi-plus" type="button" class="p-button-help"></button>
+        </div>
+        <div class="field col-12 md:col">
+            <p-dropdown formControlName="factory" [options]="factories" optionLabel="name" placeholder="Fabricas"
+                styleClass="w-full" aria-describedby="factory-help"></p-dropdown>
+            @if(isValid('factory')) {
+                <small class="form-error" id="factory-help">Seleccione una fabrica.</small>
+            }                
+        </div>
+        <div class="field col-12 md:col">
+            <!-- ACA tengo que averiguar bien si se va a poder seleccionar otra 
+                lista de precio que la unica que tenga seleccionada el cliente -->
+            <p-dropdown formControlName="priceList" [options]="priceLists" optionLabel="name" placeholder="Lista de Precios"
+                styleClass="w-full" aria-describedby="priceList-help"></p-dropdown>
+        </div>
+    </div>
+    <div class="formgrid grid">
+        <div class="field col-12 md:col">
+            <p-dropdown formControlName="invoicedPercent" [options]="percentOptions" optionLabel="percentString" placeholder="Porcentaje Facturado"
+                styleClass="w-full" aria-describedby="invoicedPercent-help"></p-dropdown>
+        </div>
+        <div class="field col-12 md:col">
+            <p-dropdown formControlName="delivery" [options]="deliveries" optionLabel="name" placeholder="Transporte"
+                styleClass="w-full" aria-describedby="delivery-help"></p-dropdown>
+        </div>
+    </div>
+    <div class="formgrid grid">
+        <div class="field col-10 md:col-11">
+            <input class="w-full" type="number" pInputText placeholder="Descuento" >
+        </div>
+        <div class="field col-2 md:col-1">
+            <button pButton icon="pi pi-plus" type="button" class="p-button-help"></button>
+        </div>
+    </div>
+    <div class="formgrid grid">
+        <div class="field col">
+            <button pButton icon="pi pi-plus" type="button" class="p-button-help" label="Producto"></button>
+        </div>
+    </div>
+    <div>...</div>
+    <button pButton label="Guardar" type="submit" class="p-button-success"></button>
+    </form>
+</p-card>    
