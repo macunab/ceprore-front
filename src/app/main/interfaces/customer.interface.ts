@@ -1,5 +1,6 @@
 import { Delivery } from "./delivery.interface";
 import { Factory } from "./factory.interface";
+import { PriceList } from "./priceList.interface";
 
 export interface Customer {
     id?: string;
@@ -7,6 +8,7 @@ export interface Customer {
     address: string;
     email: string;
     discountsByFactory?: Array<CustomerFactory>;
+    priceList?: PriceList;
 }
 
 export interface CustomerFactory {

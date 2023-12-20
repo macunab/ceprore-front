@@ -15,6 +15,8 @@ export interface Order {
     invoicedAmount?: number;
     remitAmount?: number;
     ivaAmount?: number;
+    discounts?: Array<string>;
+    cascadeDiscount?: number;
     total?: number;
 }
 

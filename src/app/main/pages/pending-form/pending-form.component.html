@@ -8,26 +8,31 @@
             <input class="w-full"type="text" pInputText formControlName="customer" placeholder="Cliente" >
         </div>
         <div class="field col-2 md:col-1">
-            <button pButton icon="pi pi-plus" type="button" class="p-button-help"></button>
+            <button pButton icon="pi pi-plus" type="button" class="p-button-help" (click)="showCustomers = true"
+                pTooltip="Seleccione un cliente" tooltipPosition="top"></button>
         </div>
         <div class="field col-12 md:col">
             <p-dropdown formControlName="factory" [options]="factories" optionLabel="name" placeholder="Fabricas"
-                styleClass="w-full" aria-describedby="factory-help"></p-dropdown>
+                styleClass="w-full" aria-describedby="factory-help" (onChange)="factorySelection()"></p-dropdown>
             @if(isValid('factory')) {
                 <small class="form-error" id="factory-help">Seleccione una fabrica.</small>
             }                
         </div>
         <div class="field col-12 md:col">
-            <!-- ACA tengo que averiguar bien si se va a poder seleccionar otra 
-                lista de precio que la unica que tenga seleccionada el cliente -->
             <p-dropdown formControlName="priceList" [options]="priceLists" optionLabel="name" placeholder="Lista de Precios"
                 styleClass="w-full" aria-describedby="priceList-help"></p-dropdown>
+                @if(isValid('priceList')) {
+                    <small class="form-error" id="priceList">Seleccione una lista de precio.</small>
+                }    
         </div>
     </div>
     <div class="formgrid grid">
         <div class="field col-12 md:col">
             <p-dropdown formControlName="invoicedPercent" [options]="percentOptions" optionLabel="percentString" placeholder="Porcentaje Facturado"
                 styleClass="w-full" aria-describedby="invoicedPercent-help"></p-dropdown>
+            @if(isValid('invoicedPercent')) {
+                <small class="form-error" id="invoicedPercent-help">Seleccione un porcetanje de facturacion.</small>
+            }    
         </div>
         <div class="field col-12 md:col">
             <p-dropdown formControlName="delivery" [options]="deliveries" optionLabel="name" placeholder="Transporte"
@@ -36,18 +41,154 @@
     </div>
     <div class="formgrid grid">
         <div class="field col-10 md:col-11">
-            <input class="w-full" type="number" pInputText placeholder="Descuento" >
+            <input class="w-full" type="number" formControlName="cascadeDiscount" pInputText placeholder="Descuento" >
         </div>
         <div class="field col-2 md:col-1">
-            <button pButton icon="pi pi-plus" type="button" class="p-button-help"></button>
+            <button pButton icon="pi pi-plus" type="button" class="p-button-help"
+                pTooltip="Agregue un nuevo descuento" tooltipPosition="top" (click)="addDiscount()"></button>
         </div>
     </div>
+    <ng-container formArrayName="discounts" class="">
+        @for( d of discounts.controls; track $index){
+            <ng-container [formGroupName]="$index" class="">
+                <div class="formgrid grid">
+                    <div class="field col-10 md:col-11">
+                        <input pInputText type="number" formControlName="discount" class="w-full">
+                    </div>
+                    <div class="field col-2 md:col-1">
+                        <button type="button" pButton icon="pi pi-trash"
+                            class="p-button-sm p-button-danger p-button-rounded p-button-text mr-2"
+                            (click)="removeDiscount($index)" pTooltip="Eliminar"></button> 
+                    </div>
+                </div>
+            </ng-container>   
+        }
+    </ng-container>
     <div class="formgrid grid">
         <div class="field col">
-            <button pButton icon="pi pi-plus" type="button" class="p-button-help" label="Producto"></button>
+            <button pButton icon="pi pi-plus" type="button" class="p-button-help" label="Producto"
+                pTooltip="Agregue nuevos productos" tooltipPosition="top" (click)="showProducts = true" [disabled]="this.products.length === 0"></button>
         </div>
     </div>
-    <div>...</div>
-    <button pButton label="Guardar" type="submit" class="p-button-success"></button>
+    @if(selectedProductsDisplayed.length > 0) {
+        <p-table [value]="selectedProductsDisplayed" [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Producto</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                    <th>Bonificado</th>
+                    <th>Subtotal</th>
+                    <th>Eliminar</th>
+                </tr>
+            </ng-template>
+        <ng-template pTemplate="body" let-product>
+            <tr>
+                <td>{{ product.product.name }}</td>
+                <td>{{ product.price | currency }}</td>
+                <td>{{ product.quantity }}</td>
+                <td>{{ product.bonus }}</td>
+                <td>{{ product.subtotal | currency }}</td>
+                <td><button type="button" pButton icon="pi pi-times" class="p-button-sm p-button-danger p-button-rounded p-button-text mr-2"
+                    (click)="deleteProductFromSelection(product)" pTooltip="Elimnar" tooltipPosition="left"></button></td>
+            </tr>
+        </ng-template>
+    </p-table>
+    }
+    <table class="w-full">
+        <tr>
+            <td>Total Neto:</td>
+            <td>{{netTotal | currency}}</td>
+            <td>Descuento(%):</td>
+            <td>{{finalDiscount | percent:'0.0-4'}}</td>
+            <td>Total Neto con Descuento:</td>
+            <td>{{netTotalWithDiscount | currency}}</td>
+        </tr>
+        <tr>
+            <td>Monto Facturado:</td>
+            <td>{{invoicedAmount | currency}}</td>
+            <td>Monto Remito:</td>
+            <td>{{remitAmount | currency}}</td>
+            <td>Monto IVA (21%):</td>
+            <td>{{ivaAmount | currency}}</td>
+        </tr>
+        <tr>
+            <td><h2>Total:</h2></td>
+            <td><h1>{{total | currency}}</h1></td>
+        </tr>
+
+    </table>
+    <button pButton label="Guardar" type="submit" class="p-button-success mt-3"></button>
     </form>
-</p-card>    
+</p-card>
+
+<p-dialog header="Seleccione un cliente" [modal]="true" [(visible)]="showCustomers" 
+    [breakpoints]="{ '960px': '95vw' }" [style]="{ width: '40vw', height: '400px' }">
+    <p-table [value]="customers" [(selection)]="selectedCustomer" dataKey="id" [tableStyle]="{'min-width': '50rem'}"
+    [paginator]="true" [rows]="4" [showCurrentPageReport]="true">
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 4rem"></th>
+                <th>Cliente</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-customer>
+            <tr>
+                <td>
+                    <p-tableRadioButton [value]="customer"></p-tableRadioButton>
+                </td>
+                <td>{{customer.name}}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <button pButton type="button" (click)="customerSelection()" label="Seleccionar" class="p-button-info mt-3"></button>
+</p-dialog>
+
+<p-dialog header="Selecione los productos" [modal]="true" [(visible)]="showProducts"
+    [breakpoints]="{ '960px': '95vw' }" [style]="{ width: '60vw', height: '500px' }">
+    <p-table [value]="products" [(selection)]="selectedProducts" dataKey="product.id" [tableStyle]="{'min-width': '50rem'}">
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 4rem">
+                    Selecciones
+                </th>
+                <th>Producto</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Bonificacion</th>
+                <th>Subtotal</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product>
+            <tr>
+                <td>
+                    <p-tableCheckbox [value]="product"></p-tableCheckbox>
+                </td>
+                <td>{{product.product.name}}</td>
+                <td>{{product.price | currency}}</td>
+                <td [pEditableColumn]="product.quantity" pEditableColumnField="quantity">
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="number" [(ngModel)]="product.quantity" required />
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{ product.quantity }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td [pEditableColumn]="product.bonus" pEditableColumnField="bonus">
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="number" [(ngModel)]="product.bonus" required />
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{ product.bonus }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>{{calculatedSubtotal(product) | currency}}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <button pButton class="p-button-info mt-3" type="button" (click)="selectProductsEvent()" label="Seleccionar"></button>
+</p-dialog>
