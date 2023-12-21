@@ -9,6 +9,7 @@ import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 import { InvoicedPercent, Order, ProductCart } from '../../interfaces/order.interface';
 import { Factory } from '../../interfaces/factory.interface';
@@ -17,12 +18,13 @@ import { PriceList } from '../../interfaces/priceList.interface';
 import { Delivery } from '../../interfaces/delivery.interface';
 import { Product } from '../../interfaces/product.interface';
 import { CurrencyPipe, PercentPipe } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-pending-form',
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, InputTextModule, ButtonModule, CardModule, DropdownModule, DialogModule,
-    ToastModule, TableModule, TooltipModule, CurrencyPipe, PercentPipe],
+    ToastModule, TableModule, TooltipModule,InputTextareaModule, CurrencyPipe, PercentPipe],
   templateUrl: './pending-form.component.html',
   styleUrl: './pending-form.component.css',
   providers: [MessageService]
@@ -36,7 +38,7 @@ export class PendingFormComponent implements OnInit {
     delivery: [''],
     invoicedPercent: ['', [Validators.required]],
     observations: [],
-    cascadeDiscount: [],
+    cascadeDiscount: ['',[Validators.required]],
     discounts: this.fb.array([])
   });
   orderUpdate: Order = {} as Order;
@@ -91,7 +93,16 @@ export class PendingFormComponent implements OnInit {
   netTotalWithDiscount: number = 0;
   total: number = 0;
 
-  constructor(private fb: FormBuilder, private message: MessageService) {}
+  constructor(private fb: FormBuilder, private message: MessageService, 
+      private router: Router) {
+        const data = this.router.getCurrentNavigation()?.extras.state;
+        if(data) {
+          this.formTitle = 'Editar Pedido';
+          this.orderForm.patchValue(data);
+          this.orderUpdate = data as Order;
+        }
+        this.orderForm.patchValue({ cascadeDiscount: 5 });
+      }
 
   ngOnInit(): void {
     // throw new Error('Method not implemented.');
@@ -101,23 +112,41 @@ export class PendingFormComponent implements OnInit {
     return <FormArray>this.orderForm.get('discounts');
   }
 
-  addDiscount(): void {
+  addDiscount(discount?: number): void {
     this.discounts.push(this.fb.group({
-      discount: [0, [Validators.required]]
+      discount: [discount ? discount : 0, [Validators.required]]
     }));
   }
 
   removeDiscount(itemIndex: number): void {
     this.discounts.removeAt(itemIndex);
+    this.selectProductsEvent(true);
+  }
+
+  isSubmitDisabled(): boolean | null {
+    return this.orderForm.invalid || this.selectedProductsDisplayed.length === 0;
   }
 
   onSubmit(): void {
-    console.log(this.selectedCustomer);
+   // console.log(this.selectedCustomer);
     if(this.orderForm.invalid) {
       this.orderForm.markAllAsTouched();
       return;
     }
-    console.table(this.orderForm.value);
+    if(this.orderUpdate.id) {
+      console.log('UPDATE');
+    } else {
+      console.log('CREATE');
+      // this.orderForm.get('customer')?.setValue(this.selectedCustomer);
+      const discountNumberArray: Array<number> = this.discounts.value.map(function(val: any) {
+        return val.discount;
+      })
+      const orderCreate: Order = { ...this.orderForm.value, customer: this.selectedCustomer, discounts: discountNumberArray, productsCart: this.selectedProductsDisplayed,
+        invoicedAmount: this.invoicedAmount, remitAmount: this.remitAmount, ivaAmount: this.ivaAmount, 
+        netTotalWithDiscount: this.netTotalWithDiscount, netTotal: this.netTotal, total: this.total };
+      console.table(orderCreate);
+      // try create service Order with orderCreate...
+    }
   }
 
   isValid(field: string): boolean | null {
@@ -151,7 +180,7 @@ export class PendingFormComponent implements OnInit {
 
   loadProducts(): void {
     // en este metodo voy a llamar a los productos en base a una fabrica
-    if(this.orderForm.get('factory')?.value !== null) {
+    if(this.orderForm.get('factory')?.value !== '') {
       // este serian los productos obtenidos del servicios en base a la fabrica seleccionada, por eso el if superior...
       let productsByFactory: Array<Product> = [
         { id: '1111', code: 'CA-1231', name: 'Gallete Cracker', description: 'Galleta cracker multicereal Ceralmix. Fabrica Otonello',
@@ -171,7 +200,6 @@ export class PendingFormComponent implements OnInit {
         let price  = value.pricesByList.find(value => value.list.id === this.orderForm.get('priceList')?.value.id);
         return { product: value, price: price?.price!, quantity: 1, bonus: 0, subtotal: price?.price!};
       });
-      console.log(this.products);
     }
   }
 
@@ -180,8 +208,8 @@ export class PendingFormComponent implements OnInit {
     return product.subtotal;
   }
 
-  selectProductsEvent(): void {
-    if(this.orderForm.get('invoicedPercent')?.value !== '') {
+  selectProductsEvent(remove: boolean): void {
+      if(this.orderForm.get('invoicedPercent')?.value !== '') {
       this.showProducts = false;
       this.netTotal = this.selectedProducts.reduce(
         (acc, cu) => acc + cu.subtotal, 0,
@@ -189,20 +217,14 @@ export class PendingFormComponent implements OnInit {
       this.finalDiscount = this.calculateFinalDiscount() !== 0 ?
       (1 - (1 - this.calculateFinalDiscount()) * (1 - this.orderForm.get('cascadeDiscount')?.value/100)) 
       : this.orderForm.get('cascadeDiscount')?.value/100;
-      // console.log('TOTAL: ',this.netTotal);
-      // console.log('FACTURADOL ', this.invoicedAmount);
-      // console.log('REMITO: ',this.remitAmount);
-      // console.log('MONTO IVA: ', this.ivaAmount);
       this.netTotalWithDiscount = this.netTotal - (this.netTotal*this.finalDiscount);
-      this.invoicedAmount = this.netTotal*this.orderForm.get('invoicedPercent')?.value.percentNumber;
-      this.remitAmount = this.netTotal - this.invoicedAmount;
-      this.ivaAmount = this.invoicedAmount + (this.invoicedAmount*0.21);
-      console.log('DISCOUNT CASCADE: ', this.calculateFinalDiscount());
-      console.log('DISCOUNT : ', this.finalDiscount);
-      
+      this.invoicedAmount = this.netTotalWithDiscount*this.orderForm.get('invoicedPercent')?.value.percentNumber;
+      this.remitAmount = this.netTotalWithDiscount - this.invoicedAmount;
+      this.ivaAmount = (this.invoicedAmount*0.21);
+      this.total = this.invoicedAmount + this.remitAmount + this.ivaAmount;
       this.selectedProductsDisplayed = this.selectedProducts;
     } else {
-      this.message.add({ severity: 'warn', summary: 'Aviso!', detail: 'Seleccione el porcentaje facturado antes que los productos'});
+      if(!remove) this.message.add({ severity: 'warn', summary: 'Aviso!', detail: 'Seleccione el porcentaje facturado antes que los productos'});
     }
     
   }
@@ -210,7 +232,7 @@ export class PendingFormComponent implements OnInit {
   deleteProductFromSelection(product: ProductCart): void {
     this.selectedProducts = this.selectedProducts.filter(value => value.product.id !== product.product.id);
     this.selectedProductsDisplayed = this.selectedProducts;
-    this.selectProductsEvent();
+    this.selectProductsEvent(true);
   }
 
   calculateFinalDiscount(): number {
@@ -228,4 +250,9 @@ export class PendingFormComponent implements OnInit {
     }
   }
 
+  changeSelectedPriceList(): void {
+    this.selectedProducts = [];
+    this.selectedProductsDisplayed = [];
+    this.loadProducts();
+  }
 }

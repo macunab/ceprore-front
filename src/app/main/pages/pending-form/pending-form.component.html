@@ -20,7 +20,7 @@
         </div>
         <div class="field col-12 md:col">
             <p-dropdown formControlName="priceList" [options]="priceLists" optionLabel="name" placeholder="Lista de Precios"
-                styleClass="w-full" aria-describedby="priceList-help"></p-dropdown>
+                styleClass="w-full" aria-describedby="priceList-help" (onChange)="changeSelectedPriceList()"></p-dropdown>
                 @if(isValid('priceList')) {
                     <small class="form-error" id="priceList">Seleccione una lista de precio.</small>
                 }    
@@ -29,7 +29,7 @@
     <div class="formgrid grid">
         <div class="field col-12 md:col">
             <p-dropdown formControlName="invoicedPercent" [options]="percentOptions" optionLabel="percentString" placeholder="Porcentaje Facturado"
-                styleClass="w-full" aria-describedby="invoicedPercent-help"></p-dropdown>
+                styleClass="w-full" aria-describedby="invoicedPercent-help" (onChange)="selectProductsEvent(false)"></p-dropdown>
             @if(isValid('invoicedPercent')) {
                 <small class="form-error" id="invoicedPercent-help">Seleccione un porcetanje de facturacion.</small>
             }    
@@ -40,8 +40,17 @@
         </div>
     </div>
     <div class="formgrid grid">
+        <div class="field col-12">
+            <textarea rows="5" cols="30" class="w-full" pInputTextarea formControlName="observations" placeholder="Observaciones"></textarea>
+        </div>
+    </div>
+    <div class="formgrid grid">
         <div class="field col-10 md:col-11">
-            <input class="w-full" type="number" formControlName="cascadeDiscount" pInputText placeholder="Descuento" >
+            <input class="w-full" type="number" formControlName="cascadeDiscount" pInputText placeholder="Descuento"
+                aria-describedby="cascadeDiscount-help">
+            @if(isValid('cascadeDiscount')) {
+                <small class="form-error" id="cascadeDiscount-help">El descuento tiene que ser un numero.</small>
+            }
         </div>
         <div class="field col-2 md:col-1">
             <button pButton icon="pi pi-plus" type="button" class="p-button-help"
@@ -53,12 +62,12 @@
             <ng-container [formGroupName]="$index" class="">
                 <div class="formgrid grid">
                     <div class="field col-10 md:col-11">
-                        <input pInputText type="number" formControlName="discount" class="w-full">
+                        <input pInputText type="number" formControlName="discount" class="w-full" (change)="selectProductsEvent(false)">
                     </div>
                     <div class="field col-2 md:col-1">
                         <button type="button" pButton icon="pi pi-trash"
                             class="p-button-sm p-button-danger p-button-rounded p-button-text mr-2"
-                            (click)="removeDiscount($index)" pTooltip="Eliminar"></button> 
+                            (click)="removeDiscount($index)" pTooltip="Eliminar" tooltipPosition="left"></button> 
                     </div>
                 </div>
             </ng-container>   
@@ -94,31 +103,31 @@
             </tr>
         </ng-template>
     </p-table>
-    }
-    <table class="w-full">
+    <table class="w-full mt-4">
         <tr>
             <td>Total Neto:</td>
-            <td>{{netTotal | currency}}</td>
+            <td>{{netTotal | currency:'':'symbol':'0.0-4'}}</td>
             <td>Descuento(%):</td>
             <td>{{finalDiscount | percent:'0.0-4'}}</td>
             <td>Total Neto con Descuento:</td>
-            <td>{{netTotalWithDiscount | currency}}</td>
+            <td>{{netTotalWithDiscount | currency:'':'symbol':'0.0-4'}}</td>
         </tr>
         <tr>
             <td>Monto Facturado:</td>
-            <td>{{invoicedAmount | currency}}</td>
+            <td>{{invoicedAmount | currency:'':'symbol':'0.0-4'}}</td>
             <td>Monto Remito:</td>
-            <td>{{remitAmount | currency}}</td>
+            <td>{{remitAmount | currency:'':'symbol':'0.0-4'}}</td>
             <td>Monto IVA (21%):</td>
-            <td>{{ivaAmount | currency}}</td>
+            <td>{{ivaAmount | currency:'':'symbol':'0.0-4'}}</td>
         </tr>
         <tr>
             <td><h2>Total:</h2></td>
-            <td><h1>{{total | currency}}</h1></td>
+            <td><h1>{{total | currency:'':'symbol':'0.0-4'}}</h1></td>
         </tr>
 
     </table>
-    <button pButton label="Guardar" type="submit" class="p-button-success mt-3"></button>
+}
+    <button pButton label="Guardar" type="submit" class="p-button-success mt-3" [disabled]="isSubmitDisabled()"></button>
     </form>
 </p-card>
 
@@ -146,7 +155,8 @@
 
 <p-dialog header="Selecione los productos" [modal]="true" [(visible)]="showProducts"
     [breakpoints]="{ '960px': '95vw' }" [style]="{ width: '60vw', height: '500px' }">
-    <p-table [value]="products" [(selection)]="selectedProducts" dataKey="product.id" [tableStyle]="{'min-width': '50rem'}">
+    <p-table [value]="products" [(selection)]="selectedProducts" dataKey="product.id" [tableStyle]="{'min-width': '50rem'}"
+        [paginator]="true" [rows]="3">
         <ng-template pTemplate="header">
             <tr>
                 <th style="width: 4rem">
@@ -162,7 +172,7 @@
         <ng-template pTemplate="body" let-product>
             <tr>
                 <td>
-                    <p-tableCheckbox [value]="product"></p-tableCheckbox>
+                    <p-tableCheckbox [value]="product" [disabled]="!product.price"></p-tableCheckbox>
                 </td>
                 <td>{{product.product.name}}</td>
                 <td>{{product.price | currency}}</td>
@@ -190,5 +200,5 @@
             </tr>
         </ng-template>
     </p-table>
-    <button pButton class="p-button-info mt-3" type="button" (click)="selectProductsEvent()" label="Seleccionar"></button>
+    <button pButton class="p-button-info mt-3" type="button" (click)="selectProductsEvent(false)" label="Seleccionar"></button>
 </p-dialog>
