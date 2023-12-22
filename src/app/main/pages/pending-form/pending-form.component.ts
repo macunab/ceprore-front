@@ -92,16 +92,30 @@ export class PendingFormComponent implements OnInit {
   finalDiscount: number = 0;
   netTotalWithDiscount: number = 0;
   total: number = 0;
+  filters: Array<string> = ['name']
 
   constructor(private fb: FormBuilder, private message: MessageService, 
       private router: Router) {
         const data = this.router.getCurrentNavigation()?.extras.state;
         if(data) {
+          console.log(data);
           this.formTitle = 'Editar Pedido';
-          this.orderForm.patchValue(data);
           this.orderUpdate = data as Order;
+          this.factories = this.orderUpdate.customer?.discountsByFactory?.map(value => value.factory)!;
+          this.orderForm.patchValue(data)
+          this.orderForm.get('customer')?.setValue(this.orderUpdate.customer!.name);
+          this.selectedProducts = this.orderUpdate.productsCart!;
+          this.selectedProductsDisplayed = this.orderUpdate.productsCart!;
+          this.remitAmount = this.orderUpdate.remitAmount!;
+          this.invoicedAmount = this.orderUpdate.invoicedAmount!;
+          this.ivaAmount = this.orderUpdate.ivaAmount!;
+          this.netTotal = this.orderUpdate.netTotal!;
+          this.finalDiscount = this.orderUpdate.cascadeDiscount!;
+          this.netTotalWithDiscount = this.orderUpdate.netTotalWithDiscount!;
+          this.total = this.orderUpdate.total!;
+          this.loadProducts();
         }
-        this.orderForm.patchValue({ cascadeDiscount: 5 });
+        // this.orderForm.patchValue({ cascadeDiscount: 5 });
       }
 
   ngOnInit(): void {
@@ -133,14 +147,18 @@ export class PendingFormComponent implements OnInit {
       this.orderForm.markAllAsTouched();
       return;
     }
+    const discountNumberArray: Array<number> = this.discounts.value.map(function(val: any) {
+      return val.discount;
+    });
     if(this.orderUpdate.id) {
       console.log('UPDATE');
+      this.orderUpdate = { ...this.orderForm.value, id: this.orderUpdate.id,customer: this.selectedCustomer, discounts: discountNumberArray, productsCart: this.selectedProductsDisplayed,
+        invoicedAmount: this.invoicedAmount, remitAmount: this.remitAmount, ivaAmount: this.ivaAmount, 
+        netTotalWithDiscount: this.netTotalWithDiscount, netTotal: this.netTotal, total: this.total };
+      console.table(this.orderUpdate);  
     } else {
       console.log('CREATE');
       // this.orderForm.get('customer')?.setValue(this.selectedCustomer);
-      const discountNumberArray: Array<number> = this.discounts.value.map(function(val: any) {
-        return val.discount;
-      })
       const orderCreate: Order = { ...this.orderForm.value, customer: this.selectedCustomer, discounts: discountNumberArray, productsCart: this.selectedProductsDisplayed,
         invoicedAmount: this.invoicedAmount, remitAmount: this.remitAmount, ivaAmount: this.ivaAmount, 
         netTotalWithDiscount: this.netTotalWithDiscount, netTotal: this.netTotal, total: this.total };

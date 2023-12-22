@@ -132,9 +132,18 @@
 </p-card>
 
 <p-dialog header="Seleccione un cliente" [modal]="true" [(visible)]="showCustomers" 
-    [breakpoints]="{ '960px': '95vw' }" [style]="{ width: '40vw', height: '400px' }">
-    <p-table [value]="customers" [(selection)]="selectedCustomer" dataKey="id" [tableStyle]="{'min-width': '50rem'}"
-    [paginator]="true" [rows]="4" [showCurrentPageReport]="true">
+    [breakpoints]="{ '960px': '95vw' }" [style]="{ width: '40vw', height: '460px' }">
+    <p-table #tableCustomers [value]="customers" [(selection)]="selectedCustomer" dataKey="id"
+    [paginator]="true" [rows]="4" [globalFilterFields]="filters">
+    <ng-template pTemplate="caption">
+        <div class="flex align-items-center justify-content-between">
+            <h3 class="m-0">Clientes</h3>
+            <span class="p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input #search class="w-full" pInputText type="text" (input)="tableCustomers.filterGlobal(search.value, 'contains')" placeholder="Buscar..." />
+            </span>
+        </div>
+    </ng-template>
         <ng-template pTemplate="header">
             <tr>
                 <th style="width: 4rem"></th>
@@ -147,6 +156,11 @@
                     <p-tableRadioButton [value]="customer"></p-tableRadioButton>
                 </td>
                 <td>{{customer.name}}</td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td [colSpan]="2">No se encontraron registros.</td>
             </tr>
         </ng-template>
     </p-table>
