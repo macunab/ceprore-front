@@ -1,0 +1,56 @@
+<form autocomplete="off"
+    [formGroup]="invoiceForm"
+    (ngSubmit)="onSubmit()">
+    <div class="formgrid grid">
+        <div class="field col-12 md:col-6">
+            <input type="text" pInputText formControlName="invoiceCode" placeholder="Numero Factura" class="w-full"
+                [ngClass]="isInvalid('invoiceCode') ? 'ng-invalid ng-dirty' : ''" aria-describedby="invoiceCode-help">
+            @if(isInvalid('invoiceCode')) {
+                <small class="form-error">El numero de factura es requerido.</small>
+            }
+        </div>
+        <div class="field col-12 md:col-6">
+            <p-calendar formControlName="invoiceDate" appendTo="body" dateFormat="dd/mm/yy" placeholder="Fecha Factura"
+                styleClass="w-full"></p-calendar>
+        </div>
+    </div>
+    <div class="formgrid grid">
+        <div class="field col-12 md:col-6">
+            <input type="number" pInputText formControlName="paymentDeadline" placeholder="Plazo Pago" class="w-full">
+        </div>
+        <div class="field col-12 md:col-6">
+            <input type="numer" pInputText formControlName="deliveryTerm" placeholder="Plazo Entrega" class="w-full">
+        </div>
+    </div>
+    <div class="formgrid grid">
+        <div class="field col-12 md:col-6">
+            <label for="invoicedAmoun">Monto Facturado</label>
+            <input type="number" pInputText formControlName="invoicedAmount" placeholder="Monto Facturado" class="w-full"
+                id="invoicedAmount"> 
+        </div>
+        <div class="field col-12 md:col-6">
+            <label for="remitAmoun">Monto Remito</label>
+            <input type="number" pInputText formControlName="remitAmount" placeholder="Monto Remito" class="w-full"
+                id="remitAmount">
+        </div>
+    </div>
+    <div class="formgrid grid">
+        <div class="field col-12 md:col-6">
+            <label for="ivaAmount">Monto IVA</label>
+            <input type="number" pInputText formControlName="ivaAmount" placeholder="Monto IVA" class="w-full"
+                id="ivaAmount">
+            @if(isInvalid('ivaAmount')) {
+                <small class="form-error">El monto de iva es requerido.</small>
+            }
+        </div>
+        <div class="field col-12 md:col-6">
+            <label for="total">Total</label>
+            <input type="number" pInputText formControlName="total" placeholder="Monto Total" class="w-full"
+                [ngClass]="isInvalid('total') ? 'ng-invalid ng-dirty' : ''" aria-describedby="total-help" [min]="0">
+            @if(isInvalid('total')) {
+                <small class="form-error">El total es requerido.</small>
+            }
+        </div>
+    </div>
+    <button pButton class="p-button-success mt-3" type="submit">Guardar</button>
+</form>

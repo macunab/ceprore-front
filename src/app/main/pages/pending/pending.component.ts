@@ -7,11 +7,14 @@ import { Router } from '@angular/router';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
+import { InvoiceFormDialogComponent } from '../../components/invoice-form-dialog/invoice-form-dialog.component';
+import { DialogData } from '../../interfaces/dialogData.interface';
+import { Invoice } from '../../interfaces/invoice.interface';
 
 @Component({
   selector: 'app-pending',
   standalone: true,
-  imports: [PendingTableComponent, ConfirmDialogModule, ToastModule, DialogModule],
+  imports: [PendingTableComponent, ConfirmDialogModule, ToastModule, DialogModule, InvoiceFormDialogComponent],
   templateUrl: './pending.component.html',
   styleUrl: './pending.component.css',
   providers: [ConfirmationService, MessageService]
@@ -94,6 +97,7 @@ export class PendingComponent implements OnInit{
 
   invoicedOrder(order: Order): void {
     // router to the invoicedForm or open a modal with the form
+    this.orderUpdate = order;
     this.showInvoiceForm = true;
   }
 
@@ -123,6 +127,23 @@ export class PendingComponent implements OnInit{
   createOrder(): void {
     // console.info('Create Order');
     this.router.navigateByUrl('main/pending-order');
+  }
+
+  onDialogClose(dialogData: DialogData<Invoice>): void {
+    this.showInvoiceForm = false;
+    console.table(dialogData.data);
+    // Aca hay que hacer 2 cosas: 1)create al invoice 2) si esta todo ok -> update al order con status: 'INVOICED'
+    try {
+      // service Create invoice/ service Update order (status)
+      // si todo sale bien tengo que dejar de mostrar el pedido, puesto que ya no va a estar pendiente.
+      this.pendingOrders = this.pendingOrders.filter( value => value.id !== dialogData.data.order.id);
+      this.pendingOrders = [...this.pendingOrders];
+      this.message.add({ severity: 'info', summary: 'Informacion',
+        detail: 'El pedido ha sido facturado exitosamente'}); 
+    } catch(error) {
+      this.message.add({severity: 'error', summary: 'ERROR', 
+        detail: 'Ha ocurrido un error al intentar crear una nueva factura.'});
+    }
   }
 
 
