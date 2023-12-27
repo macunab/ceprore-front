@@ -35,10 +35,10 @@ export class InvoiceFormDialogComponent implements OnChanges{
   constructor(private fb: FormBuilder) {}
   
   ngOnChanges(changes: SimpleChanges): void {
-    if(this.order.id) {
+    if(this.order !== undefined && this.order.id) {
       this.invoiceForm.patchValue(this.order);
     }
-    if(this.invoiceUpdate.id) {
+    if(this.invoiceUpdate !== undefined && this.invoiceUpdate.id) {
       this.invoiceForm.patchValue(this.invoiceUpdate);
     }
   }
