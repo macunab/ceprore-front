@@ -8,7 +8,7 @@ export interface Invoice {
     invoiceDate: Date;
     paymentDeadline: number;
     deliveryTerm: number;
-    invoiceAmount: number;
+    invoicedAmount: number;
     ivaAmount: number;
     remitAmount: number;
     total: number;

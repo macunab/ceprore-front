@@ -16,29 +16,31 @@
     </div>
     <div class="formgrid grid">
         <div class="field col-12 md:col-6">
-            <input type="number" pInputText formControlName="paymentDeadline" placeholder="Plazo Pago" class="w-full">
+            <input type="number" pInputText formControlName="paymentDeadline" placeholder="Plazo Pago" class="w-full"
+                [min]="0">
         </div>
         <div class="field col-12 md:col-6">
-            <input type="numer" pInputText formControlName="deliveryTerm" placeholder="Plazo Entrega" class="w-full">
+            <input type="numer" pInputText formControlName="deliveryTerm" placeholder="Plazo Entrega" class="w-full"
+                [min]="0">
         </div>
     </div>
     <div class="formgrid grid">
         <div class="field col-12 md:col-6">
             <label for="invoicedAmoun">Monto Facturado</label>
             <input type="number" pInputText formControlName="invoicedAmount" placeholder="Monto Facturado" class="w-full"
-                id="invoicedAmount"> 
+                id="invoicedAmount" [min]="0"> 
         </div>
         <div class="field col-12 md:col-6">
             <label for="remitAmoun">Monto Remito</label>
             <input type="number" pInputText formControlName="remitAmount" placeholder="Monto Remito" class="w-full"
-                id="remitAmount">
+                id="remitAmount" [min]="0">
         </div>
     </div>
     <div class="formgrid grid">
         <div class="field col-12 md:col-6">
             <label for="ivaAmount">Monto IVA</label>
             <input type="number" pInputText formControlName="ivaAmount" placeholder="Monto IVA" class="w-full"
-                id="ivaAmount">
+                id="ivaAmount" [min]="0">
             @if(isInvalid('ivaAmount')) {
                 <small class="form-error">El monto de iva es requerido.</small>
             }

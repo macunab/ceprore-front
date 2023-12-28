@@ -24,7 +24,7 @@ import { Router } from '@angular/router';
   selector: 'app-pending-form',
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, InputTextModule, ButtonModule, CardModule, DropdownModule, DialogModule,
-    ToastModule, TableModule, TooltipModule,InputTextareaModule, CurrencyPipe, PercentPipe],
+    ToastModule, TableModule, TooltipModule, InputTextareaModule, CurrencyPipe, PercentPipe],
   templateUrl: './pending-form.component.html',
   styleUrl: './pending-form.component.css',
   providers: [MessageService]

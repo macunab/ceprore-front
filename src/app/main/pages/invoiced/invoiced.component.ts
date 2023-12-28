@@ -9,11 +9,13 @@ import { DialogData } from '../../interfaces/dialogData.interface';
 import { Paid } from '../../interfaces/paid.interface';
 import { InvoiceTableComponent } from '../../components/invoice-table/invoice-table.component';
 import { InvoiceFormDialogComponent } from '../../components/invoice-form-dialog/invoice-form-dialog.component';
+import { PaidFormDialogComponent } from '../../components/paid-form-dialog/paid-form-dialog.component';
 
 @Component({
   selector: 'app-invoiced',
   standalone: true,
-  imports: [ConfirmDialogModule, ToastModule, DialogModule, InvoiceTableComponent, InvoiceFormDialogComponent],
+  imports: [ConfirmDialogModule, ToastModule, DialogModule, InvoiceTableComponent, InvoiceFormDialogComponent,
+    PaidFormDialogComponent],
   templateUrl: './invoiced.component.html',
   styleUrl: './invoiced.component.css',
   providers: [ConfirmationService, MessageService]
@@ -23,7 +25,7 @@ export class InvoicedComponent implements OnInit{
   invoicedOrders: Array<Invoice> = [
     {
       id: '1111', invoiceCode: 'RT-0001231', createAt: new Date(2023,8,22), invoiceDate: new Date(2023,8,15),
-      paymentDeadline: 10, deliveryTerm: 15, ivaAmount: 300, invoiceAmount: 1300, remitAmount: 1300, total: 2900,
+      paymentDeadline: 10, deliveryTerm: 15, ivaAmount: 300, invoicedAmount: 1300, remitAmount: 1300, total: 2900,
       order: {
         id: '1111', createAt: new Date(2020,8,15), code: 'ASD-324', status: 'Pendiente', total: 3369.6975,
       customer: {
@@ -42,7 +44,7 @@ export class InvoicedComponent implements OnInit{
       },
       priceList: { id: '2222', name: 'Distribuidoras' }, 
       delivery: { id: '2222', name: 'Carlitos SA', address: 'Inigo de la pascua 123', email: 'carlitos@gmail.com' },
-      factory: { id: '2222', name: 'Sancor Productos', address: 'Ituzaingo 232', email: 'sancor@gmail.com' },
+      factory: { id: '2222', name: 'Sancor Productos', address: 'Ituzaingo 232', email: 'sancor@gmail.com', commission: 0.05 },
       observations: 'Se vendera la mitad por remito pero se retirara en fecha acordada. Sin envio la parte de remito.',
       cascadeDiscount: 5, invoicedPercent: { percentString: '50%', percentNumber: 0.5},
       productsCart: [
@@ -64,6 +66,7 @@ export class InvoicedComponent implements OnInit{
     }
   ];
   invoiceUpdate: Invoice = {} as Invoice;
+  invoicePaid: Invoice = {} as Invoice;
   showInvoiceForm: boolean = false;
   showPaidForm: boolean = false;
 
@@ -94,25 +97,54 @@ export class InvoicedComponent implements OnInit{
   }
 
   edit(invoice: Invoice): void {
-
     this.invoiceUpdate = invoice;
     this.showInvoiceForm = true;
   }
 
   delete(invoice: Invoice): void {
-    
+    this.confirmation.confirm({
+      message: 'Desea Eliminar la factura seleccionada?',
+      header: 'Confirmar Eliminacion',
+      icon: 'pi pi-info-delete',
+      accept: () => {
+        try {
+          // delete invoice service (try)...
+          // update order status from invoice to 'PENDING'... ('INVOICED' ==> 'PENDING')
+          this.invoicedOrders = this.invoicedOrders.filter(value => value.id !== invoice.id);
+          this.invoicedOrders = [...this.invoicedOrders];
+          this.message.add({ severity: 'info', summary: 'Informacion', 
+            detail: 'La factura se ha eliminado exisotamente'}); 
+        } catch(error) {
+          this.message.add({ severity: 'error', summary: 'ERROR!', 
+            detail: 'Ha ocurrido un error al intentar eliminar la factura seleccionada!'});
+        }
+      }
+    });
   }
 
   paid(invoice: Invoice): void {
     this.showPaidForm = true;
+    this.invoicePaid = invoice;
   }
 
   onInvoiceFormSubmit(dialogData: DialogData<Invoice>): void {
+    if(dialogData.data.id) {
+      this.showInvoiceForm = false;
+      try {
+        // update invoice service
 
+        const index = this.invoicedOrders.findIndex(value => value.id === dialogData.data.id);
+        (index !== -1) ? this.invoicedOrders[index] = dialogData.data : '';
+        this.invoicedOrders = [...this.invoicedOrders];
+      } catch(error) {
+        this.message.add({ severity: 'error', summary: 'ERROR!', 
+          detail: 'Ha ocurrido un error al intentar editar una factura existente!'});
+      }
+    }
   }
 
   onPaidFormSubmit(dialogData: DialogData<Paid>): void {
-
+    console.log(dialogData.data);
   }
 
 

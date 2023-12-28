@@ -33,16 +33,16 @@
                     pTooltip="Imprimir Factura" tooltipPosition="top" (click)="emitter.emit({ data: invoice, type: 'print' })">
                 </button>
                 <button
+                    pButton icon="pi pi-money-bill" class="p-button-sm p-button-help p-button-rounded p-button-text mr-2"
+                    pTooltip="Cobrar Factura" tooltipPosition="top" (click)="emitter.emit({ data: invoice, type: 'paid' })">
+                </button>
+                <button
                     pButton icon="pi pi-pencil" class="p-button-sm p-button-info p-button-rounded p-button-text mr-2"
                     pTooltip="Editar" tooltipPosition="top" (click)="emitter.emit({ data: invoice, type: 'edit' })">
                 </button>
                 <button
                     pButton icon="pi pi-trash" class="p-button-sm p-button-danger p-button-rounded p-button-text mr-2"
                     pTooltip="Eliminar" tooltipPosition="top" (click)="emitter.emit({ data: invoice, type: 'delete' })">
-                </button>
-                <button
-                    pButton icon="pi pi-money-bill" class="p-button-sm p-button-help p-button-rounded p-button-text mr-2"
-                    pTooltip="Cobrar Factura" tooltipPosition="top" (click)="emitter.emit({ data: invoice, type: 'paid' })">
                 </button>
             </td>
         </tr>

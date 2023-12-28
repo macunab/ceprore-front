@@ -1,0 +1,61 @@
+<form autocomplete="off"
+    [formGroup]="paidForm"
+    (ngSubmit)="onSubmit()">
+    <div class="formgrid grid">
+        <div class="field col-12 md:col-6">
+            <label for="customer">Cliente</label>
+            <input type="text" pInputText formControlName="customer" id="customer" class="w-full"
+                [ngClass]="isInvalid('customer') ? 'ng-invalid ng-dirty' : ''" aria-describedby="customer-help">
+            @if(isInvalid('customer')) {
+                <small class="form-error">El clientes es requerido.</small>                
+            }    
+        </div>
+        <div class="field col-12 md:col-6">
+            <label for="factory">Fabrica</label>
+            <input type="text" pInputText formControlName="factory" id="factory" class="w-full"
+                [ngClass]="isInvalid('factory') ? 'ng-invalid ng-dirty' : ''" aria-describedby="factory-help">
+            @if(isInvalid('factory')) {
+                <small class="form-error">La fabrica es requerida.</small>                
+            }                
+        </div>
+        <div class="field col-12 md:col-6">
+            <label for="invoiceCode">N. Factura</label>
+            <input type="text" pInputText formControlName="invoiceCode" id="invoiceCode" class="w-full">
+        </div>
+        <div class="field col-12 md:col-6">
+            <label for="invoiceAmount">Total Factura</label>
+            <input type="number" pInputText formControlName="invoiceAmount" id="invoiceAmount" class="w-full">
+        </div>
+        <div class="field col-12">
+            <label for="justifiedDebitNote">Nota Debito</label>
+            <input type="number" [min]="0" pInputText formControlName="justifiedDebitNote" id="justifiedDebitNote" class="w-full">
+        </div>
+        <div class="field col-12">
+            <label for="justifiedDebitNoteObservations">Nota Debito Observaciones</label>
+            <textarea pInputTextarea row="5" cols="30" formControlName="justifiedDebitNoteObservations" id="justifiedDebitNoteObservations"
+                class="w-full"></textarea>
+        </div>
+        <div class="field col-12">
+            <label for="withholdings">Retenciones</label>
+            <input type="number" [min]="0" pInputText formControlName="withholdings" id="withholdings" class="w-full">
+        </div>
+        <div class="field col-12">
+            <label for="withholdingsObservations">Retenciones Observaciones</label>
+            <textarea id="withholdingsObservations" cols="30" rows="5" pInputTextarea formControlName="withholdingsObservations"
+                class="w-full"></textarea>
+        </div>
+        <div class="field col-12">
+            <label for="paymentOnAccount">Pago a Cuenta</label>
+            <input type="number" [min]="0" pInputText formControlName="paymentOnAccount" id="paymentOnAccount" class="w-full">
+        </div>
+        <div class="field col-12 md:col-6">
+            <label for="total">Total</label>
+            <input type="number" [min]="0" pInputText formControlName="total" id="total" class="w-full">
+        </div>
+        <div class="field col-12 md:col-6">
+            <label for="commission">Comision</label>
+            <input type="number" [min]="0" pInputText formControlName="commission" id="commission" class="w-full">
+        </div>
+    </div>
+    <button pButton class="p-button-success mt-3" type="submit">Guardar</button>
+</form>        
