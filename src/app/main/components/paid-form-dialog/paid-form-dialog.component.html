@@ -28,7 +28,8 @@
         </div>
         <div class="field col-12">
             <label for="justifiedDebitNote">Nota Debito</label>
-            <input type="number" [min]="0" pInputText formControlName="justifiedDebitNote" id="justifiedDebitNote" class="w-full">
+            <input type="number" [min]="0" pInputText formControlName="justifiedDebitNote" id="justifiedDebitNote" class="w-full"
+                (change)="onChangePaidAmounts('justifiedDebitNote')">
         </div>
         <div class="field col-12">
             <label for="justifiedDebitNoteObservations">Nota Debito Observaciones</label>
@@ -37,7 +38,8 @@
         </div>
         <div class="field col-12">
             <label for="withholdings">Retenciones</label>
-            <input type="number" [min]="0" pInputText formControlName="withholdings" id="withholdings" class="w-full">
+            <input type="number" [min]="0" pInputText formControlName="withholdings" id="withholdings" class="w-full"
+                (change)="onChangePaidAmounts('withholdings')">
         </div>
         <div class="field col-12">
             <label for="withholdingsObservations">Retenciones Observaciones</label>
@@ -46,7 +48,8 @@
         </div>
         <div class="field col-12">
             <label for="paymentOnAccount">Pago a Cuenta</label>
-            <input type="number" [min]="0" pInputText formControlName="paymentOnAccount" id="paymentOnAccount" class="w-full">
+            <input type="number" [min]="0" pInputText formControlName="paymentOnAccount" id="paymentOnAccount" class="w-full"
+                (change)="onChangePaidAmounts('paymentOnAccount')">
         </div>
         <div class="field col-12 md:col-6">
             <label for="total">Total</label>

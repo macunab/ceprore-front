@@ -145,6 +145,16 @@ export class InvoicedComponent implements OnInit{
 
   onPaidFormSubmit(dialogData: DialogData<Paid>): void {
     console.log(dialogData.data);
+    if(dialogData.data.invoice.order.id) {
+      // create paid / update order status to PAID
+      try {
+
+      } catch(error) {
+        this.message.add({ severity: 'error', summary: 'ERROR!', 
+          detail: 'Ha ocurrido un error al intentar crear un nuevo pago!'});
+      }
+      this.showPaidForm = false;
+    }
   }
 
 

@@ -22,9 +22,9 @@ export class InvoiceFormDialogComponent implements OnChanges{
     invoiceDate: ['',[Validators.required]],
     paymentDeadline: [],
     deliveryTerm: [],
-    invoicedAmount: [[Validators.required]],
+    invoicedAmount: [0,[Validators.required]],
     ivaAmount: [{value: '', disabled: true }, [Validators.required]],
-    remitAmount: [[Validators.required]],
+    remitAmount: [0, [Validators.required]],
     total: [[Validators.required]]
   });
   @Input() order!: Order;
@@ -49,7 +49,7 @@ export class InvoiceFormDialogComponent implements OnChanges{
       return;
     }
     console.log(this.invoiceForm.get('ivaAmount')!.value);
-    if(this.invoiceUpdate.id) {
+    if(this.invoiceUpdate !== undefined && this.invoiceUpdate.id) {
       this.invoice = { ...this.invoiceForm.value, id: this.invoiceUpdate.id, order: this.invoiceUpdate.order, createAt: this.invoiceUpdate.createAt,
         ivaAmount: this.invoiceForm.get('ivaAmount')!.value };
     } else {
@@ -63,5 +63,12 @@ export class InvoiceFormDialogComponent implements OnChanges{
   isInvalid(field: string): boolean | null {
     return this.invoiceForm.controls[field].errors 
       && this.invoiceForm.controls[field].touched;
+  }
+
+  onChangeAmount(): void {
+    const newIvaAmount: number = this.invoiceForm.get('invoicedAmount')!.value*0.21;
+    const total: number = newIvaAmount+this.invoiceForm.get('invoicedAmount')!.value + this.invoiceForm.get('remitAmount')!.value;
+    this.invoiceForm.get('total')?.patchValue(total);
+    this.invoiceForm.get('ivaAmount')?.patchValue(newIvaAmount);
   }
 }

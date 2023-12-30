@@ -69,4 +69,18 @@ export class PaidFormDialogComponent implements OnChanges{
     return this.paidForm.controls[field].errors
       && this.paidForm.controls[field].touched;
   }
+
+  onChangePaidAmounts(field: string): void {
+    const debitNote: number = this.paidForm.get('justifiedDebitNote')!.value;
+    const withholdings: number = this.paidForm.get('withholdings')!.value;
+    const paidOnAccount: number = this.paidForm.get('paymentOnAccount')!.value;
+    if(debitNote+withholdings+paidOnAccount < this.invoice.total) {
+      const newTotal: number = this.invoice.total - this.paidForm.get('justifiedDebitNote')!.value;
+      this.paidForm.get('total')?.patchValue(newTotal - this.paidForm.get('paymentOnAccount')?.value 
+        - this.paidForm.get('withholdings')?.value);
+      this.paidForm.get('commission')?.patchValue(newTotal * this.invoice.order.factory?.commission!);
+    } else {
+      this.paidForm.controls[field].patchValue(0);
+    }
+  }
 }
