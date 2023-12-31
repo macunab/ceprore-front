@@ -62,7 +62,7 @@ export class InvoicedComponent implements OnInit{
       price: 540, quantity: 1, bonus: 0, subtotal: 540 }
       ], netTotal: 3210, netTotalWithDiscount: 3049.5, invoicedAmount: 1524.75, remitAmount: 1524.75, ivaAmount: 320.1975,
       discounts: [5, 5]
-      }
+      }, isPaid: false
     }
   ];
   invoiceUpdate: Invoice = {} as Invoice;
@@ -132,13 +132,14 @@ export class InvoicedComponent implements OnInit{
       this.showInvoiceForm = false;
       try {
         // update invoice service
-
         const index = this.invoicedOrders.findIndex(value => value.id === dialogData.data.id);
         (index !== -1) ? this.invoicedOrders[index] = dialogData.data : '';
         this.invoicedOrders = [...this.invoicedOrders];
+        this.message.add({ severity: 'info', summary: 'Informacion', 
+          detail: 'Se ha editado una factura exitosamente.'})
       } catch(error) {
         this.message.add({ severity: 'error', summary: 'ERROR!', 
-          detail: 'Ha ocurrido un error al intentar editar una factura existente!'});
+          detail: 'Ha ocurrido un error al intentar editar una factura existente!.'});
       }
     }
   }
@@ -146,12 +147,17 @@ export class InvoicedComponent implements OnInit{
   onPaidFormSubmit(dialogData: DialogData<Paid>): void {
     console.log(dialogData.data);
     if(dialogData.data.invoice.order.id) {
-      // create paid / update order status to PAID
       try {
-
+        dialogData.data.invoice.isPaid = true;
+        // save paid.
+        // update invoice (isPaid: true).
+        // update order (status: PAID).
+        this.invoicedOrders = this.invoicedOrders.filter(value => value.id !== dialogData.data.invoice.id);
+        this.message.add({ severity:'info', summary: 'Informacion', 
+          detail: 'Se ha cargado un pago exitosamente.'})
       } catch(error) {
         this.message.add({ severity: 'error', summary: 'ERROR!', 
-          detail: 'Ha ocurrido un error al intentar crear un nuevo pago!'});
+          detail: 'Ha ocurrido un error al intentar crear un nuevo pago!.'});
       }
       this.showPaidForm = false;
     }

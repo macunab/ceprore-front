@@ -51,10 +51,11 @@ export class InvoiceFormDialogComponent implements OnChanges{
     console.log(this.invoiceForm.get('ivaAmount')!.value);
     if(this.invoiceUpdate !== undefined && this.invoiceUpdate.id) {
       this.invoice = { ...this.invoiceForm.value, id: this.invoiceUpdate.id, order: this.invoiceUpdate.order, createAt: this.invoiceUpdate.createAt,
-        ivaAmount: this.invoiceForm.get('ivaAmount')!.value };
+        ivaAmount: this.invoiceForm.get('ivaAmount')!.value, isPaid: false };
     } else {
       this.order.status = 'INVOICED';
-      this.invoice = { ...this.invoiceForm.value, order: this.order, ivaAmount: this.invoiceForm.get('ivaAmount')!.value };
+      this.invoice = { ...this.invoiceForm.value, order: this.order, ivaAmount: this.invoiceForm.get('ivaAmount')!.value,
+        isPaid: false };
     }
     console.log(this.invoice);
     this.emmiter.emit({ data: this.invoice });

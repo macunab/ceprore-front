@@ -12,4 +12,5 @@ export interface Invoice {
     ivaAmount: number;
     remitAmount: number;
     total: number;
+    isPaid: boolean;
 }

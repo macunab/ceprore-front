@@ -34,10 +34,20 @@
         </div>
     </div>
     <div class="formgrid grid">
+        <div class="field col-12">
+            <input type="number" class="w-full" pInputText formControlName="commission" placeholder="Comision"
+                [ngClass]="isValid('commission') ? 'ng-invalid ng-dirty' : ''" aria-describedby="commission-help"
+                [min]="0">
+            @if(isValid('commission')) {
+                <small class="form-error">La comision es requerida.</small>
+            }    
+        </div>
+    </div>
+    <div class="formgrid grid">
         <div class=" flex align-items-center gap-1">
             <p-checkbox styleClass="" formControlName="retainCommision" [binary]="true" inputId="checkbox"></p-checkbox>
             <label for="checkbox">Retiene comision?</label>
         </div>
     </div>
-    <button pButton class="mt-4" label="Guardar" type="submit"></button>
+    <button pButton class="p-button-success mt-4" label="Guardar" type="submit"></button>
 </form>

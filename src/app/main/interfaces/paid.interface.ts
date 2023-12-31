@@ -10,4 +10,7 @@ export interface Paid {
     total: number;
     commission: number;
     invoice: Invoice;
+    isAccountable: boolean; // listo para rendir?
+    createAt: Date;
+    renderedDate: Date; // fecha de rendido/cobrado a fabrica/cobro de comision...
 }

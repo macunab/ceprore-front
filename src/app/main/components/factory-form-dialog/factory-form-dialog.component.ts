@@ -24,7 +24,8 @@ export class FactoryFormDialogComponent implements OnChanges {
     address: [''],
     email: ['', [Validators.email, Validators.required]],
     retainCommision: [false],
-    limitDays: [5]
+    limitDays: [5],
+    commission: ['',[Validators.required, Validators.min(1)]]
   });
 
   constructor(private fb: FormBuilder) {}

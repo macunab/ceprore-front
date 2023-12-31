@@ -1,6 +1,6 @@
 <p-toolbar styleClass="mb-1">
     <div class="p-toolbar-group-start">
-        <p-button label="Nuevo" icon="pi pi-plus" class="mr-2" (onClick)="emitter.emit({ type: 'create' })" size="small"></p-button>
+        <p-button label="Nuevo" icon="pi pi-plus" class="mr-2" severity="info" (onClick)="emitter.emit({ type: 'create' })" size="small"></p-button>
     </div> 
 </p-toolbar>
 <p-table #table responsiveLayout="stack" [columns]="headers" [value]="rows" [globalFilterFields]="filters"

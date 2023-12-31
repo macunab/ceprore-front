@@ -81,6 +81,7 @@ export class PaidFormDialogComponent implements OnChanges{
       this.paidForm.get('commission')?.patchValue(newTotal * this.invoice.order.factory?.commission!);
     } else {
       this.paidForm.controls[field].patchValue(0);
+      this.onChangePaidAmounts(field);
     }
   }
 }

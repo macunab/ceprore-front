@@ -131,7 +131,6 @@ export class PendingComponent implements OnInit{
 
   onDialogClose(dialogData: DialogData<Invoice>): void {
     this.showInvoiceForm = false;
-    console.table(dialogData.data);
     // Aca hay que hacer 2 cosas: 1)create al invoice 2) si esta todo ok -> update al order con status: 'INVOICED'
     try {
       // service Create invoice/ service Update order (status)
@@ -139,7 +138,7 @@ export class PendingComponent implements OnInit{
       this.pendingOrders = this.pendingOrders.filter( value => value.id !== dialogData.data.order.id);
       this.pendingOrders = [...this.pendingOrders];
       this.message.add({ severity: 'info', summary: 'Informacion',
-        detail: 'El pedido ha sido facturado exitosamente'}); 
+        detail: 'El pedido ha sido facturado exitosamente.'}); 
     } catch(error) {
       this.message.add({severity: 'error', summary: 'ERROR', 
         detail: 'Ha ocurrido un error al intentar crear una nueva factura.'});
