@@ -38,26 +38,29 @@ export class PaidFormDialogComponent implements OnChanges{
   constructor(private fb: FormBuilder) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(this.paidUpdate.id) {
-
-    }
-    if(this.invoice.id) {
-      this.paidForm.patchValue(this.invoice);
-      this.paidForm.get('customer')?.patchValue(this.invoice.order.customer?.name);
-      this.paidForm.get('factory')?.patchValue(this.invoice.order.factory?.name);
-      this.paidForm.get('invoiceAmount')?.patchValue(this.invoice.total);
-      this.paidForm.get('commission')?.patchValue(this.invoice.order.factory?.commission!*this.invoice.total);
-    }
+    // if(this.paidUpdate.id) {
+    //   this.paidForm.patchValue(this.paidUpdate);
+    //   this.invoice = this.paidUpdate.invoice;
+    // }
+    // if(this.invoice.id) {
+    //   this.paidForm.patchValue(this.invoice);
+    //   this.paidForm.get('customer')?.patchValue(this.invoice.order.customer?.name);
+    //   this.paidForm.get('factory')?.patchValue(this.invoice.order.factory?.name);
+    //   this.paidForm.get('invoiceAmount')?.patchValue(this.invoice.total);
+    //   this.paidForm.get('commission')?.patchValue(this.invoice.order.factory?.commission!*this.invoice.total);
+    // }
+    this.updateFormValues();
   }
 
   onSubmit(): void {
     if(this.paidForm.invalid) {
       this.paidForm.markAllAsTouched();
-      console.log('TIENE ERRORES')
       return;
     }
     if(this.paidUpdate.id) {
-
+      this.paid = { ...this.paidForm.value, id: this.paidUpdate.id, invoice: this.paidUpdate.invoice, 
+        total: this.paidForm.get('total')!.value, commission: this.paidForm.get('commission')?.value, 
+        createAt: this.paidUpdate.createAt, renderedDate: this.paidUpdate.renderedDate };
     } else {
       this.paid = { ...this.paidForm.value, invoice: this.invoice, total: this.paidForm.get('total')!.value,
       commission: this.paidForm.get('commission')!.value };
@@ -82,6 +85,24 @@ export class PaidFormDialogComponent implements OnChanges{
     } else {
       this.paidForm.controls[field].patchValue(0);
       this.onChangePaidAmounts(field);
+      return;
+    }
+  }
+
+  updateFormValues(): void {
+    if(this.paidUpdate.id) {
+      this.paidForm.patchValue(this.paidUpdate);
+      this.invoice = this.paidUpdate.invoice;
+      this.paidForm.get('customer')?.patchValue(this.invoice.order.customer?.name);
+      this.paidForm.get('factory')?.patchValue(this.invoice.order.factory?.name);
+      this.paidForm.get('invoiceAmount')?.patchValue(this.invoice.total);
+      this.paidForm.get('invoiceCode')?.patchValue(this.invoice.invoiceCode);
+    } else if(this.invoice.id) {
+      this.paidForm.patchValue(this.invoice);
+      this.paidForm.get('customer')?.patchValue(this.invoice.order.customer?.name);
+      this.paidForm.get('factory')?.patchValue(this.invoice.order.factory?.name);
+      this.paidForm.get('invoiceAmount')?.patchValue(this.invoice.total);
+      this.paidForm.get('commission')?.patchValue(this.invoice.order.factory?.commission!*this.invoice.total);
     }
   }
 }
