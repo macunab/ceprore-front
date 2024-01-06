@@ -1,4 +1,7 @@
 <p-sidebar [(visible)]="_showSidebar" (onHide)="emmiter.emit()">
-    <h3>Sidebar</h3>
+    <div class="flex justify-content-center flex-wrap">
+        <img src="assets/images/ceprore-logo2.png" alt="Image" height="40" class="mb-3 flex align-items-center justify-content-center">
+    </div>
+    <!-- <h3>Sidebar</h3> -->
     <p-panelMenu [model]="items"></p-panelMenu>
 </p-sidebar>

@@ -122,7 +122,12 @@ export class PaidComponent implements OnInit{
       message: 'Desea habilitar el Pago para rendicion?',
       accept: () => {
         try {
-          // update paid sarvice isAccountable = true;
+          paid.isAccountable = true;
+          // update paid sarvice
+          this.paidOrders = this.paidOrders.filter(value => value.id !== paid.id);
+          this.message.add({ severity: 'info', summary: 'Informacion', 
+            detail: 'El pago seleccionado ha sido marcado para rendicion exitosamente.'})
+
         } catch(error) {
           this.message.add({ severity: 'error', summary: 'ERROR!', 
             detail: 'Ha ocurrido un error al intentar rendir un pago.'});
