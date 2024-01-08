@@ -5,16 +5,20 @@
         <div class="field col-12 md:col-6">
             <input pInputText class="w-full" type="text" formControlName="code" placeholder="Codigo"
                 [ngClass]="isValid('code') ? 'ng-invalid ng-dirty' : ''" id="code" aria-describedby="code-help">
-            @if(isValid('code')) {
-                <small class="form-error" id="code-help">El codigo es requerido.</small>
-            }    
+            <div class="block-error">
+                @if(isValid('code')) {
+                    <small class="form-error" id="code-help">El codigo es requerido.</small>
+                }    
+            </div>
         </div>
         <div class="field col-12 md:col-6">
             <input pInputText class="w-full" type="text" formControlName="name" placeholder="Nombre"
                 [ngClass]="isValid('name') ? 'ng-invalid ng-dirty' : ''" id="name" aria-describedby="name-help">
-            @if(isValid('name')) {
-                <small class="form-error" id="name-help">El nombre es requerido.</small>
-            }                
+            <div class="block-error">
+                @if(isValid('name')) {
+                    <small class="form-error" id="name-help">El nombre es requerido.</small>
+                }                
+            </div>
         </div>
         <div class="field col-12">
             <!-- change for textarea -->
@@ -24,9 +28,11 @@
         <div class="field col-12">
             <p-dropdown styleClass="w-full" formControlName="factory" [options]="factories" optionLabel="name"
                 placeholder="Fabrica" aria-describedby="factory-help"></p-dropdown>
-            @if(isValid('factory')) {
-                <small id="factory-help" class="form-error">Seleccione una fabrica.</small>
-            }
+            <div class="block-error">
+                @if(isValid('factory')) {
+                    <small id="factory-help" class="form-error">Seleccione una fabrica.</small>
+                }
+            </div>
         </div>
         <div class="field col-12 md:col-6">
             <input pInputText type="number" class="w-full" formControlName="boxesPallet" placeholder="Cajas x Pallet"
@@ -39,7 +45,6 @@
     </div>
     <p-divider align="left" type="dotted">Precios x Lista</p-divider>
     <ng-container formArrayName="pricesByList">
-
         @for( p of pricesByList.controls; track $index) {
             <ng-container [formGroupName]="$index" class="field grid" >
                 <label for="$index" class="col-fixed" style="width:100px">{{p.get('list')?.value.name}}</label>

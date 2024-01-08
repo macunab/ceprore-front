@@ -8,3 +8,7 @@ body {
 .form-error {
     color: #f27f88;
 }
+
+.block-error {
+    height: 0.5rem;
+}
