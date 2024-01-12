@@ -15,12 +15,13 @@ import { DialogData } from '../../interfaces/dialogData.interface';
 import { CustomerFactoryDialogComponent } from '../../components/customer-factory-dialog/customer-factory-dialog.component';
 import { CommonModule, PercentPipe } from '@angular/common';
 import { TableModule } from 'primeng/table';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-customer-form',
   standalone: true,
   imports: [ FormsModule, ReactiveFormsModule, InputTextModule, ButtonModule, CardModule, DropdownModule, DialogModule,
-    ToastModule, TableModule, PercentPipe, CustomerFactoryDialogComponent, CommonModule],
+    ToastModule, TableModule, PercentPipe, CustomerFactoryDialogComponent, CommonModule, TooltipModule],
   templateUrl: './customer-form.component.html',
   styleUrl: './customer-form.component.css',
   providers: [MessageService]

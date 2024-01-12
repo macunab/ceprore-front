@@ -6,6 +6,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { CommonModule } from '@angular/common';
+import { TooltipModule } from 'primeng/tooltip';
 
 //temporal fix
 export interface ArrayDiscount {
@@ -16,7 +17,7 @@ export interface ArrayDiscount {
   selector: 'app-customer-factory-dialog',
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, DropdownModule, ButtonModule, 
-    InputTextModule, CommonModule],
+    InputTextModule, CommonModule, TooltipModule],
   templateUrl: './customer-factory-dialog.component.html',
   styleUrl: './customer-factory-dialog.component.css'
 })

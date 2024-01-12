@@ -50,7 +50,9 @@
             </div>
         </div>
         <div class="mb-3">    
-            <button pButton type="button" icon='pi pi-plus' label="Fabrica" class="p-button-success p-button-sm" (click)="addFactoryDiscount()"></button>
+            <button pButton type="button" icon='pi pi-plus' label="Fabrica" 
+                class="p-button-help p-button-sm" (click)="addFactoryDiscount()"
+                pTooltip="Agregue una fabrica"></button>
         </div>
         <div class="mb-3">
             @if(customerFactories.length > 0) {
@@ -73,8 +75,9 @@
             </p-table>
         }
         </div>
-            <p-button icon="pi pi-arrow-left" type="button" severity="secondary" styleClass="mr-2" (onClick)="cancelSubmit()"></p-button>
-            <button pButton label="Guardar" type="submit"></button>
+            <!-- <p-button icon="pi pi-arrow-left" type="button" severity="secondary" styleClass="mr-2" (onClick)="cancelSubmit()"></p-button> -->
+            <button pButton label="Guardar" type="submit" class="p-button-success" [disabled]="customerFactories.length < 1"
+                pTooltip="Guardar cliente"></button>
     </form>
 </p-card>
 

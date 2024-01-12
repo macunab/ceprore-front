@@ -19,7 +19,8 @@
     </div>    
     <div class="mb-3">    
         <button pButton icon='pi pi-plus' label="Descuento" type="button" 
-            class="p-button-success p-button-sm" (click)="addDiscount()"></button>
+            class="p-button-help p-button-sm" (click)="addDiscount()"
+            pTooltip="Agregar descuento"></button>
     </div>
     <ng-container formArrayName="discounts" class="flex flex-column">
         @for( d of discounts.controls; track $index){
@@ -31,5 +32,5 @@
                 
         }
     </ng-container>
-    <button pButton label="Guardar" type="submit" class="mt-2"></button>
+    <button pButton label="Guardar" type="submit" class="p-button-success mt-2" pTooltip="Guardar fabrica"></button>
 </form>
