@@ -51,13 +51,13 @@ export class PendingFormComponent implements OnInit {
     id: '1111', name: 'Carlo Juarez', address: 'San juan 1234', email: 'carlos@gmail.com', 
       discountsByFactory: [
         { factory: { id: '1111', name: 'Fabrica1', address: 'San juan 232', email: 'factory1@gmail.com'},
-        delivery: { id: '1111', name: 'Cruz Azul', address: 'San Martin 124', email: 'cruzAzul@viajes.com' },
+        delivery: { _id: '1111', name: 'Cruz Azul', address: 'San Martin 124', email: 'cruzAzul@viajes.com' },
         discounts: [5, 5], cascadeDiscount: 0.0975 },
         { factory: { id: '1212', name: 'Carilo SA', address: 'Suipacha 123', email: 'carilo@gmail.com' },
-        delivery: { id: '3333', name: 'Fedex Arg', address: 'Carlos Gardel 233', email: 'fedexArg@fedex.com'},
+        delivery: { _id: '3333', name: 'Fedex Arg', address: 'Carlos Gardel 233', email: 'fedexArg@fedex.com'},
         discounts: [5], cascadeDiscount: 0.05 },
         { factory: { id: '2222', name: 'Sancor Productos', address: 'Ituzaingo 232', email: 'sancor@gmail.com' },
-        delivery: { id: '2222', name: 'Carlitos SA', address: 'Inigo de la pascua 123', email: 'carlitos@gmail.com' },
+        delivery: { _id: '2222', name: 'Carlitos SA', address: 'Inigo de la pascua 123', email: 'carlitos@gmail.com' },
         discounts: [5], cascadeDiscount: 0.05 }
       ], priceList: { _id: '2222', name: 'Distribuidoras' }
   },
@@ -65,7 +65,7 @@ export class PendingFormComponent implements OnInit {
     id: '2222', name: 'Pedro Alonso', address: 'Bolivar 231', email: 'pedro@gmail.com', 
     discountsByFactory: [
       { factory: { id: '1111', name: 'Fabrica1', address: 'San juan 232', email: 'factory1@gmail.com'},
-      delivery: { id: '1111', name: 'Cruz Azul', address: 'San Martin 124', email: 'cruzAzul@viajes.com' },
+      delivery: { _id: '1111', name: 'Cruz Azul', address: 'San Martin 124', email: 'cruzAzul@viajes.com' },
       discounts: [5, 5], cascadeDiscount: 0.0975 }], priceList: { _id: '2222', name: 'Distribuidoras' }
   }
 ];
@@ -76,9 +76,9 @@ export class PendingFormComponent implements OnInit {
     { _id: '4444', name: 'Campo Agroindustria' }
   ];
   deliveries: Array<Delivery> = [
-    { id: '1111', name: 'Cruz Azul', address: 'San Martin 124', email: 'cruzAzul@viajes.com' },
-    { id: '2222', name: 'Carlitos SA', address: 'Inigo de la pascua 123', email: 'carlitos@gmail.com' },
-    { id: '3333', name: 'Fedex Arg', address: 'Carlos Gardel 233', email: 'fedexArg@fedex.com'}
+    { _id: '1111', name: 'Cruz Azul', address: 'San Martin 124', email: 'cruzAzul@viajes.com' },
+    { _id: '2222', name: 'Carlitos SA', address: 'Inigo de la pascua 123', email: 'carlitos@gmail.com' },
+    { _id: '3333', name: 'Fedex Arg', address: 'Carlos Gardel 233', email: 'fedexArg@fedex.com'}
   ];
   formTitle: string = 'Nuevo Pedido';
   percentOptions: Array<InvoicedPercent> = [{ percentString: '0%', percentNumber: 0}, 

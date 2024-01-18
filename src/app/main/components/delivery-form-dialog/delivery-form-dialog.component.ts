@@ -20,13 +20,14 @@ export class DeliveryFormDialogComponent implements OnChanges{
   deliveryForm: FormGroup = this.fb.group({
     name: ['', [Validators.required]],
     address: [''],
-    email: ['', [Validators.required, Validators.email]]
+    email: ['', [Validators.required, Validators.email]],
+    phone: ['', [Validators.required]]
   });
 
   constructor(private fb:  FormBuilder) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(this.deliveryUpdate.id) {
+    if(this.deliveryUpdate._id) {
       this.deliveryForm.patchValue(this.deliveryUpdate);
     } else {
       this.deliveryForm.reset();
@@ -38,8 +39,8 @@ export class DeliveryFormDialogComponent implements OnChanges{
       this.deliveryForm.markAllAsTouched();
       return;
     }
-    if(this.deliveryUpdate.id) {
-      this.deliveryUpdate = { id: this.deliveryUpdate.id, ...this.deliveryForm.value };
+    if(this.deliveryUpdate._id) {
+      this.deliveryUpdate = { _id: this.deliveryUpdate._id, ...this.deliveryForm.value };
       this.emmiter.emit({ data: this.deliveryUpdate });
     } else {
       this.emmiter.emit({ data: this.deliveryForm.value });

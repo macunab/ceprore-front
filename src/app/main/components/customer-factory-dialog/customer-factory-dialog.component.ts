@@ -36,7 +36,7 @@ export class CustomerFactoryDialogComponent {
     { id: '3333', name: 'Factory3', address: 'Simon Bolivar 123', email: 'factory3@gmail.com' }
   ];
   deliveries: Array<Delivery> = [
-    { id: '1111', name: 'Transporte La Calera', address: 'Simon Bolivar 2321', email: 'transporteCalera@gmail.com' }
+    { _id: '1111', name: 'Transporte La Calera', address: 'Simon Bolivar 2321', email: 'transporteCalera@gmail.com' }
   ];
 
   constructor(private fb: FormBuilder) {}

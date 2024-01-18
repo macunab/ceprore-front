@@ -3,33 +3,61 @@ import { environment } from '../../../environments/environment.development';
 import { Delivery } from '../interfaces/delivery.interface';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Customer } from '../interfaces/customer.interface';
-import { Observable, of } from 'rxjs';
+import { Observable, catchError, of, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DeliveryService {
 
-  private readonly url: string = `${environment.baseUrl}/delivery`;
+  private readonly baseUrl: string = `${environment.baseUrl}/delivery`;
 
   constructor(private http: HttpClient) { }
 
-  create(delivery: Delivery) { }
+  create(delivery: Delivery): Observable<Delivery> { 
 
-
-  findAll(): Observable<Array<Customer> | boolean> { 
-    
-    const token = localStorage.getItem('token');
-    if(!token) {
-      return of(false);
-    }
-    const headers = new HttpHeaders()
-      .set('Authorization', `Beared ${token}`);
-    return this.http.get<Array<Customer>>(this.url, { headers })
+    return this.http.post<Delivery>(this.baseUrl, delivery)
+      .pipe(
+        catchError(error => {
+          return throwError(() => `Error: ${error.error.message}`);
+        })
+      )
   }
 
-  update(delivery: Delivery) { }
+  findAll(): Observable<Array<Delivery>> { 
+    
+    // const token = localStorage.getItem('token');
+    // const headers = new HttpHeaders()
+    //   .set('Authorization', `Beared ${token}`);
+    return this.http.get<Array<Delivery>>(this.baseUrl)
+      .pipe(
+        catchError( error => {
+          return throwError(() => `Error: ${error.error.message}`)
+        })
+      );
+  }
 
-  delete(id: string) { }
+  update(delivery: Delivery): Observable<Delivery> {
+
+    const { _id, ...deliveryData } = delivery;
+    const url: string = `${this.baseUrl}/${_id}`;
+    return this.http.patch<Delivery>(url, deliveryData)
+      .pipe(
+        catchError(error => {
+          return throwError(() => `Error: ${error.error.message}`)
+        })
+      );
+   }
+
+  delete(id: string): Observable<Delivery> {
+
+    const url: string = `${this.baseUrl}/${id}`;
+    return this.http.delete<Delivery>(url)
+      .pipe(
+        catchError(error => {
+          return throwError(() => `Error: ${error.error.message}`)
+        })
+      );
+   }
 
 }

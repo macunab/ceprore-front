@@ -8,6 +8,7 @@ import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 import { DialogData } from '../../interfaces/dialogData.interface';
 import { DeliveryFormDialogComponent } from '../../components/delivery-form-dialog/delivery-form-dialog.component';
+import { DeliveryService } from '../../services/delivery.service';
 
 @Component({
   selector: 'app-deliveries',
@@ -21,9 +22,9 @@ import { DeliveryFormDialogComponent } from '../../components/delivery-form-dial
 export class DeliveriesComponent implements OnInit{
 
   deliveries: Array<Delivery> = [
-    { id: '1111', name: 'Cruz Azul', address: 'San Martin 124', email: 'cruzAzul@viajes.com' },
-    { id: '2222', name: 'Carlitos SA', address: 'Inigo de la pascua 123', email: 'carlitos@gmail.com' },
-    { id: '3333', name: 'Fedex Arg', address: 'Carlos Gardel 233', email: 'fedexArg@fedex.com'}
+    { _id: '1111', name: 'Cruz Azul', address: 'San Martin 124', email: 'cruzAzul@viajes.com' },
+    { _id: '2222', name: 'Carlitos SA', address: 'Inigo de la pascua 123', email: 'carlitos@gmail.com' },
+    { _id: '3333', name: 'Fedex Arg', address: 'Carlos Gardel 233', email: 'fedexArg@fedex.com'}
   ];
   showForm: boolean = false;
   buttons: Array<ButtonConfig> = [
@@ -40,10 +41,21 @@ export class DeliveriesComponent implements OnInit{
   formTitle: string = '';
   tableTitle: string = 'Transportes';
 
-  constructor(private messageService: MessageService, private confirmationService: ConfirmationService) {}
+  constructor(private messageService: MessageService, private confirmationService: ConfirmationService,
+    private deliveryService: DeliveryService) {}
   
   ngOnInit(): void {
     console.info('Se cargan los deliveries existentes en la db');
+    this.deliveryService.findAll()
+      .subscribe({
+        next: (res) => {
+          this.deliveries = res;
+        },
+        error: (error) => {
+          this.messageService.add({severity: 'error', summary: 'ERROR!',
+            detail: 'Ha ocurrido un error al intentar obtener todos los transportes del sistema'});
+        }
+      });
   }
 
   onActions(action: TableEvent<Delivery>): void {
@@ -72,53 +84,61 @@ export class DeliveriesComponent implements OnInit{
       header: 'Confirmar Eliminacion',
       icon: 'pi pi-info-delete',
       accept: () => {
-        try {
-          // delete delivery service.. if ok then
-          //throw new Error;
-          this.deliveries = this.deliveries.filter(value => value.id !== delivery.id);
-          this.messageService.add({ severity: 'info', summary: 'Informacion', 
-            detail: `El transporte: "${delivery.name}", se ha eliminado exitosamente.`});
-        } catch(error) {
-          // save error in log
-          this.messageService.add({ severity: 'error', summary: 'ERROR!', 
-            detail: `Ha ocurrido un error al intentar eliminar el transporte: "${delivery.name}".`})
-        }
+        this.deliveryService.delete(delivery._id!)
+          .subscribe({
+            next: (res) => {
+              this.deliveries = this.deliveries.filter(value => value._id !== res._id);
+              this.messageService.add({severity: 'info', summary: 'Informacion',
+                detail: `El transporte: "${res.name}", se ha eliminado exitosamente.`})
+            },
+            error: (error) => {
+              console.error(error);
+              this.messageService.add({ severity: 'error', summary: 'ERROR!',
+                detail: `Ha ocurrido un error al intentar eliminar el Transporte: "${delivery.name}".`});
+            }
+          });
       }
     })
   }
 
   createDelivery(): void {
-    this.formTitle = 'Nueva Transporte';
+    this.formTitle = 'Nuevo Transporte';
     this.deliveryUpdate = {} as Delivery;
     this.showForm = true;
   }
 
   onFormClose(dialogData: DialogData<Delivery>): void {
     this.showForm = false;
-    if(dialogData.data.id) {
-      try {
-        // update service
-        const index = this.deliveries.findIndex( val => val.id === dialogData.data.id);
-        (index !== -1) ? this.deliveries[index] = dialogData.data : '';
-        this.deliveries = [ ...this.deliveries ];
-        this.messageService.add({ severity: 'info', summary:'Informacion', 
-          detail: `El transporte: "${dialogData.data.name}", fue modificado exitosamente`});
-      } catch(error) {
-        this.messageService.add({ severity: 'error', summary: 'ERROR!', 
-          detail: `Ocurrio un error al intentar modificar el transporte: "${dialogData.data.name}"`});
-      }
+    if(dialogData.data._id) {
+      this.deliveryService.update(dialogData.data)
+        .subscribe({
+          next: (res) => {
+            const index = this.deliveries.findIndex(val => val._id === res._id);
+            (index != -1) ? this.deliveries[index] = res : '';
+            this.deliveries = [...this.deliveries];
+            this.messageService.add({ severity: 'info', summary: 'Informacion',
+              detail: `El Transporte: "${res.name}", fue modificado exitosamente`});
+          },
+          error: (error) => {
+            this.messageService.add({ severity: 'error', summary: 'ERROR!',
+              detail: `Ha ocurrido un error al intentar editar el Transporte: "${dialogData.data.name}"`});
+          }
+        });
     } else {
-      try {
-        // create service
-        dialogData.data.id = '33234234'; // only for tests
-        this.deliveries.push(dialogData.data);
-        this.deliveries = [...this.deliveries];
-        this.messageService.add({ severity: 'info', summary: 'Informacion', 
-          detail: `Se ha creado exitosamente el transporte: "${dialogData.data.name}"`});
-      } catch(error) {
-        this.messageService.add({ severity: 'error', summary: 'ERROR!', 
-          detail: 'Ocurrio un error al intentar crear un nuevo transporte'});
-      }
+      this.deliveryService.create(dialogData.data)
+        .subscribe({
+          next: (res) => {
+            this.deliveries.push(res);
+            this.deliveries = [...this.deliveries];
+            this.messageService.add({severity: 'info', summary: 'Informacion',
+              detail: `Se ha creado exitosamente el transporte: "${res.name}"`});
+          },
+          error: (error) => {
+            console.log(error);
+            this.messageService.add({ severity: 'error', summary: 'ERROR!',
+              detail: 'Ha ocurrido un error al intentar crear un nuevo Transporte'});
+          }
+        });
     }
   }
 

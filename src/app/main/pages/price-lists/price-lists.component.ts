@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { PriceList, Temp } from '../../interfaces/priceList.interface';
+import { PriceList } from '../../interfaces/priceList.interface';
 import { ButtonConfig, Column, TableEvent } from '../../../shared/interfaces/genericTable.interface';
 import { DialogData } from '../../interfaces/dialogData.interface';
 import { GenericTableComponent } from '../../../shared/generic-table/generic-table.component';
@@ -43,10 +43,14 @@ export class PriceListsComponent implements OnInit{
       private priceListService: PriceListService) {}
   
   ngOnInit(): void {
-    // get priceLists from service...
     this.priceListService.findAll()
-      .subscribe( resp => {
-        this.priceLists = resp;
+      .subscribe({
+        next: (res) => this.priceLists = res,
+        error: (error) => {
+          console.log(error);
+          this.messageService.add({ severity: 'error', summary: 'ERROR!',
+            detail: 'Ha ocurrido un error al intentar obtener todas las listas de precio'});
+        }
       });
   }
 
@@ -71,29 +75,25 @@ export class PriceListsComponent implements OnInit{
   }
 
   deletePriceList(priceList: PriceList): void {
-    // console.log(priceList);
     this.confirmationService.confirm({
       message: `Desea Eliminar la lista de precios: "${priceList.name}"?`,
       header: 'Confirmar Eliminacion',
       icon: 'pi pi-info-delete',
       accept: () => {
-        try {
-          this.priceListService.delete(priceList._id!)
-            .subscribe(resp => {
-              if(typeof resp !== 'boolean') {
-                this.priceLists = this.priceLists.filter( value => value._id !== resp._id);
-                this.priceLists = [...this.priceLists];
-                this.messageService.add({ severity: 'info', summary: 'Informacion', 
-                detail: `La lista de precio: "${resp.name}", se ha eliminado exitosamente. `})
-              } else {
-                this.messageService.add({ severity: 'error', summary: 'ERROR!', 
-                  detail: `Ha ocurrido un error de parte del servidor al intentar eliminar la lista de precio: "${priceList.name}".`});
-              }
-            })
-        } catch(error) {
-          this.messageService.add({ severity: 'error', summary: 'ERROR!', 
-            detail: `Ha ocurrido un error al intentar eliminar la lista de precio: "${priceList.name}".`});
-        }
+        this.priceListService.delete(priceList._id!)
+          .subscribe({
+            next: (res) => {
+              this.priceLists = this.priceLists.filter( value => value._id !== res._id);
+              this.priceLists = [...this.priceLists];
+              this.messageService.add({ severity: 'info', summary: 'Informacion', 
+                detail: `La lista de precio: "${res.name}", se ha eliminado exitosamente. `})
+            },
+            error: (error) => {
+              console.log(error);
+              this.messageService.add({ severity: 'error', summary: 'ERROR!',
+                detail: `Ha occurrido un error al intentar eliminar la Lista de precios: ${priceList.name}`});
+            }
+          })
       }
     })
   }
@@ -106,35 +106,36 @@ export class PriceListsComponent implements OnInit{
 
   onFormClose(dialogData: DialogData<PriceList>): void {
     this.showForm = false;
-    console.log(dialogData.data._id)
     if(dialogData.data._id) {
-      try {
-        // update service
-        this.priceListService.edit(dialogData.data)
-          .subscribe(resp => {
-            const index = this.priceLists.findIndex( value => value._id === resp._id);
-            (index !== -1) ? this.priceLists[index] = resp : '';
+      this.priceListService.edit(dialogData.data)
+        .subscribe({
+          next: (res) => {
+            const index = this.priceLists.findIndex( value => value._id === res._id);
+            (index !== -1) ? this.priceLists[index] = res : '';
             this.priceLists = [...this.priceLists];
             this.messageService.add({ severity: 'info', summary: 'Informacion', 
-              detail: `La lista de precio: "${resp.name}", fue modificada exitosamente.`});
-          })
-      } catch(error) {
-        this.messageService.add({ severity: 'error', summary: 'ERROR!', 
-          detail: `Ocurrio un error al intentar modificar la list de precio: "${dialogData.data.name}".`})
-      }
+              detail: `La lista de precio: "${res.name}", fue modificada exitosamente.`});
+          },
+          error: (error) => {
+            console.log(error);
+            this.messageService.add({ severity: 'error', summary: 'ERROR!',
+              detail: `Ha ocurrido un error al intentar modificar la Lista de precio: ${dialogData.data.name}`});
+          }
+        });
     } else {
-      try {
-        this.priceListService.create(dialogData.data)
-          .subscribe(resp => {
-            this.priceLists.push(resp);
-          this.priceLists = [...this.priceLists];
-          this.messageService.add({ severity: 'info', summary: 'Informacion',
-            detail: `Se ha creado exitosamente la lista de precio: ${resp.name}`})
-          })
-      } catch(error) {
-        this.messageService.add({ severity: 'error', summary: 'ERROR!', 
-          detail: 'Ocurrio un error al intentar crear un nuevo transporte.'})
-      }
+      this.priceListService.create(dialogData.data)
+        .subscribe({
+          next: (res) => {
+            this.priceLists.push(res);
+            this.priceLists = [...this.priceLists];
+            this.messageService.add({ severity: 'info', summary: 'Informacion',
+              detail: `Se ha creado exitosamente la Lista de precio: ${res.name}`});
+          },
+          error: (error) => {
+            this.messageService.add({ severity: 'error', summary: 'ERROR!',
+              detail: `Ha ocurrido un error al intentar crear una nueva Lista de precio`});
+          }
+        });
     }
   }
 

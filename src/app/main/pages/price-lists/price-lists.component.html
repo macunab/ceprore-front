@@ -4,6 +4,6 @@
     (onAction)="onActions($event)" [tableTitle]="tableTitle"></app-generic-table>
 
 <p-dialog [header]="formTitle" [modal]="true" [(visible)]="showForm" 
-    [breakpoints]="{ '960px': '95vw' }" [style]="{ width: '50vw', height: '250px' }">
+    [breakpoints]="{ '960px': '95vw' }" [style]="{ width: '30vw', height: '250px' }">
     <app-price-list-form-dialog [priceListUpdate]="priceListUpdate" (onClose)="onFormClose($event)"></app-price-list-form-dialog>
 </p-dialog>
