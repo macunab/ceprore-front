@@ -39,8 +39,8 @@ export class CustomerFormComponent {
   });
   ivaCondition: Array<string> = ['Responsable inscripto', 'Afiliado al gremio!'];
   priceList: Array<PriceList> = [
-    { id: '1111', name: 'Monotributo' },
-    { id: '2222', name: 'Supermercados' }
+    { _id: '1111', name: 'Monotributo' },
+    { _id: '2222', name: 'Supermercados' }
   ];
   showDialog: boolean = false;
   @ViewChild(CustomerFactoryDialogComponent) factoryDiscount!: CustomerFactoryDialogComponent;

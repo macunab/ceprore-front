@@ -35,9 +35,9 @@ export class PendingComponent implements OnInit{
             { factory: { id: '2222', name: 'Sancor Productos', address: 'Ituzaingo 232', email: 'sancor@gmail.com' },
             delivery: { id: '2222', name: 'Carlitos SA', address: 'Inigo de la pascua 123', email: 'carlitos@gmail.com' },
             discounts: [5], cascadeDiscount: 0.05 }
-          ], priceList: { id: '2222', name: 'Distribuidoras' }
+          ], priceList: { _id: '2222', name: 'Distribuidoras' }
       },
-      priceList: { id: '2222', name: 'Distribuidoras' }, 
+      priceList: { _id: '2222', name: 'Distribuidoras' }, 
       delivery: { id: '2222', name: 'Carlitos SA', address: 'Inigo de la pascua 123', email: 'carlitos@gmail.com' },
       factory: { id: '2222', name: 'Sancor Productos', address: 'Ituzaingo 232', email: 'sancor@gmail.com' },
       observations: 'Se vendera la mitad por remito pero se retirara en fecha acordada. Sin envio la parte de remito.',
@@ -45,15 +45,15 @@ export class PendingComponent implements OnInit{
       productsCart: [
         { product: { id: '1111', code: 'CA-1231', name: 'Gallete Cracker', description: 'Galleta cracker multicereal Ceralmix. Fabrica Otonello',
         boxesPallet: 10, unitsBox: 24, factory: { id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
-        pricesByList: [{ list: { id: '1111', name: 'Supermercados' }, price: 150 }, { list: {id: '2222', name: 'Distribuidoras'}, price: 170 }] }, price: 170,
+        pricesByList: [{ list: { _id: '1111', name: 'Supermercados' }, price: 150 }, { list: {_id: '2222', name: 'Distribuidoras'}, price: 170 }] }, price: 170,
       quantity: 1, bonus: 0,subtotal: 170 },
       { product: { id: '2222', code: 'CA-1231', name: 'Confites de aniz', description: 'Galleta cracker multicereal Ceralmix. Fabrica Otonello',
       boxesPallet: 10, unitsBox: 24, factory: { id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
-      pricesByList: [{ list: { id: '1111', name: 'Supermercados' }, price: 150 }, { list: {id: '2222', name: 'Distribuidoras'}, price: 250 }] },
+      pricesByList: [{ list: { _id: '1111', name: 'Supermercados' }, price: 150 }, { list: {_id: '2222', name: 'Distribuidoras'}, price: 250 }] },
       price: 250, quantity: 10, bonus: 0, subtotal: 2500 },
       { product: { id: '4444', code: 'CA-1231', name: 'Chocolate aguila', description: 'Galleta cracker multicereal Ceralmix. Fabrica Otonello',
       boxesPallet: 10, unitsBox: 24, factory: { id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
-      pricesByList: [{ list: { id: '1111', name: 'Supermercados' }, price: 150 }, { list: {id: '2222', name: 'Distribuidoras'}, price: 540 }] },
+      pricesByList: [{ list: { _id: '1111', name: 'Supermercados' }, price: 150 }, { list: {_id: '2222', name: 'Distribuidoras'}, price: 540 }] },
       price: 540, quantity: 1, bonus: 0, subtotal: 540 }
       ], netTotal: 3210, netTotalWithDiscount: 3049.5, invoicedAmount: 1524.75, remitAmount: 1524.75, ivaAmount: 320.1975,
       discounts: [5, 5]

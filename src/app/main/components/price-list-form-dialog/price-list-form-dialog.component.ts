@@ -23,7 +23,7 @@ export class PriceListFormDialogComponent implements OnChanges{
   constructor(private fb: FormBuilder) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(this.priceListUpdate.id) {
+    if(this.priceListUpdate._id) {
       this.priceListForm.patchValue(this.priceListUpdate);
     } else {
       this.priceListForm.reset();
@@ -35,8 +35,8 @@ export class PriceListFormDialogComponent implements OnChanges{
       this.priceListForm.markAllAsTouched();
       return;
     }
-    if(this.priceListUpdate.id) {
-      this.priceListUpdate = { id: this.priceListUpdate.id, ...this.priceListForm.value };
+    if(this.priceListUpdate._id) {
+      this.priceListUpdate = { _id: this.priceListUpdate._id, ...this.priceListForm.value };
       this.emmiter.emit({ data: this.priceListUpdate });
     } else {
       this.emmiter.emit({ data: this.priceListForm.value });

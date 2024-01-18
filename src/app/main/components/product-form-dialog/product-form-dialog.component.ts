@@ -32,7 +32,7 @@ export class ProductFormDialogComponent implements OnChanges, OnInit{
     factory: ['', [Validators.required]],
     pricesByList: this.fb.array([])
   });
-  priceLists: Array<PriceList> = [{ id: '1111', name: 'Supermercados'}, { id: '2222', name: 'Kioscos' }];
+  priceLists: Array<PriceList> = [{ _id: '1111', name: 'Supermercados'}, { _id: '2222', name: 'Kioscos' }];
   factories: Array<Factory> = [
     { id: '1111', name: 'Factory1', address: 'San juan 123', email: 'factory1@gmail.com' },
     { id: '2222', name: 'Factory2', address: 'Ituzaingo 123', email: 'factory2@gmail.com' },
