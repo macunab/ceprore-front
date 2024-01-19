@@ -2,17 +2,17 @@ import { Factory } from "./factory.interface";
 import { PriceList } from "./priceList.interface";
 
 export interface Product {
-    id?: string;
+    _id?: string;
     name: string;
     code: string;
     description?: string;
-    boxesPallet?: number;
-    unitsBox?: number;
+    boxesPerPallet?: number;
+    unitsPerBox?: number;
     factory: Factory;
     pricesByList: Array<ProductPrice>;
 }
 
 export interface ProductPrice {
-    list: PriceList;
+    priceList: PriceList;
     price: number;
 }

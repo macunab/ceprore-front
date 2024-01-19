@@ -35,19 +35,19 @@
             </div>
         </div>
         <div class="field col-12 md:col-6">
-            <input pInputText type="number" class="w-full" formControlName="boxesPallet" placeholder="Cajas x Pallet"
-                id="boxesPallet">                
+            <input pInputText type="number" class="w-full" formControlName="boxesPerPallet" placeholder="Cajas x Pallet"
+                id="boxesPerPallet">                
         </div>
         <div class="field col-12 md:col-6">
-            <input pInputText type="number" class="w-full" formControlName="unitsBox" placeholder="Unidades x Caja"
-                id="unitsBox">
+            <input pInputText type="number" class="w-full" formControlName="unitsPerBox" placeholder="Unidades x Caja"
+                id="unitsPerBox">
         </div>
     </div>
     <p-divider align="left" type="dotted">Precios x Lista</p-divider>
     <ng-container formArrayName="pricesByList">
         @for( p of pricesByList.controls; track $index) {
             <ng-container [formGroupName]="$index" class="field grid" >
-                <label for="$index" class="col-fixed" style="width:100px">{{p.get('list')?.value.name}}</label>
+                <label for="$index" class="col-fixed" style="width:100px">{{p.get('priceList')?.value.name}}</label>
                 <input pInputText type="number" class="w-full" formControlName="price" id="$index">
             </ng-container>
         }

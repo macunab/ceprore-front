@@ -69,7 +69,7 @@ export class CustomerFormComponent {
     }
     if(this.customer) {
       // update
-      this.customer = { id: this.customer.id, discountsByFactory: this.customerFactories, ...this.customerForm.value }
+      this.customer = { _id: this.customer._id, discountsByFactory: this.customerFactories, ...this.customerForm.value }
     } else {
       // create
       this.customer = { ...this.customerForm.value, discountsByFactory: this.customerFactories };

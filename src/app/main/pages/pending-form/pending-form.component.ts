@@ -48,7 +48,7 @@ export class PendingFormComponent implements OnInit {
   products: Array<ProductCart> = []
   factories: Array<Factory> = [];
   customers: Array<Customer> = [{
-    id: '1111', name: 'Carlo Juarez', address: 'San juan 1234', email: 'carlos@gmail.com', 
+    _id: '1111', name: 'Carlo Juarez', address: 'San juan 1234', email: 'carlos@gmail.com', 
       discountsByFactory: [
         { factory: { _id: '1111', name: 'Fabrica1', address: 'San juan 232', email: 'factory1@gmail.com'},
         delivery: { _id: '1111', name: 'Cruz Azul', address: 'San Martin 124', email: 'cruzAzul@viajes.com' },
@@ -62,7 +62,7 @@ export class PendingFormComponent implements OnInit {
       ], priceList: { _id: '2222', name: 'Distribuidoras' }
   },
   {
-    id: '2222', name: 'Pedro Alonso', address: 'Bolivar 231', email: 'pedro@gmail.com', 
+    _id: '2222', name: 'Pedro Alonso', address: 'Bolivar 231', email: 'pedro@gmail.com', 
     discountsByFactory: [
       { factory: { _id: '1111', name: 'Fabrica1', address: 'San juan 232', email: 'factory1@gmail.com'},
       delivery: { _id: '1111', name: 'Cruz Azul', address: 'San Martin 124', email: 'cruzAzul@viajes.com' },
@@ -174,7 +174,7 @@ export class PendingFormComponent implements OnInit {
 
   customerSelection(): void {
     this.products = [];
-    if(this.selectedCustomer !== null && this.selectedCustomer.id) {
+    if(this.selectedCustomer !== null && this.selectedCustomer._id) {
       this.orderForm.get('customer')?.setValue(this.selectedCustomer.name);
       this.orderForm.get('priceList')?.setValue(this.selectedCustomer.priceList);
       let customerFactories = this.selectedCustomer.discountsByFactory?.map(value => {
@@ -201,21 +201,21 @@ export class PendingFormComponent implements OnInit {
     if(this.orderForm.get('factory')?.value !== '') {
       // este serian los productos obtenidos del servicios en base a la fabrica seleccionada, por eso el if superior...
       let productsByFactory: Array<Product> = [
-        { id: '1111', code: 'CA-1231', name: 'Gallete Cracker', description: 'Galleta cracker multicereal Ceralmix. Fabrica Otonello',
-        boxesPallet: 10, unitsBox: 24, factory: { _id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
-        pricesByList: [{ list: { _id: '1111', name: 'Supermercados' }, price: 150 }, { list: {_id: '2222', name: 'Distribuidoras'}, price: 170 }] },
-        { id: '2222', code: 'CA-1231', name: 'Confites de aniz', description: 'Galleta cracker multicereal Ceralmix. Fabrica Otonello',
-        boxesPallet: 10, unitsBox: 24, factory: { _id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
-        pricesByList: [{ list: { _id: '1111', name: 'Supermercados' }, price: 150 }, { list: {_id: '2222', name: 'Distribuidoras'}, price: 250 }] },
-        { id: '3333', code: 'CA-1231', name: 'Galletas surtidas', description: 'Galleta cracker multicereal Ceralmix. Fabrica Otonello',
-        boxesPallet: 10, unitsBox: 24, factory: { _id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
-        pricesByList: [{ list: { _id: '1111', name: 'Supermercados' }, price: 150 }, { list: {_id: '2222', name: 'Distribuidoras'}, price: 150 }] },
-        { id: '4444', code: 'CA-1231', name: 'Chocolate aguila', description: 'Galleta cracker multicereal Ceralmix. Fabrica Otonello',
-        boxesPallet: 10, unitsBox: 24, factory: { _id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
-        pricesByList: [{ list: { _id: '1111', name: 'Supermercados' }, price: 150 }, { list: {_id: '2222', name: 'Distribuidoras'}, price: 540 }] }
+        { _id: '1111', code: 'CA-1231', name: 'Gallete Cracker', description: 'Galleta cracker multicereal Ceralmix. Fabrica Otonello',
+        boxesPerPallet: 10, unitsPerBox: 24, factory: { _id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
+        pricesByList: [{ priceList: { _id: '1111', name: 'Supermercados' }, price: 150 }, { priceList: {_id: '2222', name: 'Distribuidoras'}, price: 170 }] },
+        { _id: '2222', code: 'CA-1231', name: 'Confites de aniz', description: 'Galleta cracker multicereal Ceralmix. Fabrica Otonello',
+        boxesPerPallet: 10, unitsPerBox: 24, factory: { _id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
+        pricesByList: [{ priceList: { _id: '1111', name: 'Supermercados' }, price: 150 }, { priceList: {_id: '2222', name: 'Distribuidoras'}, price: 250 }] },
+        { _id: '3333', code: 'CA-1231', name: 'Galletas surtidas', description: 'Galleta cracker multicereal Ceralmix. Fabrica Otonello',
+        boxesPerPallet: 10, unitsPerBox: 24, factory: { _id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
+        pricesByList: [{ priceList: { _id: '1111', name: 'Supermercados' }, price: 150 }, { priceList: {_id: '2222', name: 'Distribuidoras'}, price: 150 }] },
+        { _id: '4444', code: 'CA-1231', name: 'Chocolate aguila', description: 'Galleta cracker multicereal Ceralmix. Fabrica Otonello',
+        boxesPerPallet: 10, unitsPerBox: 24, factory: { _id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
+        pricesByList: [{ priceList: { _id: '1111', name: 'Supermercados' }, price: 150 }, { priceList: {_id: '2222', name: 'Distribuidoras'}, price: 540 }] }
       ];
       this.products = productsByFactory.map(value => {
-        let price  = value.pricesByList.find(value => value.list._id === this.orderForm.get('priceList')?.value.id);
+        let price  = value.pricesByList.find(value => value.priceList._id === this.orderForm.get('priceList')?.value.id);
         return { product: value, price: price?.price!, quantity: 1, bonus: 0, subtotal: price?.price!};
       });
     }
@@ -248,7 +248,7 @@ export class PendingFormComponent implements OnInit {
   }
 
   deleteProductFromSelection(product: ProductCart): void {
-    this.selectedProducts = this.selectedProducts.filter(value => value.product.id !== product.product.id);
+    this.selectedProducts = this.selectedProducts.filter(value => value.product._id !== product.product._id);
     this.selectedProductsDisplayed = this.selectedProducts;
     this.selectProductsEvent(true);
   }

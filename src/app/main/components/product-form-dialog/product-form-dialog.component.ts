@@ -10,6 +10,9 @@ import { Product, ProductPrice } from '../../interfaces/product.interface';
 import { PriceList } from '../../interfaces/priceList.interface';
 import { Factory } from '../../interfaces/factory.interface';
 import { DropdownModule } from 'primeng/dropdown';
+import { FactoryService } from '../../services/factory.service';
+import { PriceListService } from '../../services/price-list.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-product-form-dialog',
@@ -27,8 +30,8 @@ export class ProductFormDialogComponent implements OnChanges, OnInit{
     code: ['', [Validators.required]],
     name: ['', [Validators.required]],
     description: [''],
-    boxesPallet: [0],
-    unitsBox: [0],
+    boxesPerPallet: [0],
+    unitsPerBox: [0],
     factory: ['', [Validators.required]],
     pricesByList: this.fb.array([])
   });
@@ -39,15 +42,28 @@ export class ProductFormDialogComponent implements OnChanges, OnInit{
     { _id: '3333', name: 'Factory3', address: 'Simon Bolivar 123', email: 'factory3@gmail.com' }
   ];
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private factoryService: FactoryService,
+    private priceListService: PriceListService) {}
 
   ngOnInit(): void {
-    console.log('SE LLAMA AL INIT')
-    // get priceList/factories from service then
+    this.priceListService.findAll()
+      .subscribe({
+        next: res => this.priceLists = res,
+        error: err => {
+          console.log(err);
+        }
+      });
+    this.factoryService.findAll()
+      .subscribe({
+        next: res => this.factories = res,
+        error: err => {
+          console.log(err);
+        }
+      });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(this.productUpdate.id) {
+    if(this.productUpdate._id) {
       this.pricesByList.clear();
       this.productForm.patchValue(this.productUpdate);
     } else {
@@ -61,14 +77,14 @@ export class ProductFormDialogComponent implements OnChanges, OnInit{
 
   setUpdatePricesArray(prices: Array<ProductPrice>) {
     prices.map( p => {
-      const priceForm = this.createPrice(p.list, p.price);
+      const priceForm = this.createPrice(p.priceList, p.price);
       this.pricesByList.push(priceForm);
     })
   }
 
   createPrice(priceList: PriceList, price?: number): FormGroup {
     return this.fb.group({
-      list: [priceList],
+      priceList: [priceList],
       price: [price ? price : 0, [Validators.required]]
     });
   }
@@ -78,12 +94,10 @@ export class ProductFormDialogComponent implements OnChanges, OnInit{
       this.productForm.markAllAsTouched();
       return;
     }
-    if(this.productUpdate.id) {
-      //console.table(this.productUpdate);
-      this.productUpdate = { id: this.productUpdate.id, ...this.productForm.value };
+    if(this.productUpdate._id) {
+      this.productUpdate = { _id: this.productUpdate._id, ...this.productForm.value };
       this.emmiter.emit({ data: this.productUpdate });
     } else {
-      //console.warn('ENTRA EN CREATE');
       this.emmiter.emit({ data: this.productForm.value });
     }
 }

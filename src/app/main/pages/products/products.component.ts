@@ -8,6 +8,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { GenericTableComponent } from '../../../shared/generic-table/generic-table.component';
 import { ProductFormDialogComponent } from '../../components/product-form-dialog/product-form-dialog.component';
 import { DialogData } from '../../interfaces/dialogData.interface';
+import { ProductService } from '../../services/product.service';
 
 @Component({
   selector: 'app-products',
@@ -21,9 +22,9 @@ import { DialogData } from '../../interfaces/dialogData.interface';
 export class ProductsComponent implements OnInit{
 
   products: Array<Product> = [
-    { id: '1111', code: 'CA-1231', name: 'Gallete Cracker', description: 'Galleta cracker multicereal Ceralmix. Fabrica Otonello',
-        boxesPallet: 10, unitsBox: 24, factory: { _id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
-        pricesByList: [{ list: { _id: '1111', name: 'Supermercados' }, price: 150 }, { list: {_id: '2222', name: 'Kioscos'}, price: 170 }] }
+    { _id: '1111', code: 'CA-1231', name: 'Gallete Cracker', description: 'Galleta cracker multicereal Ceralmix. Fabrica Otonello',
+        boxesPerPallet: 10, unitsPerBox: 24, factory: { _id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
+        pricesByList: [{ priceList: { _id: '1111', name: 'Supermercados' }, price: 150 }, { priceList: {_id: '2222', name: 'Kioscos'}, price: 170 }] }
   ];
   buttons: Array<ButtonConfig> = [
     { class: 'p-button-sm p-button-info p-button-rounded p-button-text mr-2', 
@@ -43,10 +44,22 @@ export class ProductsComponent implements OnInit{
   productUpdate: Product = {} as Product;
   @ViewChild(ProductFormDialogComponent) formDialog!: ProductFormDialogComponent;
 
-  constructor(private confirmationService: ConfirmationService, private messageService: MessageService) {}
+  constructor(private confirmationService: ConfirmationService, private messageService: MessageService,
+    private productService: ProductService) {}
 
   ngOnInit(): void {
-    // service get Products list
+    this.productService.findAll()
+      .subscribe({
+        next: res => {
+          this.products = res;
+          console.log(res);
+        },
+        error: err => {
+          console.log(err);
+          this.messageService.add({ severity: 'error', summary: 'ERROR!', 
+            detail: 'Ha ocurrido un error al intentar obtener todos los Productos'});
+        }
+      });
   }
 
   onActions(action: TableEvent<Product>): void {
@@ -75,16 +88,20 @@ export class ProductsComponent implements OnInit{
       header: 'Eliminar Producto',
       icon: 'pi pi-info-delete',
       accept: () => {
-        try {
-          // deleteProduct service.. if ok then...
-          this.products = this.products.filter(value => value.id !== product.id);
-          this.products = [...this.products];
-          this.messageService.add({ severity: 'info', summary: 'Informacion',
-            detail: `El producto: "${product.name}", se ha eliminado exitosamente!`});
-        } catch(error) {
-          this.messageService.add({ severity: 'error', summary: 'ERROR!', 
-            detail: `Ha ocurrido un error al intentar eliminar el producto: "${product.name}"`})
-        }
+        this.productService.delete(product._id!)
+          .subscribe({
+            next: res => {
+              this.products = this.products.filter(value => value._id !== res._id);
+              this.products = [...this.products];
+              this.messageService.add({ severity: 'success', summary: 'Informacion',
+                detail: `El Producto: "${res.name}", se ha eliminado exitosamente`});
+            },
+            error: err => {
+              console.log(err);
+              this.messageService.add({ severity: 'error', summary: 'ERROR!',
+                detail: `Ha ocurrido un error al intentar eliminar el Producto: "${product.name}"`});
+            }
+          })
       }
     });
   }
@@ -98,23 +115,37 @@ export class ProductsComponent implements OnInit{
   onFormClose(dialogData: DialogData<Product>): void {
     console.log(dialogData.data);
     this.showForm = false;
-    if(dialogData.data.id) {
-      // update service
-      console.info('SE VA A INTERTAR EDITAR UN PRODUCTO');
-      const index = this.products.findIndex(value => value.id === dialogData.data.id);
-      (index !== -1) ? this.products[index] = dialogData.data : '';
-      this.products = [...this.products];
+    if(dialogData.data._id) {
+      this.productService.update(dialogData.data)
+        .subscribe({
+          next: res => {
+            console.log(res);
+            const index = this.products.findIndex(value => value._id === res._id);
+            (index !== -1) ? this.products[index] = res : '';
+            this.products = [...this.products];
+            this.messageService.add({ severity: 'success', summary: 'Informacion',
+              detail: `El Producto: "${res.name}", se ha modificado exitosamente.`});
+          },
+          error: () => {
+            this.messageService.add({ severity: 'error', summary: 'ERROR!',
+              detail: `Ha ocurrido un error al intentar modificar el Producto: "${dialogData.data.name}"`});
+          }
+        })
     } else {
-      console.info('SE VA A INTENTAR CREAR UN PRODUCTO');
-      try {
-        // create product service function.
-        dialogData.data.id = '12312312'; // only for tests.. in production use the service result.
-        this.products.push(dialogData.data);
-        this.products = [...this.products];
-      } catch(error) {
-        this.messageService.add({ severity:'error', summary: 'ERROR!', 
-          detail: 'Ha ocurrido un error al intentar crear un nuevo producto'});
-      }
+      this.productService.create(dialogData.data)
+        .subscribe({
+          next: res => {
+            console.log(res);
+            this.products.push(res);
+            this.products = [...this.products];
+            this.messageService.add({ severity: 'success', summary: 'Informacion',
+              detail: `El Producto: "${res.name}", se ha creado exitosamente.`});
+          },
+          error: err => {
+            this.messageService.add({ severity: 'error', summary: 'ERROR!',
+              detail: 'Ha ocurrido un error al intentar crear un nuevo Producto.'});
+          }
+      })
     }
   }
 
@@ -123,7 +154,7 @@ export class ProductsComponent implements OnInit{
   }
 
   onShow(): void {
-    if(this.productUpdate.id) {
+    if(this.productUpdate._id) {
       this.formDialog.productForm.patchValue(this.productUpdate);
       this.formDialog.setUpdatePricesArray(this.productUpdate.pricesByList);
     } else {
