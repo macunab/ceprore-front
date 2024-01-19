@@ -88,7 +88,7 @@ export class CustomerFormComponent {
   }
 
   onDialogClose(dialogData: DialogData<CustomerFactory>): void {
-    if(this.customerFactories.find( key => key.factory.id === dialogData.data.factory.id)) {
+    if(this.customerFactories.find( key => key.factory._id === dialogData.data.factory._id)) {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'La fabrica seleccionada ya fue cargada al cliente.' });
       return;
     }

@@ -31,9 +31,9 @@ export class CustomerFactoryDialogComponent {
     cascadeDiscount: [0]
   });
   factories: Array<Factory> = [
-    { id: '1111', name: 'Factory1', address: 'San juan 123', email: 'factory1@gmail.com' },
-    { id: '2222', name: 'Factory2', address: 'Ituzaingo 123', email: 'factory2@gmail.com' },
-    { id: '3333', name: 'Factory3', address: 'Simon Bolivar 123', email: 'factory3@gmail.com' }
+    { _id: '1111', name: 'Factory1', address: 'San juan 123', email: 'factory1@gmail.com' },
+    { _id: '2222', name: 'Factory2', address: 'Ituzaingo 123', email: 'factory2@gmail.com' },
+    { _id: '3333', name: 'Factory3', address: 'Simon Bolivar 123', email: 'factory3@gmail.com' }
   ];
   deliveries: Array<Delivery> = [
     { _id: '1111', name: 'Transporte La Calera', address: 'Simon Bolivar 2321', email: 'transporteCalera@gmail.com' }

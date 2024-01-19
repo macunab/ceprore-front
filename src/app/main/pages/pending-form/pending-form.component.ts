@@ -50,13 +50,13 @@ export class PendingFormComponent implements OnInit {
   customers: Array<Customer> = [{
     id: '1111', name: 'Carlo Juarez', address: 'San juan 1234', email: 'carlos@gmail.com', 
       discountsByFactory: [
-        { factory: { id: '1111', name: 'Fabrica1', address: 'San juan 232', email: 'factory1@gmail.com'},
+        { factory: { _id: '1111', name: 'Fabrica1', address: 'San juan 232', email: 'factory1@gmail.com'},
         delivery: { _id: '1111', name: 'Cruz Azul', address: 'San Martin 124', email: 'cruzAzul@viajes.com' },
         discounts: [5, 5], cascadeDiscount: 0.0975 },
-        { factory: { id: '1212', name: 'Carilo SA', address: 'Suipacha 123', email: 'carilo@gmail.com' },
+        { factory: { _id: '1212', name: 'Carilo SA', address: 'Suipacha 123', email: 'carilo@gmail.com' },
         delivery: { _id: '3333', name: 'Fedex Arg', address: 'Carlos Gardel 233', email: 'fedexArg@fedex.com'},
         discounts: [5], cascadeDiscount: 0.05 },
-        { factory: { id: '2222', name: 'Sancor Productos', address: 'Ituzaingo 232', email: 'sancor@gmail.com' },
+        { factory: { _id: '2222', name: 'Sancor Productos', address: 'Ituzaingo 232', email: 'sancor@gmail.com' },
         delivery: { _id: '2222', name: 'Carlitos SA', address: 'Inigo de la pascua 123', email: 'carlitos@gmail.com' },
         discounts: [5], cascadeDiscount: 0.05 }
       ], priceList: { _id: '2222', name: 'Distribuidoras' }
@@ -64,7 +64,7 @@ export class PendingFormComponent implements OnInit {
   {
     id: '2222', name: 'Pedro Alonso', address: 'Bolivar 231', email: 'pedro@gmail.com', 
     discountsByFactory: [
-      { factory: { id: '1111', name: 'Fabrica1', address: 'San juan 232', email: 'factory1@gmail.com'},
+      { factory: { _id: '1111', name: 'Fabrica1', address: 'San juan 232', email: 'factory1@gmail.com'},
       delivery: { _id: '1111', name: 'Cruz Azul', address: 'San Martin 124', email: 'cruzAzul@viajes.com' },
       discounts: [5, 5], cascadeDiscount: 0.0975 }], priceList: { _id: '2222', name: 'Distribuidoras' }
   }
@@ -190,7 +190,7 @@ export class PendingFormComponent implements OnInit {
   factorySelection(): void {
     let selectedFactory = this.orderForm.get('factory')!.value;
     let customerFactory: CustomerFactory = this.selectedCustomer
-      .discountsByFactory?.find(value => value.factory.id === selectedFactory.id)!;
+      .discountsByFactory?.find(value => value.factory._id === selectedFactory.id)!;
     this.orderForm.get('delivery')?.setValue(customerFactory.delivery);
     this.orderForm.get('cascadeDiscount')?.setValue(customerFactory.cascadeDiscount*100);
     this.loadProducts();
@@ -202,16 +202,16 @@ export class PendingFormComponent implements OnInit {
       // este serian los productos obtenidos del servicios en base a la fabrica seleccionada, por eso el if superior...
       let productsByFactory: Array<Product> = [
         { id: '1111', code: 'CA-1231', name: 'Gallete Cracker', description: 'Galleta cracker multicereal Ceralmix. Fabrica Otonello',
-        boxesPallet: 10, unitsBox: 24, factory: { id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
+        boxesPallet: 10, unitsBox: 24, factory: { _id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
         pricesByList: [{ list: { _id: '1111', name: 'Supermercados' }, price: 150 }, { list: {_id: '2222', name: 'Distribuidoras'}, price: 170 }] },
         { id: '2222', code: 'CA-1231', name: 'Confites de aniz', description: 'Galleta cracker multicereal Ceralmix. Fabrica Otonello',
-        boxesPallet: 10, unitsBox: 24, factory: { id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
+        boxesPallet: 10, unitsBox: 24, factory: { _id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
         pricesByList: [{ list: { _id: '1111', name: 'Supermercados' }, price: 150 }, { list: {_id: '2222', name: 'Distribuidoras'}, price: 250 }] },
         { id: '3333', code: 'CA-1231', name: 'Galletas surtidas', description: 'Galleta cracker multicereal Ceralmix. Fabrica Otonello',
-        boxesPallet: 10, unitsBox: 24, factory: { id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
+        boxesPallet: 10, unitsBox: 24, factory: { _id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
         pricesByList: [{ list: { _id: '1111', name: 'Supermercados' }, price: 150 }, { list: {_id: '2222', name: 'Distribuidoras'}, price: 150 }] },
         { id: '4444', code: 'CA-1231', name: 'Chocolate aguila', description: 'Galleta cracker multicereal Ceralmix. Fabrica Otonello',
-        boxesPallet: 10, unitsBox: 24, factory: { id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
+        boxesPallet: 10, unitsBox: 24, factory: { _id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
         pricesByList: [{ list: { _id: '1111', name: 'Supermercados' }, price: 150 }, { list: {_id: '2222', name: 'Distribuidoras'}, price: 540 }] }
       ];
       this.products = productsByFactory.map(value => {

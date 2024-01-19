@@ -8,6 +8,7 @@ import { ButtonConfig, Column, TableEvent } from '../../../shared/interfaces/gen
 import { DialogModule } from 'primeng/dialog';
 import { FactoryFormDialogComponent } from '../../components/factory-form-dialog/factory-form-dialog.component';
 import { DialogData } from '../../interfaces/dialogData.interface';
+import { FactoryService } from '../../services/factory.service';
 
 @Component({
   selector: 'app-factories',
@@ -21,10 +22,10 @@ import { DialogData } from '../../interfaces/dialogData.interface';
 export class FactoriesComponent implements OnInit {
 
   factories: Array<Factory> = [
-    { id: '1111', name: 'Carilo SA', address: 'Suipacha 123', email: 'carilo@gmail.com' },
-    { id: '2222', name: 'Sancor Productos', address: 'Ituzaingo 232', email: 'sancor@gmail.com' },
-    { id: '3333', name: 'Holidays SA', address: 'Olaen 232', email: 'holidays@gmail.com' },
-    { id: '4444', name: 'Arcor', address: 'Ruta 2 232', email: 'arcor@gmail.com' }
+    { _id: '1111', name: 'Carilo SA', address: 'Suipacha 123', email: 'carilo@gmail.com' },
+    { _id: '2222', name: 'Sancor Productos', address: 'Ituzaingo 232', email: 'sancor@gmail.com' },
+    { _id: '3333', name: 'Holidays SA', address: 'Olaen 232', email: 'holidays@gmail.com' },
+    { _id: '4444', name: 'Arcor', address: 'Ruta 2 232', email: 'arcor@gmail.com' }
   ];
   buttons: Array<ButtonConfig> = [
     { class: 'p-button-sm p-button-info p-button-rounded p-button-text mr-2', functionType: 'edit', icon: 'pi pi-pencil', tooltipText: 'Editar' },
@@ -41,10 +42,22 @@ export class FactoriesComponent implements OnInit {
   factoryUpdate: Factory = {} as Factory;
   tableTitle: string = 'Fabricas';
 
-  constructor(private messageService: MessageService, private confirmationService: ConfirmationService) {}
+  constructor(private messageService: MessageService, private confirmationService: ConfirmationService,
+      private factoryService: FactoryService) {}
 
   ngOnInit(): void {
     console.log('Se cargan los factories de la db por medio de un servicio');
+    this.factoryService.findAll()
+      .subscribe({
+        next: (res) => {
+          this.factories = res;
+        },
+        error: (error) => {
+          console.log(error);
+          this.messageService.add({ severity: 'error', summary: 'ERROR!',
+            detail: 'Ha ocurrido un error al intentar obtener todas las fabricas/Representadas'});
+        }
+      });
   }
 
   onActions(action: TableEvent<Factory>) {
@@ -67,16 +80,19 @@ export class FactoriesComponent implements OnInit {
       header: 'Confirmar Eliminacion',
       icon: 'pi pi-info-delete',
       accept: () => {
-        // try/catch delete factory service. if ok...
-        try {
-          // delete service
-          this.factories = this.factories.filter(value => value.id !== factory.id);
-          this.messageService.add({ severity: 'info', summary: 'Informacion',
-            detail: `La fabrica: "${factory.name}", se ha eliminado exitosamente!`});
-        } catch(error) {
-          this.messageService.add({ severity: 'error', summary: 'Error!', 
-            detail: `Ha ocurrido un error al intentar eliminar la fabrica: "${factory.name}"!!`});
-        }
+        this.factoryService.delete(factory._id!)
+          .subscribe({
+            next: (res) => {
+              this.factories = this.factories.filter(value => value._id !== res._id);
+              this.messageService.add({ severity: 'info', summary: 'Informacion',
+                detail: `La Fabrica: ${res.name}, se ha eliminado exitosamente.`})
+            },
+            error: (error) => {
+              console.log(error);
+              this.messageService.add({ severity: 'error', summary: 'ERROR!',
+                detail: `Ha ocurrido un error al intentar eliminar la Fabrica: ${factory.name}.`});
+            }
+          });
       }
     })
   }
@@ -95,19 +111,36 @@ export class FactoriesComponent implements OnInit {
 
   onDialogClose(dialogData: DialogData<Factory>): void {
     this.showCreateFactory = false;
-    if(dialogData.data.id) {
-      // update service - try/catch
-      const index = this.factories.findIndex( val => val.id === dialogData.data.id);
-      (index !== -1) ? this.factories[index] = dialogData.data : '';
-      this.factories = [...this.factories];
-      this.messageService.add({ severity: 'info', summary: 'Informacion', 
-        detail: `La fabrica: "${dialogData.data.name}", se ha modificado exitosamente!`});
+    if(dialogData.data._id) {
+      this.factoryService.update(dialogData.data)
+        .subscribe({
+          next: (res) => {
+            const index = this.factories.findIndex(val => val._id === res._id);
+            (index !== -1) ? this.factories[index] = res : '';
+            this.factories = [...this.factories];
+            this.messageService.add({ severity: 'success', summary: 'Informacion',
+              detail: `La fabrica ${res.name}, se ha modificado exitosamente.`});
+          },
+          error: () => {
+            this.messageService.add({ severity: 'error', summary: 'ERROR!',
+              detail: `Ha ocurrido un error al intentar modificar la Fabrica: ${dialogData.data.name}.`});
+          }
+        });
     } else {
-      // create service - try/catch /// id only for test
-      dialogData.data.id = '123123123';
-      this.factories.push(dialogData.data);
-      this.messageService.add({ severity: 'info', summary: 'Informacion', 
-        detail: `La fabrica: "${dialogData.data.name}", se ha creado exitosamente!`});
+      console.log(dialogData.data);
+      this.factoryService.create(dialogData.data)
+        .subscribe({
+          next: (res) => {
+            this.factories.push(res);
+            this.factories = [...this.factories];
+            this.messageService.add({ severity: 'success', summary: 'Informacion',
+              detail: `La Fabrica: "${res.name}", se ha creado exitosamente.`})
+          },
+          error: () => {
+            this.messageService.add({ severity: 'error', summary: 'ERROR!',
+              detail: 'Ha ocurrido un error al intentar crear una nueva Fabrica.'});
+          }
+        })
     }
   }
 

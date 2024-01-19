@@ -20,11 +20,11 @@ export class FactoryFormDialogComponent implements OnChanges {
   factoryForm: FormGroup = this.fb.group({
     name: ['', [Validators.required]],
     province: [''],
-    provincialTown: [''],
+    locality: [''],
     address: [''],
     email: ['', [Validators.email, Validators.required]],
-    retainCommision: [false],
-    limitDays: [5],
+    retainCommission: [false],
+    limitDays: [''],
     commission: ['',[Validators.required, Validators.min(1)]]
   });
 
@@ -32,10 +32,11 @@ export class FactoryFormDialogComponent implements OnChanges {
 
   // ToDO fix performance
   ngOnChanges(changes: SimpleChanges): void {
-    if(this.factoryUpdate.id) {
+    if(this.factoryUpdate._id) {
+      // this.factoryUpdate.commission = this.factoryUpdate.commission! * 100;
       this.factoryForm.patchValue(this.factoryUpdate);
     } else {
-      this.factoryForm.reset({ retainCommision: false, limitDays: 5 });
+      this.factoryForm.reset({ retainCommission: false });
     }
   }
 
@@ -44,8 +45,8 @@ export class FactoryFormDialogComponent implements OnChanges {
       this.factoryForm.markAllAsTouched();
       return;
     }
-    if(this.factoryUpdate.id) {
-      this.factoryUpdate = { id: this.factoryUpdate.id, ...this.factoryForm.value };
+    if(this.factoryUpdate._id) {
+      this.factoryUpdate = { _id: this.factoryUpdate._id, ...this.factoryForm.value };
       this.emmiter.emit({ data: this.factoryUpdate });
     } else {
       this.emmiter.emit({ data: this.factoryForm.value });
