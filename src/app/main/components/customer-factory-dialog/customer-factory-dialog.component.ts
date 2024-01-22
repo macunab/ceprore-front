@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Factory } from '../../interfaces/factory.interface';
 import { Delivery } from '../../interfaces/delivery.interface';
@@ -7,6 +7,8 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { CommonModule } from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
+import { FactoryService } from '../../services/factory.service';
+import { DeliveryService } from '../../services/delivery.service';
 
 //temporal fix
 export interface ArrayDiscount {
@@ -21,7 +23,7 @@ export interface ArrayDiscount {
   templateUrl: './customer-factory-dialog.component.html',
   styleUrl: './customer-factory-dialog.component.css'
 })
-export class CustomerFactoryDialogComponent {
+export class CustomerFactoryDialogComponent implements OnInit{
 
   @Output('onClose') emmiter = new EventEmitter();
   factoryDiscountForm: FormGroup = this.fb.group({
@@ -39,7 +41,30 @@ export class CustomerFactoryDialogComponent {
     { _id: '1111', name: 'Transporte La Calera', address: 'Simon Bolivar 2321', email: 'transporteCalera@gmail.com' }
   ];
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private factoryService: FactoryService,
+    private deliveryService: DeliveryService) {}
+
+  ngOnInit(): void {
+    this.factoryService.findAll()
+      .subscribe({
+        next: res => {
+          this.factories = res;
+        },
+        error: err => {
+          console.error(err);
+        }
+      });
+
+    this.deliveryService.findAll()
+      .subscribe({
+        next: res => {
+          this.deliveries = res;
+        },
+        error: err => {
+          console.error(err);
+        }
+      });  
+  }
 
   get discounts(): FormArray {
     return <FormArray>this.factoryDiscountForm.get('discounts');

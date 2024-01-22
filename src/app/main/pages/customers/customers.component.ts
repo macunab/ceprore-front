@@ -7,6 +7,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { CustomerService } from '../../services/customer.service';
 
 
 @Component({
@@ -41,9 +42,21 @@ export class CustomersComponent implements OnInit{
   tableTitle: string = 'Clientes';
 
   constructor(private router: Router, private confirmationService: ConfirmationService, 
-      private messageService: MessageService) {}
+      private messageService: MessageService, private customerSevice: CustomerService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.customerSevice.findAll()
+      .subscribe({
+        next: res => {
+          this.customers = res;
+        },
+        error: err => {
+          console.log(err);
+          this.messageService.add({ severity: 'error', summary: 'ERROR!',
+            detail: 'Ha ocurrido un error al intentar obtener todos los Cliente.'});
+        }
+      });
+  }
 
   onActions(action: TableEvent<Customer>): void {
     switch(action.type) {
@@ -68,10 +81,20 @@ export class CustomersComponent implements OnInit{
       header: 'Confirmar Eliminacion',
       icon: 'pi pi-info-delete',
       accept: () => {
-        // try/catch delete customer service if ok ...
-        this.customers = this.customers.filter(val => val._id !== customer._id);
-        this.messageService.add({ severity: 'info', summary: 'Informacion', 
-          detail: `El cliente: "${customer.name}", se ha eliminado exitosamente`});
+        this.customerSevice.delete(customer._id!)
+          .subscribe({
+            next: res => {
+              this.customers = this.customers.filter(val => val._id !== res._id);
+              this.customers = [...this.customers];
+              this.messageService.add({ severity: 'success', summary: 'Informacion',
+                detail: `El Cliente: "${res.name}", se ha eliminado exitosamente.`})
+            },
+            error: err => {
+              console.log(err);
+              this.messageService.add({ severity: 'error', summary: 'ERROR!',
+                detail: `Ha ocurrido un error al intentar eliminar el Cliente: "${customer.name}".`});
+            }
+          });
       }
     })
   }

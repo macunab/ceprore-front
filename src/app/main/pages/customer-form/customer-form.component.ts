@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { InputTextModule } from 'primeng/inputtext';
@@ -16,6 +16,8 @@ import { CustomerFactoryDialogComponent } from '../../components/customer-factor
 import { CommonModule, PercentPipe } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
+import { PriceListService } from '../../services/price-list.service';
+import { CustomerService } from '../../services/customer.service';
 
 @Component({
   selector: 'app-customer-form',
@@ -26,7 +28,7 @@ import { TooltipModule } from 'primeng/tooltip';
   styleUrl: './customer-form.component.css',
   providers: [MessageService]
 })
-export class CustomerFormComponent {
+export class CustomerFormComponent implements OnInit {
   
   title: string = 'Nuevo Cliente';
   customerFactories: Array<CustomerFactory> = [];
@@ -47,7 +49,8 @@ export class CustomerFormComponent {
   customer!: Customer;
 
   constructor(private fb: FormBuilder, private router: Router, 
-      private messageService: MessageService) {
+      private messageService: MessageService, private priceListService: PriceListService,
+      private customerService: CustomerService) {
     const data = this.router.getCurrentNavigation()?.extras.state;
     if(data) {
       this.title = 'Editar Cliente';
@@ -56,6 +59,20 @@ export class CustomerFormComponent {
       this.customerFactories = this.customer.discountsByFactory ? this.customer.discountsByFactory : [];
       console.table(this.customer)
     }
+  }
+
+  ngOnInit(): void {
+    this.priceListService.findAll()
+      .subscribe({
+        next: res => {
+          this.priceList = res;
+        },
+        error: err => {
+          console.log(err);
+          this.messageService.add({ severity: 'error', summary: 'ERROR!',
+            detail: 'Ha ocurrido un error al intentar obtenes todas las Listas de precio.'});
+        }
+      });
   }
 
   onSubmit() {
@@ -70,9 +87,28 @@ export class CustomerFormComponent {
     if(this.customer) {
       // update
       this.customer = { _id: this.customer._id, discountsByFactory: this.customerFactories, ...this.customerForm.value }
+      this.customerService.update(this.customer)
+        .subscribe({
+          next: res => {
+            this.customer = res;
+          },
+          error: err => {
+            console.log(err);
+            this.messageService.add({ severity: 'error', summary: 'ERROR!',
+              detail: 'Ha ocurrido un error al intentar crear un nuevo Cliente.'});
+          }
+        });
     } else {
       // create
       this.customer = { ...this.customerForm.value, discountsByFactory: this.customerFactories };
+      this.customerService.create(this.customer)
+        .subscribe({
+          error: err => {
+            console.log(err);
+            this.messageService.add({ severity: 'error', summary: 'ERROR!',
+              detail: `Ha ocurrido un error al intentar crear el Cliente: "${this.customer.name}"`});
+          }
+        });
     }
     console.table(this.customer);
     this.router.navigateByUrl('main/customers');
