@@ -10,6 +10,8 @@ import { DialogModule } from 'primeng/dialog';
 import { InvoiceFormDialogComponent } from '../../components/invoice-form-dialog/invoice-form-dialog.component';
 import { DialogData } from '../../interfaces/dialogData.interface';
 import { Invoice } from '../../interfaces/invoice.interface';
+import { OrderService } from '../../services/order.service';
+import { ThisReceiver } from '@angular/compiler';
 
 @Component({
   selector: 'app-pending',
@@ -22,7 +24,7 @@ import { Invoice } from '../../interfaces/invoice.interface';
 export class PendingComponent implements OnInit{
   
   pendingOrders: Array<Order> = [
-    { id: '1111', createAt: new Date(2020,8,15), code: 'ASD-324', status: 'Pendiente', total: 3369.6975,
+    { _id: '1111', createdAt: new Date(2020,8,15), code: 'ASD-324', status: 'Pendiente', total: 3369.6975,
       customer: {
         _id: '1111', name: 'Carlo Juarez', address: 'San juan 1234', email: 'carlos@gmail.com', 
           discountsByFactory: [
@@ -63,10 +65,21 @@ export class PendingComponent implements OnInit{
   showInvoiceForm: boolean = false;
 
   constructor(private confirmation: ConfirmationService, private message: MessageService,
-      private router: Router) {}
+      private router: Router, private orderService: OrderService) {}
 
   ngOnInit(): void {
-    //throw new Error('Method not implemented.');
+    this.orderService.findAll('STARTED')
+      .subscribe({
+        next: res => {
+          this.pendingOrders = res;
+        },
+        error: err => {
+          console.log(err);
+          this.message.add({ severity: 'error', summary: 'ERROR!',
+            detail: 'Ha ocurrido un erro al intentar obtener todos los Pedidos Pendientes.'});
+        }
+      })
+    
   }
 
   onAction(action: TableEvent<Order>): void {
@@ -90,13 +103,22 @@ export class PendingComponent implements OnInit{
   }
 
   printOrder(order: Order): void {
-    // print order service...
-    console.log('Se solicitara la ruta de implesion enviando la orden solicitada al backend...');
-    console.table(order);
+    this.orderService.printPending(order)
+      .subscribe({
+        next: res => {
+          let blob = new Blob([res], { type: 'application/pdf' });
+          let pdfUrl = window.URL.createObjectURL(blob);
+          window.open(pdfUrl, '_blank');
+        },
+        error: err => {
+          console.log(err);
+          this.message.add({ severity: 'error', summary: 'ERROR!',
+            detail: 'Ha ocurrido un erro al intentar imprimir el Pedido.'});
+        }
+      });
   }
 
   invoicedOrder(order: Order): void {
-    // router to the invoicedForm or open a modal with the form
     this.orderUpdate = order;
     this.showInvoiceForm = true;
   }
@@ -113,7 +135,7 @@ export class PendingComponent implements OnInit{
       accept: () => {
         try {
           // delete order service... only Pending
-          this.pendingOrders = this.pendingOrders.filter(value => value.id !== order.id);
+          this.pendingOrders = this.pendingOrders.filter(value => value._id !== order._id);
           this.message.add({severity: 'info', summary: 'Informacion',
             detail: 'El pedido se ha eliminado exitosamente!'});
         } catch(error) {
@@ -125,17 +147,16 @@ export class PendingComponent implements OnInit{
   }
 
   createOrder(): void {
-    // console.info('Create Order');
     this.router.navigateByUrl('main/pending-order');
   }
 
-  onDialogClose(dialogData: DialogData<Invoice>): void {
+  onDialogClose(dialogData: DialogData<Order>): void {
     this.showInvoiceForm = false;
     // Aca hay que hacer 2 cosas: 1)create al invoice 2) si esta todo ok -> update al order con status: 'INVOICED'
     try {
       // service Create invoice/ service Update order (status)
       // si todo sale bien tengo que dejar de mostrar el pedido, puesto que ya no va a estar pendiente.
-      this.pendingOrders = this.pendingOrders.filter( value => value.id !== dialogData.data.order.id);
+      this.pendingOrders = this.pendingOrders.filter( value => value._id !== dialogData.data._id);
       this.pendingOrders = [...this.pendingOrders];
       this.message.add({ severity: 'info', summary: 'Informacion',
         detail: 'El pedido ha sido facturado exitosamente.'}); 

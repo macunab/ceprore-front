@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Product } from '../interfaces/product.interface';
 import { Observable, catchError, throwError } from 'rxjs';
 
@@ -23,14 +23,29 @@ export class ProductService {
       );
   } 
 
-  findAll(): Observable<Array<Product>> {
+  findAll(query?: string): Observable<Array<Product>> {
 
-    return this.http.get<Array<Product>>(this.baseUrl)
+    query = query?.trim();
+    const options = query ? 
+      { params: new HttpParams().set('factory', query) } : {};
+    return this.http.get<Array<Product>>(this.baseUrl, options)
       .pipe(
         catchError(error => {
           return throwError(() => `Error: ${error.error.message}`)
         })
       );
+  }
+
+  findByFactory(factoryId: string): Observable<Array<Product>> {
+
+    const url: string = `${this.baseUrl}/${factoryId}`;
+    console.log(url);
+    return this.http.get<Array<Product>>(url)
+    .pipe(
+      catchError(error => {
+        return throwError(() => `Error: ${error.error.message}`)
+      })
+    );
   }
 
   update(product: Product): Observable<Product> {

@@ -1,16 +1,17 @@
 import { Customer } from "./customer.interface";
 import { Delivery } from "./delivery.interface";
 import { Factory } from "./factory.interface";
+import { Invoice } from "./invoice.interface";
 import { PriceList } from "./priceList.interface";
 import { Product } from "./product.interface";
 
 export interface Order {
-    id?: string;
-    createAt?: Date;
+    _id?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
     code?: string;
     status?: string;
-    /// etc ...
-    productsCart?: Array<ProductCart>;
+    productsCart?: Array<Cart>;
     customer?: Customer;
     factory?: Factory;
     priceList?: PriceList;
@@ -25,9 +26,12 @@ export interface Order {
     netTotalWithDiscount?: number;
     netTotal?: number;
     total?: number;
+    invoice?: Invoice;
+    payment?: Payment;
+    __v?: number;
 }
 
-export interface ProductCart {
+export interface Cart {
     product: Product;
     price: number;
     quantity: number;
@@ -36,6 +40,21 @@ export interface ProductCart {
 }
 
 export interface InvoicedPercent {
+    _id?: string;
     percentString: string;
     percentNumber: number;
+}
+
+export interface Payment {
+
+    justifiedDebitNote: number;
+    justifiedDebitNoteObservations: string;
+    withholdings: number;
+    withholdingsObservations: string;
+    paymentOnAccount: number;
+    total: number;
+    commission: number;
+    isAccountable: boolean; // listo para rendir?
+    createAt: Date;
+    renderedDate: Date; // fecha de rendido/cobrado a fabrica/cobro de comision...
 }

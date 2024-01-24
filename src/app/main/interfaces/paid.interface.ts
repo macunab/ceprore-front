@@ -1,7 +1,8 @@
 import { Invoice } from "./invoice.interface";
 
 export interface Paid {
-    id?: string;
+
+    // id?: string;
     justifiedDebitNote: number;
     justifiedDebitNoteObservations: string;
     withholdings: number;
@@ -9,7 +10,6 @@ export interface Paid {
     paymentOnAccount: number;
     total: number;
     commission: number;
-    invoice: Invoice;
     isAccountable: boolean; // listo para rendir?
     createAt: Date;
     renderedDate: Date; // fecha de rendido/cobrado a fabrica/cobro de comision...

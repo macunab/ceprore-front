@@ -11,7 +11,7 @@ import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 
-import { InvoicedPercent, Order, ProductCart } from '../../interfaces/order.interface';
+import { Cart, InvoicedPercent, Order } from '../../interfaces/order.interface';
 import { Factory } from '../../interfaces/factory.interface';
 import { Customer, CustomerFactory } from '../../interfaces/customer.interface';
 import { PriceList } from '../../interfaces/priceList.interface';
@@ -19,6 +19,11 @@ import { Delivery } from '../../interfaces/delivery.interface';
 import { Product } from '../../interfaces/product.interface';
 import { CurrencyPipe, PercentPipe } from '@angular/common';
 import { Router } from '@angular/router';
+import { PriceListService } from '../../services/price-list.service';
+import { DeliveryService } from '../../services/delivery.service';
+import { OrderService } from '../../services/order.service';
+import { CustomerService } from '../../services/customer.service';
+import { ProductService } from '../../services/product.service';
 
 @Component({
   selector: 'app-pending-form',
@@ -37,15 +42,15 @@ export class PendingFormComponent implements OnInit {
     priceList: ['', [Validators.required]],
     delivery: [''],
     invoicedPercent: ['', [Validators.required]],
-    observations: [],
+    observations: [''],
     cascadeDiscount: ['',[Validators.required]],
     discounts: this.fb.array([])
   });
   orderUpdate: Order = {} as Order;
-  selectedProducts: Array<ProductCart> = [];
-  selectedProductsDisplayed: Array<ProductCart> = [];
+  selectedProducts: Array<Cart> = [];
+  selectedProductsDisplayed: Array<Cart> = [];
   selectedCustomer: Customer = {} as Customer;
-  products: Array<ProductCart> = []
+  products: Array<Cart> = []
   factories: Array<Factory> = [];
   customers: Array<Customer> = [{
     _id: '1111', name: 'Carlo Juarez', address: 'San juan 1234', email: 'carlos@gmail.com', 
@@ -95,31 +100,61 @@ export class PendingFormComponent implements OnInit {
   filters: Array<string> = ['name']
 
   constructor(private fb: FormBuilder, private message: MessageService, 
-      private router: Router) {
+      private router: Router, private priceListService: PriceListService, private deliveryService: DeliveryService,
+      private orderService: OrderService, private customerService: CustomerService,
+      private productService: ProductService) {
         const data = this.router.getCurrentNavigation()?.extras.state;
         if(data) {
-          console.log(data);
           this.formTitle = 'Editar Pedido';
           this.orderUpdate = data as Order;
-          this.factories = this.orderUpdate.customer?.discountsByFactory?.map(value => value.factory)!;
-          this.orderForm.patchValue(data)
-          this.orderForm.get('customer')?.setValue(this.orderUpdate.customer!.name);
+          delete this.orderUpdate.invoicedPercent?._id;
+          this.orderUpdate.discounts?.forEach(val => this.addDiscount(val));
+          this.selectedCustomer = this.orderUpdate.customer!;
+          this.orderForm.patchValue(this.orderUpdate);
+          this.setCustomersValues();
+          this.orderForm.get('priceList')?.setValue(this.orderUpdate.priceList);
           this.selectedProducts = this.orderUpdate.productsCart!;
           this.selectedProductsDisplayed = this.orderUpdate.productsCart!;
-          this.remitAmount = this.orderUpdate.remitAmount!;
-          this.invoicedAmount = this.orderUpdate.invoicedAmount!;
-          this.ivaAmount = this.orderUpdate.ivaAmount!;
-          this.netTotal = this.orderUpdate.netTotal!;
-          this.finalDiscount = this.orderUpdate.cascadeDiscount!;
-          this.netTotalWithDiscount = this.orderUpdate.netTotalWithDiscount!;
-          this.total = this.orderUpdate.total!;
+          this.orderForm.get('factory')?.setValue(this.orderUpdate.factory);
           this.loadProducts();
+          this.selectProductsEvent(false);
         }
-        // this.orderForm.patchValue({ cascadeDiscount: 5 });
       }
 
   ngOnInit(): void {
-    // throw new Error('Method not implemented.');
+    this.priceListService.findAll()
+      .subscribe({
+        next: res => {
+          this.priceLists = res;
+        },
+        error: err => {
+          console.log(err);
+          this.message.add({ severity: 'error', summary: 'ERROR!',
+            detail: 'Ha ocurrido un error al intentar obtener todas las Listas de precios.'});
+        }
+      });
+    this.deliveryService.findAll()
+      .subscribe({
+        next: res => {
+          this.deliveries = res;
+        },
+        error: err => {
+          console.log(err);
+          this.message.add({ severity: 'error', summary: 'ERROR!',
+            detail: 'Ha ocurrido un erro al intentar obtener todos los Transportes.'});
+        }
+      });
+    this.customerService.findAll()
+      .subscribe({
+        next: res => {
+          this.customers = res;
+        },
+        error: err => {
+          console.log(err);
+          this.message.add({ severity: 'error', summary: 'ERROR!',
+            detail: 'Ha ocurrido un error al intentar obtener todos los Clientes.'});
+        }
+      });
   }
 
   get discounts(): FormArray {
@@ -150,20 +185,42 @@ export class PendingFormComponent implements OnInit {
     const discountNumberArray: Array<number> = this.discounts.value.map(function(val: any) {
       return val.discount;
     });
-    if(this.orderUpdate.id) {
+    if(this.orderUpdate._id) {
       console.log('UPDATE');
-      this.orderUpdate = { ...this.orderForm.value, id: this.orderUpdate.id,customer: this.selectedCustomer, discounts: discountNumberArray, productsCart: this.selectedProductsDisplayed,
+      this.orderUpdate = { ...this.orderForm.value, _id: this.orderUpdate._id,customer: this.selectedCustomer, discounts: discountNumberArray, productsCart: this.selectedProductsDisplayed,
         invoicedAmount: this.invoicedAmount, remitAmount: this.remitAmount, ivaAmount: this.ivaAmount, 
         netTotalWithDiscount: this.netTotalWithDiscount, netTotal: this.netTotal, total: this.total };
-      console.table(this.orderUpdate);  
+      console.table(this.orderUpdate); 
+      this.orderService.update(this.orderUpdate)
+        .subscribe({
+          next: res => {
+            console.log(res);
+            this.router.navigateByUrl('main/pending-orders');
+          },
+          error: err => {
+            console.warn(err);
+            this.message.add({ severity: 'error', summary: 'ERROR!',
+              detail: 'Ha ocurrido un error al intentar modificar un Pedido.'});
+          }
+        });
     } else {
       console.log('CREATE');
       // this.orderForm.get('customer')?.setValue(this.selectedCustomer);
       const orderCreate: Order = { ...this.orderForm.value, customer: this.selectedCustomer, discounts: discountNumberArray, productsCart: this.selectedProductsDisplayed,
         invoicedAmount: this.invoicedAmount, remitAmount: this.remitAmount, ivaAmount: this.ivaAmount, 
         netTotalWithDiscount: this.netTotalWithDiscount, netTotal: this.netTotal, total: this.total };
-      console.table(orderCreate);
-      // try create service Order with orderCreate...
+      this.orderService.create(orderCreate)
+        .subscribe({
+          next: res => {
+            console.log(res);
+            this.router.navigateByUrl('main/pending-orders');
+          },
+          error: err => {
+            console.log(err);
+            this.message.add({ severity: 'error', summary: 'ERROR!',
+              detail: 'Ha ocurrido un error al intentar crear un nuevo Pedido.'});
+          }
+        });
     }
   }
 
@@ -175,55 +232,54 @@ export class PendingFormComponent implements OnInit {
   customerSelection(): void {
     this.products = [];
     if(this.selectedCustomer !== null && this.selectedCustomer._id) {
-      this.orderForm.get('customer')?.setValue(this.selectedCustomer.name);
-      this.orderForm.get('priceList')?.setValue(this.selectedCustomer.priceList);
-      let customerFactories = this.selectedCustomer.discountsByFactory?.map(value => {
-        return value.factory;
-      });
-      this.factories = customerFactories!;
+      this.setCustomersValues();
       this.showCustomers = false;
     } else {
       this.message.add({ severity: 'warn', summary: 'Advertencia', detail: 'Asegurese de seleccionar un cliente primero.'});
     }
   }
 
+  setCustomersValues(): void {
+      this.orderForm.get('customer')?.setValue(this.selectedCustomer.name);
+      this.orderForm.get('priceList')?.setValue(this.selectedCustomer.priceList);
+      let customerFactories = this.selectedCustomer.discountsByFactory?.map(value => {
+        return value.factory;
+      });
+      this.factories = customerFactories!;
+  }
+
   factorySelection(): void {
     let selectedFactory = this.orderForm.get('factory')!.value;
     let customerFactory: CustomerFactory = this.selectedCustomer
-      .discountsByFactory?.find(value => value.factory._id === selectedFactory.id)!;
+      .discountsByFactory?.find(val => val.factory._id === selectedFactory._id)!;
     this.orderForm.get('delivery')?.setValue(customerFactory.delivery);
     this.orderForm.get('cascadeDiscount')?.setValue(customerFactory.cascadeDiscount*100);
     this.loadProducts();
   }
 
   loadProducts(): void {
-    // en este metodo voy a llamar a los productos en base a una fabrica
+
+    const factory: Factory = this.orderForm.get('factory')?.value;
     if(this.orderForm.get('factory')?.value !== '') {
-      // este serian los productos obtenidos del servicios en base a la fabrica seleccionada, por eso el if superior...
-      let productsByFactory: Array<Product> = [
-        { _id: '1111', code: 'CA-1231', name: 'Gallete Cracker', description: 'Galleta cracker multicereal Ceralmix. Fabrica Otonello',
-        boxesPerPallet: 10, unitsPerBox: 24, factory: { _id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
-        pricesByList: [{ priceList: { _id: '1111', name: 'Supermercados' }, price: 150 }, { priceList: {_id: '2222', name: 'Distribuidoras'}, price: 170 }] },
-        { _id: '2222', code: 'CA-1231', name: 'Confites de aniz', description: 'Galleta cracker multicereal Ceralmix. Fabrica Otonello',
-        boxesPerPallet: 10, unitsPerBox: 24, factory: { _id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
-        pricesByList: [{ priceList: { _id: '1111', name: 'Supermercados' }, price: 150 }, { priceList: {_id: '2222', name: 'Distribuidoras'}, price: 250 }] },
-        { _id: '3333', code: 'CA-1231', name: 'Galletas surtidas', description: 'Galleta cracker multicereal Ceralmix. Fabrica Otonello',
-        boxesPerPallet: 10, unitsPerBox: 24, factory: { _id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
-        pricesByList: [{ priceList: { _id: '1111', name: 'Supermercados' }, price: 150 }, { priceList: {_id: '2222', name: 'Distribuidoras'}, price: 150 }] },
-        { _id: '4444', code: 'CA-1231', name: 'Chocolate aguila', description: 'Galleta cracker multicereal Ceralmix. Fabrica Otonello',
-        boxesPerPallet: 10, unitsPerBox: 24, factory: { _id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
-        pricesByList: [{ priceList: { _id: '1111', name: 'Supermercados' }, price: 150 }, { priceList: {_id: '2222', name: 'Distribuidoras'}, price: 540 }] }
-      ];
-      this.products = productsByFactory.map(value => {
-        let price  = value.pricesByList.find(value => value.priceList._id === this.orderForm.get('priceList')?.value.id);
-        return { product: value, price: price?.price!, quantity: 1, bonus: 0, subtotal: price?.price!};
-      });
+      this.productService.findAll(factory._id!)
+        .subscribe({
+          next: res => {
+            this.products = res.map(value => {
+              let price  = value.pricesByList.find(value => value.priceList._id === this.orderForm.get('priceList')?.value._id);
+              return { product: value, price: price?.price!, quantity: 1, bonus: 0, subtotal: price?.price!};
+            });
+          },
+          error: err => {
+            console.log(err);
+            this.message.add({ severity: 'error', summary: 'ERROR!',
+              detail: 'Ha ocurrido un error al intentar obtener todos los Productos.'});
+          }
+        });     
     }
   }
 
-  calculatedSubtotal(product: ProductCart): number {
+  calculatedSubtotal(product: Cart): void {
     product.subtotal = product.quantity * product.price; 
-    return product.subtotal;
   }
 
   selectProductsEvent(remove: boolean): void {
@@ -240,14 +296,16 @@ export class PendingFormComponent implements OnInit {
       this.remitAmount = this.netTotalWithDiscount - this.invoicedAmount;
       this.ivaAmount = (this.invoicedAmount*0.21);
       this.total = this.invoicedAmount + this.remitAmount + this.ivaAmount;
+      console.log(this.selectedProductsDisplayed)
       this.selectedProductsDisplayed = this.selectedProducts;
+      console.log(this.selectedProducts);
     } else {
       if(!remove) this.message.add({ severity: 'warn', summary: 'Aviso!', detail: 'Seleccione el porcentaje facturado antes que los productos'});
     }
     
   }
 
-  deleteProductFromSelection(product: ProductCart): void {
+  deleteProductFromSelection(product: Cart): void {
     this.selectedProducts = this.selectedProducts.filter(value => value.product._id !== product.product._id);
     this.selectedProductsDisplayed = this.selectedProducts;
     this.selectProductsEvent(true);

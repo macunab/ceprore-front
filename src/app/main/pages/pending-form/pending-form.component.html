@@ -47,7 +47,7 @@
     <div class="formgrid grid">
         <div class="field col-10 md:col-11">
             <input class="w-full" type="number" formControlName="cascadeDiscount" pInputText placeholder="Descuento"
-                aria-describedby="cascadeDiscount-help">
+                aria-describedby="cascadeDiscount-help" (change)="selectProductsEvent(false)">
             @if(isValid('cascadeDiscount')) {
                 <small class="form-error" id="cascadeDiscount-help">El descuento tiene que ser un numero.</small>
             }
@@ -133,7 +133,7 @@
 
 <p-dialog header="Seleccione un cliente" [modal]="true" [(visible)]="showCustomers" 
     [breakpoints]="{ '960px': '95vw' }" [style]="{ width: '40vw', height: '460px' }">
-    <p-table #tableCustomers [value]="customers" [(selection)]="selectedCustomer" dataKey="id"
+    <p-table #tableCustomers [value]="customers" [(selection)]="selectedCustomer" dataKey="_id"
     [paginator]="true" [rows]="4" [globalFilterFields]="filters">
     <ng-template pTemplate="caption">
         <div class="flex align-items-center justify-content-between">
@@ -169,7 +169,7 @@
 
 <p-dialog header="Selecione los productos" [modal]="true" [(visible)]="showProducts"
     [breakpoints]="{ '960px': '95vw' }" [style]="{ width: '60vw', height: '500px' }">
-    <p-table [value]="products" [(selection)]="selectedProducts" dataKey="product.id" [tableStyle]="{'min-width': '50rem'}"
+    <p-table [value]="products" [(selection)]="selectedProducts" dataKey="product._id" [tableStyle]="{'min-width': '50rem'}"
         [paginator]="true" [rows]="3">
         <ng-template pTemplate="header">
             <tr>
@@ -193,7 +193,7 @@
                 <td [pEditableColumn]="product.quantity" pEditableColumnField="quantity">
                     <p-cellEditor>
                         <ng-template pTemplate="input">
-                            <input pInputText type="number" [(ngModel)]="product.quantity" required />
+                            <input pInputText type="number" [(ngModel)]="product.quantity" (change)="calculatedSubtotal(product)" required />
                         </ng-template>
                         <ng-template pTemplate="output">
                             {{ product.quantity }}
@@ -210,7 +210,7 @@
                         </ng-template>
                     </p-cellEditor>
                 </td>
-                <td>{{calculatedSubtotal(product) | currency}}</td>
+                <td>{{ product.quantity * product.price | currency}}</td>
             </tr>
         </ng-template>
     </p-table>

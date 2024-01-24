@@ -35,12 +35,12 @@ export class InvoiceFormDialogComponent implements OnChanges{
   constructor(private fb: FormBuilder) {}
   
   ngOnChanges(changes: SimpleChanges): void {
-    if(this.order !== undefined && this.order.id) {
-      this.invoiceForm.patchValue(this.order);
-    }
-    if(this.invoiceUpdate !== undefined && this.invoiceUpdate.id) {
-      this.invoiceForm.patchValue(this.invoiceUpdate);
-    }
+    // if(this.order !== undefined && this.order.id) {
+    //   this.invoiceForm.patchValue(this.order);
+    // }
+    // if(this.invoiceUpdate !== undefined && this.invoiceUpdate.id) {
+    //   this.invoiceForm.patchValue(this.invoiceUpdate);
+    // }
   }
 
   onSubmit(): void {
@@ -49,14 +49,14 @@ export class InvoiceFormDialogComponent implements OnChanges{
       return;
     }
     console.log(this.invoiceForm.get('ivaAmount')!.value);
-    if(this.invoiceUpdate !== undefined && this.invoiceUpdate.id) {
-      this.invoice = { ...this.invoiceForm.value, id: this.invoiceUpdate.id, order: this.invoiceUpdate.order, createAt: this.invoiceUpdate.createAt,
-        ivaAmount: this.invoiceForm.get('ivaAmount')!.value, isPaid: false };
-    } else {
-      this.order.status = 'INVOICED';
-      this.invoice = { ...this.invoiceForm.value, order: this.order, ivaAmount: this.invoiceForm.get('ivaAmount')!.value,
-        isPaid: false };
-    }
+    // if(this.invoiceUpdate !== undefined && this.invoiceUpdate.id) {
+    //   this.invoice = { ...this.invoiceForm.value, id: this.invoiceUpdate.id, order: this.invoiceUpdate.order, createAt: this.invoiceUpdate.createAt,
+    //     ivaAmount: this.invoiceForm.get('ivaAmount')!.value, isPaid: false };
+    // } else {
+    //   this.order.status = 'INVOICED';
+    //   this.invoice = { ...this.invoiceForm.value, order: this.order, ivaAmount: this.invoiceForm.get('ivaAmount')!.value,
+    //     isPaid: false };
+    // }
     console.log(this.invoice);
     this.emmiter.emit({ data: this.invoice });
   }

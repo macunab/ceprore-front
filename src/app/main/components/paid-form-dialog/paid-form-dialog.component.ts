@@ -57,14 +57,14 @@ export class PaidFormDialogComponent implements OnChanges{
       this.paidForm.markAllAsTouched();
       return;
     }
-    if(this.paidUpdate.id) {
-      this.paid = { ...this.paidForm.value, id: this.paidUpdate.id, invoice: this.paidUpdate.invoice, 
-        total: this.paidForm.get('total')!.value, commission: this.paidForm.get('commission')?.value, 
-        createAt: this.paidUpdate.createAt, renderedDate: this.paidUpdate.renderedDate };
-    } else {
-      this.paid = { ...this.paidForm.value, invoice: this.invoice, total: this.paidForm.get('total')!.value,
-      commission: this.paidForm.get('commission')!.value };
-    }
+    // if(this.paidUpdate.id) {
+    //   this.paid = { ...this.paidForm.value, id: this.paidUpdate.id, invoice: this.paidUpdate.invoice, 
+    //     total: this.paidForm.get('total')!.value, commission: this.paidForm.get('commission')?.value, 
+    //     createAt: this.paidUpdate.createAt, renderedDate: this.paidUpdate.renderedDate };
+    // } else {
+    //   this.paid = { ...this.paidForm.value, invoice: this.invoice, total: this.paidForm.get('total')!.value,
+    //   commission: this.paidForm.get('commission')!.value };
+    // }
     this.emitter.emit({ data: this.paid });
   }
 
@@ -77,32 +77,32 @@ export class PaidFormDialogComponent implements OnChanges{
     const debitNote: number = this.paidForm.get('justifiedDebitNote')!.value;
     const withholdings: number = this.paidForm.get('withholdings')!.value;
     const paidOnAccount: number = this.paidForm.get('paymentOnAccount')!.value;
-    if(debitNote+withholdings+paidOnAccount < this.invoice.total) {
-      const newTotal: number = this.invoice.total - this.paidForm.get('justifiedDebitNote')!.value;
-      this.paidForm.get('total')?.patchValue(newTotal - this.paidForm.get('paymentOnAccount')?.value 
-        - this.paidForm.get('withholdings')?.value);
-      this.paidForm.get('commission')?.patchValue(newTotal * this.invoice.order.factory?.commission!);
-    } else {
-      this.paidForm.controls[field].patchValue(0);
-      this.onChangePaidAmounts(field);
-      return;
-    }
+    // if(debitNote+withholdings+paidOnAccount < this.invoice.total) {
+    //   const newTotal: number = this.invoice.total - this.paidForm.get('justifiedDebitNote')!.value;
+    //   this.paidForm.get('total')?.patchValue(newTotal - this.paidForm.get('paymentOnAccount')?.value 
+    //     - this.paidForm.get('withholdings')?.value);
+    //   this.paidForm.get('commission')?.patchValue(newTotal * this.invoice.order.factory?.commission!);
+    // } else {
+    //   this.paidForm.controls[field].patchValue(0);
+    //   this.onChangePaidAmounts(field);
+    //   return;
+    // }
   }
 
   updateFormValues(): void {
-    if(this.paidUpdate.id) {
-      this.paidForm.patchValue(this.paidUpdate);
-      this.invoice = this.paidUpdate.invoice;
-      this.paidForm.get('customer')?.patchValue(this.invoice.order.customer?.name);
-      this.paidForm.get('factory')?.patchValue(this.invoice.order.factory?.name);
-      this.paidForm.get('invoiceAmount')?.patchValue(this.invoice.total);
-      this.paidForm.get('invoiceCode')?.patchValue(this.invoice.invoiceCode);
-    } else if(this.invoice.id) {
-      this.paidForm.patchValue(this.invoice);
-      this.paidForm.get('customer')?.patchValue(this.invoice.order.customer?.name);
-      this.paidForm.get('factory')?.patchValue(this.invoice.order.factory?.name);
-      this.paidForm.get('invoiceAmount')?.patchValue(this.invoice.total);
-      this.paidForm.get('commission')?.patchValue(this.invoice.order.factory?.commission!*this.invoice.total);
-    }
+    // if(this.paidUpdate.id) {
+    //   this.paidForm.patchValue(this.paidUpdate);
+    //   this.invoice = this.paidUpdate.invoice;
+    //   this.paidForm.get('customer')?.patchValue(this.invoice.order.customer?.name);
+    //   this.paidForm.get('factory')?.patchValue(this.invoice.order.factory?.name);
+    //   this.paidForm.get('invoiceAmount')?.patchValue(this.invoice.total);
+    //   this.paidForm.get('invoiceCode')?.patchValue(this.invoice.invoiceCode);
+    // } else if(this.invoice.id) {
+    //   this.paidForm.patchValue(this.invoice);
+    //   this.paidForm.get('customer')?.patchValue(this.invoice.order.customer?.name);
+    //   this.paidForm.get('factory')?.patchValue(this.invoice.order.factory?.name);
+    //   this.paidForm.get('invoiceAmount')?.patchValue(this.invoice.total);
+    //   this.paidForm.get('commission')?.patchValue(this.invoice.order.factory?.commission!*this.invoice.total);
+    // }
   }
 }
