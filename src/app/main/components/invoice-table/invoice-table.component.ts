@@ -5,7 +5,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { ToolbarModule } from 'primeng/toolbar';
 import { TooltipModule } from 'primeng/tooltip';
-import { Invoice } from '../../interfaces/invoice.interface';
+import { Order } from '../../interfaces/order.interface';
 
 @Component({
   selector: 'app-invoice-table',
@@ -17,7 +17,7 @@ import { Invoice } from '../../interfaces/invoice.interface';
 })
 export class InvoiceTableComponent {
 
-  @Input() invoicedOrders: Array<Invoice> = [];
+  @Input() invoicedOrders: Array<Order> = [];
   @Output('onAction') emitter = new EventEmitter();
-  filters: Array<string> = ['order.customer.name', 'order.factory.name', 'invoiceCode'];
+  filters: Array<string> = ['order.customer.name', 'order.factory.name', 'order.invoice.invoiceCode'];
 }

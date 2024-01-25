@@ -133,15 +133,20 @@ export class PendingComponent implements OnInit{
       header: 'Confirmar Eliminacion',
       icon: 'pi pi-info-delete',
       accept: () => {
-        try {
-          // delete order service... only Pending
-          this.pendingOrders = this.pendingOrders.filter(value => value._id !== order._id);
-          this.message.add({severity: 'info', summary: 'Informacion',
-            detail: 'El pedido se ha eliminado exitosamente!'});
-        } catch(error) {
-          this.message.add({severity: 'error', summary: 'ERROR!', 
-            detail: 'Ha ocurrido un error al intentar eliminar el pedido seleccionado!!'});
-        }
+        this.orderService.delete(order._id!)
+          .subscribe({
+            next: res => {
+              this.pendingOrders = this.pendingOrders.filter(val => val._id !== res._id);
+              this.pendingOrders = [...this.pendingOrders];
+              this.message.add({ severity: 'success', summary: 'Informacion',
+                detail: 'El Pedido ha sido eliminado exitosamente.'});
+            },
+            error: err => {
+              console.log(err);
+              this.message.add({ severity: 'error', summary: 'ERROR!',
+                detail: 'Ha ocurrido un error al intentar eliminar un Pedido pendiente.'});
+            }
+          });
       }
     });
   }
@@ -150,20 +155,25 @@ export class PendingComponent implements OnInit{
     this.router.navigateByUrl('main/pending-order');
   }
 
+  // Facturacion de Pedido Pendiente.
   onDialogClose(dialogData: DialogData<Order>): void {
     this.showInvoiceForm = false;
-    // Aca hay que hacer 2 cosas: 1)create al invoice 2) si esta todo ok -> update al order con status: 'INVOICED'
-    try {
-      // service Create invoice/ service Update order (status)
-      // si todo sale bien tengo que dejar de mostrar el pedido, puesto que ya no va a estar pendiente.
-      this.pendingOrders = this.pendingOrders.filter( value => value._id !== dialogData.data._id);
-      this.pendingOrders = [...this.pendingOrders];
-      this.message.add({ severity: 'info', summary: 'Informacion',
-        detail: 'El pedido ha sido facturado exitosamente.'}); 
-    } catch(error) {
-      this.message.add({severity: 'error', summary: 'ERROR', 
-        detail: 'Ha ocurrido un error al intentar crear una nueva factura.'});
-    }
+    console.log(dialogData.data)
+    const { __v, createdAt, updatedAt, ...order } = dialogData.data;
+      this.orderService.update(order)
+        .subscribe({
+          next: res => {
+            this.pendingOrders = this.pendingOrders.filter( val => val._id !== res._id)
+            this.pendingOrders = [...this.pendingOrders];
+            this.message.add({ severity: 'success', summary: 'Informacion',
+              detail: 'El Pedido ha sido Facturado exitosamente.'});
+          },
+          error: err => {
+            console.log(err);
+            this.message.add({ severity: 'error', summary: 'ERROR!',
+              detail: 'Ha ocurrido un error al intentar crear una nueva Factura'});
+          }
+        });
   }
 
 }

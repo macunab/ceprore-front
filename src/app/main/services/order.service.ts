@@ -49,6 +49,17 @@ export class OrderService {
       );
   }
 
+  removeInvoice(order: Order): Observable<Order> {
+    const { _id, ...orderData } = order;
+    const url: string = `${this.baseUrl}/invoice-delete/${_id}`;
+    return this.http.patch<Order>(url, orderData)
+      .pipe(
+        catchError(({error}) => {
+          return throwError(() => `Error: ${error.message}`)
+        })
+      );
+  }
+
   delete(id: string): Observable<Order> {
 
     const url: string = `${this.baseUrl}/${id}`;
@@ -60,16 +71,23 @@ export class OrderService {
       );
   }
 
-  printPending(order: Order) {
+  printPending(order: Order): Observable<Blob> {
 
     const { _id, createdAt, updatedAt, __v, ...orderData } = order;
     const url: string = `${this.baseUrl}/pdf`;
     return this.http.post(url, orderData, { responseType: 'blob' })
       .pipe(
-        // tap( data => this.dowloadFile),
         catchError(({error}) => {
           return throwError(() => `Error: ${error.message}`);
         })
       );
+  }
+
+  printInvoice(order: Order) {
+
+  }
+
+  printPayment(order: Order) {
+
   }
 }

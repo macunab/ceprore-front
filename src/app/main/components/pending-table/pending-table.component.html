@@ -28,7 +28,7 @@
             <td>{{ order.createdAt | date:'shortDate' }}</td>
             <td>{{ order.customer.name }}</td>
             <td>{{ order.factory.name }}</td>
-            <td>{{ order.total | currency }}</td>
+            <td>{{ order.total | currency:'USD':'symbol':'3.0-3' }}</td>
             <td>
                 <button
                     pButton icon="pi pi-print" class="p-button-sm p-button-secondary p-button-rounded p-button-text mr-2"
