@@ -5,7 +5,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { ToolbarModule } from 'primeng/toolbar';
 import { TooltipModule } from 'primeng/tooltip';
-import { Paid } from '../../interfaces/paid.interface';
+import { Order } from '../../interfaces/order.interface';
 
 @Component({
   selector: 'app-paid-table',
@@ -17,7 +17,7 @@ import { Paid } from '../../interfaces/paid.interface';
 })
 export class PaidTableComponent {
 
-  @Input() paidOrders: Array<Paid> = [];
+  @Input() paidOrders: Array<Order> = [];
   @Output('onAction') emitter = new EventEmitter();
   filters: Array<string> = [];
 

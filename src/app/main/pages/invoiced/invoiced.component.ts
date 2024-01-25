@@ -35,7 +35,6 @@ export class InvoicedComponent implements OnInit{
       private orderService: OrderService) {}
   
   ngOnInit(): void {
-    // get invoicedOrders from invoice service and set the variable
     this.orderService.findAll('INVOICED')
       .subscribe({
         next: res => {
@@ -52,18 +51,15 @@ export class InvoicedComponent implements OnInit{
   onAction(action: TableEvent<Order>): void {
     switch(action.type) {
       case 'edit':
-        console.log('EDIT');
         this.edit(action.data);
       break;
       case 'delete':
-        console.log('DELETE');
         this.delete(action.data);
       break;
       case 'print':
-        console.log('PRINT');
+        this.print(action.data);
       break;
       case 'paid':
-        console.log('PAID');
         this.paid(action.data);
       break;
     }
@@ -129,27 +125,38 @@ export class InvoicedComponent implements OnInit{
       this.showInvoiceForm = false;
   }
 
-  onPaidFormSubmit(dialogData: DialogData<Paid>): void {
+  onPaidFormSubmit(dialogData: DialogData<Order>): void {
     console.log(dialogData.data);
-    // if(dialogData.data.invoice.order.id) {
-    //   try {
-    //     dialogData.data.invoice.isPaid = true;
-    //     // save paid.
-    //     // update invoice (isPaid: true).
-    //     // update order (status: PAID).
-    //     this.invoicedOrders = this.invoicedOrders.filter(value => value.id !== dialogData.data.invoice.id);
-    //     this.message.add({ severity:'info', summary: 'Informacion', 
-    //       detail: 'Se ha cargado un pago exitosamente.'})
-    //   } catch(error) {
-    //     this.message.add({ severity: 'error', summary: 'ERROR!', 
-    //       detail: 'Ha ocurrido un error al intentar crear un nuevo pago!.'});
-    //   }
-    //   this.showPaidForm = false;
-    // }
+    this.orderService.update(dialogData.data)
+      .subscribe({
+        next: res => {
+          this.invoicedOrders = this.invoicedOrders.filter(val => val._id !== res._id);
+          this.invoicedOrders = [...this.invoicedOrders];
+          this.message.add({ severity: 'success', summary: 'Informacion',
+            detail: 'Se ha creado un Pago exitosamente.'});
+        },
+        error: err => {
+          console.log(err);
+          this.message.add({ severity: 'error', summary: 'ERROR!',
+            detail: 'Ha ocurrido un error al intentar crear un Pago.'});
+        }
+      });
   }
 
   print(order: Order): void {
-    
+    this.orderService.printInvoice(order)
+      .subscribe({
+        next: res => {
+          let blob = new Blob([res], { type: 'application/pdf' });
+          let pdfUrl = window.URL.createObjectURL(blob);
+          window.open(pdfUrl, '_blank');
+        },
+        error: err => {
+          console.log(err);
+          this.message.add({ severity: 'error', summary: 'ERROR!',
+            detail: 'Ha ocurrido un erro al intentar de imprimir una Factura.'});
+        }
+      });
   }
 
 

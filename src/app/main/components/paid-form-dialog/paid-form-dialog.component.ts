@@ -6,6 +6,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { Paid } from '../../interfaces/paid.interface';
 import { Invoice } from '../../interfaces/invoice.interface';
+import { Order } from '../../interfaces/order.interface';
 
 @Component({
   selector: 'app-paid-form-dialog',
@@ -30,25 +31,20 @@ export class PaidFormDialogComponent implements OnChanges{
     total: [{ value: 0, disabled: true}],
     commission: [{ value: 0, disabled: true }]
   });
-  @Input() paidUpdate: Paid = {} as Paid;
-  @Input() invoice: Invoice = {} as Invoice;
+  @Input() order: Order = {} as Order;
   @Output('onSubmit') emitter = new EventEmitter();
-  paid: Paid = {} as Paid;
+  orderPaid: Order = {} as Order;
 
   constructor(private fb: FormBuilder) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    // if(this.paidUpdate.id) {
-    //   this.paidForm.patchValue(this.paidUpdate);
-    //   this.invoice = this.paidUpdate.invoice;
-    // }
-    // if(this.invoice.id) {
-    //   this.paidForm.patchValue(this.invoice);
-    //   this.paidForm.get('customer')?.patchValue(this.invoice.order.customer?.name);
-    //   this.paidForm.get('factory')?.patchValue(this.invoice.order.factory?.name);
-    //   this.paidForm.get('invoiceAmount')?.patchValue(this.invoice.total);
-    //   this.paidForm.get('commission')?.patchValue(this.invoice.order.factory?.commission!*this.invoice.total);
-    // }
+    if(this.order.invoice) {
+      this.paidForm.patchValue(this.order.invoice!);
+      this.paidForm.get('customer')?.patchValue(this.order.customer?.name);
+      this.paidForm.get('factory')?.patchValue(this.order.factory?.name);
+      this.paidForm.get('invoiceAmount')?.patchValue(this.order.invoice?.total);
+      this.paidForm.get('commission')?.patchValue(this.order.factory?.commission!/100*this.order.invoice!.total);
+    }
     this.updateFormValues();
   }
 
@@ -56,6 +52,12 @@ export class PaidFormDialogComponent implements OnChanges{
     if(this.paidForm.invalid) {
       this.paidForm.markAllAsTouched();
       return;
+    }
+    if(this.order.payment) {
+      console.log('EDIT');
+    } else {
+      this.order.payment = { ...this.paidForm.value, total: this.paidForm.get('total')?.value,
+        commission: this.paidForm.get('commission')?.value, status: 'PAID' };
     }
     // if(this.paidUpdate.id) {
     //   this.paid = { ...this.paidForm.value, id: this.paidUpdate.id, invoice: this.paidUpdate.invoice, 
@@ -65,7 +67,7 @@ export class PaidFormDialogComponent implements OnChanges{
     //   this.paid = { ...this.paidForm.value, invoice: this.invoice, total: this.paidForm.get('total')!.value,
     //   commission: this.paidForm.get('commission')!.value };
     // }
-    this.emitter.emit({ data: this.paid });
+    this.emitter.emit({ data: this.order });
   }
 
   isInvalid(field: string): boolean | null {
@@ -77,16 +79,16 @@ export class PaidFormDialogComponent implements OnChanges{
     const debitNote: number = this.paidForm.get('justifiedDebitNote')!.value;
     const withholdings: number = this.paidForm.get('withholdings')!.value;
     const paidOnAccount: number = this.paidForm.get('paymentOnAccount')!.value;
-    // if(debitNote+withholdings+paidOnAccount < this.invoice.total) {
-    //   const newTotal: number = this.invoice.total - this.paidForm.get('justifiedDebitNote')!.value;
-    //   this.paidForm.get('total')?.patchValue(newTotal - this.paidForm.get('paymentOnAccount')?.value 
-    //     - this.paidForm.get('withholdings')?.value);
-    //   this.paidForm.get('commission')?.patchValue(newTotal * this.invoice.order.factory?.commission!);
-    // } else {
-    //   this.paidForm.controls[field].patchValue(0);
-    //   this.onChangePaidAmounts(field);
-    //   return;
-    // }
+    if(debitNote+withholdings+paidOnAccount < this.order.invoice!.total) {
+      const newTotal: number = this.order.invoice!.total - this.paidForm.get('justifiedDebitNote')!.value;
+      this.paidForm.get('total')?.patchValue(newTotal - this.paidForm.get('paymentOnAccount')?.value 
+        - this.paidForm.get('withholdings')?.value);
+      this.paidForm.get('commission')?.patchValue(newTotal * this.order.factory?.commission!/100);
+    } else {
+      this.paidForm.controls[field].patchValue(0);
+      this.onChangePaidAmounts(field);
+      return;
+    }
   }
 
   updateFormValues(): void {

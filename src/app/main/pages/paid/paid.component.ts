@@ -5,10 +5,9 @@ import { ToastModule } from 'primeng/toast';
 import { PaidTableComponent } from '../../components/paid-table/paid-table.component';
 import { PaidFormDialogComponent } from '../../components/paid-form-dialog/paid-form-dialog.component';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Paid } from '../../interfaces/paid.interface';
 import { TableEvent } from '../../../shared/interfaces/genericTable.interface';
 import { DialogData } from '../../interfaces/dialogData.interface';
-import { Payment } from '../../interfaces/order.interface';
+import { Order, Payment } from '../../interfaces/order.interface';
 
 @Component({
   selector: 'app-paid',
@@ -20,7 +19,7 @@ import { Payment } from '../../interfaces/order.interface';
 })
 export class PaidComponent implements OnInit{
 
-  paidOrders: Array<Paid> = [
+  paidOrders: Array<Order> = [
     // {
     //   _id: '1111', justifiedDebitNote: 0, justifiedDebitNoteObservations: '', withholdings: 100, withholdingsObservations: 'Retencion por algo',
     //   paymentOnAccount: 0, total: 2900, commission: 145, isAccountable: false, createAt: new Date(2023,5, 23), renderedDate: new Date(2023,7, 12),
@@ -68,7 +67,7 @@ export class PaidComponent implements OnInit{
     // }
   ];
   showForm: boolean = false;
-  paidUpdate: Paid = {} as Paid;
+  paidUpdate: Payment = {} as Payment;
   @ViewChild(PaidFormDialogComponent) formDialog!: PaidFormDialogComponent;
   
   constructor(private confirmation: ConfirmationService, private message: MessageService) {}
@@ -77,16 +76,16 @@ export class PaidComponent implements OnInit{
     // throw new Error('Method not implemented.');
   }
 
-  onAction(action: TableEvent<Paid>): void {
+  onAction(action: TableEvent<Order>): void {
     switch(action.type) {
       case 'print':
         console.log('IMPRIMIR PAGO');
       break;
       case 'edit':
         console.log('EDIT PAGO');
-        this.paidUpdate = action.data;
-        console.table(this.paidUpdate);
-        this.formDialog.updateFormValues();
+        // this.paidUpdate = action.data;
+        // console.table(this.paidUpdate);
+        // this.formDialog.updateFormValues();
         this.showForm = true;
       break;
       case 'surrender':
@@ -100,7 +99,7 @@ export class PaidComponent implements OnInit{
     }
   }
 
-  onDelete(paid: Payment): void {
+  onDelete(order: Order): void {
     this.confirmation.confirm({
       header: 'Confirmar Eliminacion',
       message: 'Desea eliminar el pago seleccionado?',
@@ -117,7 +116,7 @@ export class PaidComponent implements OnInit{
     });
   }
 
-  onSurrender(paid: Paid): void {
+  onSurrender(order: Order): void {
     this.confirmation.confirm({
       header: 'Confirmar Rendicion',
       message: 'Desea habilitar el Pago para rendicion?',
@@ -137,7 +136,7 @@ export class PaidComponent implements OnInit{
     });
   }
 
-  onPaidFormSubmit(dialogData: DialogData<Paid>): void {
+  onPaidFormSubmit(dialogData: DialogData<Order>): void {
     console.log(dialogData.data);
     // this.showForm = false;
     // if(dialogData.data.id) {

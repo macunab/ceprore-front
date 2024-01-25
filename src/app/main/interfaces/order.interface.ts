@@ -6,6 +6,7 @@ import { PriceList } from "./priceList.interface";
 import { Product } from "./product.interface";
 
 export interface Order {
+    
     _id?: string;
     createdAt?: Date;
     updatedAt?: Date;
@@ -32,6 +33,7 @@ export interface Order {
 }
 
 export interface Cart {
+
     product: Product;
     price: number;
     quantity: number;
@@ -40,6 +42,7 @@ export interface Cart {
 }
 
 export interface InvoicedPercent {
+
     _id?: string;
     percentString: string;
     percentNumber: number;
@@ -54,7 +57,7 @@ export interface Payment {
     paymentOnAccount: number;
     total: number;
     commission: number;
-    isAccountable: boolean; // listo para rendir?
-    createAt: Date;
-    renderedDate: Date; // fecha de rendido/cobrado a fabrica/cobro de comision...
+    // isAccountable: boolean; // listo para rendir?
+    createdAt: Date;
+    surrenderDate?: Date; // fecha de rendido/cobrado a fabrica/cobro de comision...
 }

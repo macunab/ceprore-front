@@ -85,9 +85,26 @@ export class OrderService {
 
   printInvoice(order: Order) {
 
+    const { _id, createdAt, updatedAt, __v, ...orderData } = order;
+    const url: string = `${this.baseUrl}/invoice-pdf`;
+    return this.http.post(url, orderData, { responseType: 'blob' })
+      .pipe(
+        catchError(({error}) => {
+          return throwError(() => `Error: ${error.message}`)
+        })
+      );
+
   }
 
   printPayment(order: Order) {
 
+    const { _id, createdAt, updatedAt, __v, ...orderData } = order;
+    const url: string = `${this.baseUrl}/payment-pdf`;
+    return this.http.post(url, orderData, { responseType: 'blob'})
+      .pipe(
+        catchError(({error}) => {
+          return throwError(() => `Error: ${error.message}`)
+        })
+      );
   }
 }
