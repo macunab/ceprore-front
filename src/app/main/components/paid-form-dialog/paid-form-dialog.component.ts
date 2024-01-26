@@ -4,8 +4,6 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
-import { Paid } from '../../interfaces/paid.interface';
-import { Invoice } from '../../interfaces/invoice.interface';
 import { Order } from '../../interfaces/order.interface';
 
 @Component({
@@ -45,6 +43,9 @@ export class PaidFormDialogComponent implements OnChanges{
       this.paidForm.get('invoiceAmount')?.patchValue(this.order.invoice?.total);
       this.paidForm.get('commission')?.patchValue(this.order.factory?.commission!/100*this.order.invoice!.total);
     }
+    if(this.order.payment) {
+      this.paidForm.patchValue(this.order.payment);
+    }
     this.updateFormValues();
   }
 
@@ -53,12 +54,16 @@ export class PaidFormDialogComponent implements OnChanges{
       this.paidForm.markAllAsTouched();
       return;
     }
-    if(this.order.payment) {
-      console.log('EDIT');
-    } else {
+    // if(this.order.payment) {
+    //   this.order.payment = { ...this.paidForm.value, total: this.paidForm.get('total')?.value,
+    //     commission: this.paidForm.get('commission')?.value };
+
+    //   console.log('EDIT');
+    // } else {
       this.order.payment = { ...this.paidForm.value, total: this.paidForm.get('total')?.value,
-        commission: this.paidForm.get('commission')?.value, status: 'PAID' };
-    }
+        commission: this.paidForm.get('commission')?.value };
+      this.order.status = 'PAID';
+    // }
     // if(this.paidUpdate.id) {
     //   this.paid = { ...this.paidForm.value, id: this.paidUpdate.id, invoice: this.paidUpdate.invoice, 
     //     total: this.paidForm.get('total')!.value, commission: this.paidForm.get('commission')?.value, 

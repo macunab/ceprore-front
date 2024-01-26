@@ -3,5 +3,5 @@
 <app-paid-table [paidOrders]="paidOrders" (onAction)="onAction($event)"></app-paid-table>
 <p-dialog header="Editar Pago" [modal]="true" [(visible)]="showForm"
     [breakpoints]="{ '960px': '95vw' }" [style]="{ width: '60vw', height: '500px' }">
-    <!-- <app-paid-form-dialog [paidUpdate]="paidUpdate" (onSubmit)="onPaidFormSubmit($event)" ></app-paid-form-dialog> -->
+    <app-paid-form-dialog [order]="paymentUpdate" (onSubmit)="onPaidFormSubmit($event)" ></app-paid-form-dialog>
 </p-dialog>

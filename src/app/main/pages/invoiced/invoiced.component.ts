@@ -127,7 +127,8 @@ export class InvoicedComponent implements OnInit{
 
   onPaidFormSubmit(dialogData: DialogData<Order>): void {
     console.log(dialogData.data);
-    this.orderService.update(dialogData.data)
+    const { __v, createdAt, updatedAt, ...orderData } = dialogData.data;
+    this.orderService.update(orderData)
       .subscribe({
         next: res => {
           this.invoicedOrders = this.invoicedOrders.filter(val => val._id !== res._id);
@@ -141,6 +142,7 @@ export class InvoicedComponent implements OnInit{
             detail: 'Ha ocurrido un error al intentar crear un Pago.'});
         }
       });
+      this.showPaidForm = false;
   }
 
   print(order: Order): void {

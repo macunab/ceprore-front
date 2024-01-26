@@ -8,6 +8,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { TableEvent } from '../../../shared/interfaces/genericTable.interface';
 import { DialogData } from '../../interfaces/dialogData.interface';
 import { Order, Payment } from '../../interfaces/order.interface';
+import { OrderService } from '../../services/order.service';
 
 @Component({
   selector: 'app-paid',
@@ -19,61 +20,26 @@ import { Order, Payment } from '../../interfaces/order.interface';
 })
 export class PaidComponent implements OnInit{
 
-  paidOrders: Array<Order> = [
-    // {
-    //   _id: '1111', justifiedDebitNote: 0, justifiedDebitNoteObservations: '', withholdings: 100, withholdingsObservations: 'Retencion por algo',
-    //   paymentOnAccount: 0, total: 2900, commission: 145, isAccountable: false, createAt: new Date(2023,5, 23), renderedDate: new Date(2023,7, 12),
-    //   invoice: {
-    //     id: '1111', invoiceCode: 'RT-0001231', createAt: new Date(2023,8,22), invoiceDate: new Date(2023,8,15),
-    //   paymentDeadline: 10, deliveryTerm: 15, ivaAmount: 300, invoicedAmount: 1300, remitAmount: 1300, total: 2900,
-    //   order: {
-    //     id: '1111', createAt: new Date(2020,8,15), code: 'ASD-324', status: 'Pendiente', total: 3369.6975,
-    //   customer: {
-    //     _id: '1111', name: 'Carlo Juarez', address: 'San juan 1234', email: 'carlos@gmail.com', 
-    //       discountsByFactory: [
-    //         { factory: { _id: '1111', name: 'Fabrica1', address: 'San juan 232', email: 'factory1@gmail.com'},
-    //         delivery: { _id: '1111', name: 'Cruz Azul', address: 'San Martin 124', email: 'cruzAzul@viajes.com' },
-    //         discounts: [5, 5], cascadeDiscount: 0.0975 },
-    //         { factory: { _id: '1212', name: 'Carilo SA', address: 'Suipacha 123', email: 'carilo@gmail.com' },
-    //         delivery: { _id: '3333', name: 'Fedex Arg', address: 'Carlos Gardel 233', email: 'fedexArg@fedex.com'},
-    //         discounts: [5], cascadeDiscount: 0.05 },
-    //         { factory: { _id: '2222', name: 'Sancor Productos', address: 'Ituzaingo 232', email: 'sancor@gmail.com' },
-    //         delivery: { _id: '2222', name: 'Carlitos SA', address: 'Inigo de la pascua 123', email: 'carlitos@gmail.com' },
-    //         discounts: [5], cascadeDiscount: 0.05 }
-    //       ], priceList: { _id: '2222', name: 'Distribuidoras' }
-    //   },
-    //   priceList: { _id: '2222', name: 'Distribuidoras' }, 
-    //   delivery: { _id: '2222', name: 'Carlitos SA', address: 'Inigo de la pascua 123', email: 'carlitos@gmail.com' },
-    //   factory: { _id: '2222', name: 'Sancor Productos', address: 'Ituzaingo 232', email: 'sancor@gmail.com', commission: 0.05 },
-    //   observations: 'Se vendera la mitad por remito pero se retirara en fecha acordada. Sin envio la parte de remito.',
-    //   cascadeDiscount: 5, invoicedPercent: { percentString: '50%', percentNumber: 0.5},
-    //   productsCart: [
-    //     { product: { _id: '1111', code: 'CA-1231', name: 'Gallete Cracker', description: 'Galleta cracker multicereal Ceralmix. Fabrica Otonello',
-    //     boxesPerPallet: 10, unitsPerBox: 24, factory: { _id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
-    //     pricesByList: [{ priceList: { _id: '1111', name: 'Supermercados' }, price: 150 }, { priceList: {_id: '2222', name: 'Distribuidoras'}, price: 170 }] }, price: 170,
-    //   quantity: 1, bonus: 0,subtotal: 170 },
-    //   { product: { _id: '2222', code: 'CA-1231', name: 'Confites de aniz', description: 'Galleta cracker multicereal Ceralmix. Fabrica Otonello',
-    //   boxesPerPallet: 10, unitsPerBox: 24, factory: { _id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
-    //   pricesByList: [{ priceList: { _id: '1111', name: 'Supermercados' }, price: 150 }, { priceList: {_id: '2222', name: 'Distribuidoras'}, price: 250 }] },
-    //   price: 250, quantity: 10, bonus: 0, subtotal: 2500 },
-    //   { product: { _id: '4444', code: 'CA-1231', name: 'Chocolate aguila', description: 'Galleta cracker multicereal Ceralmix. Fabrica Otonello',
-    //   boxesPerPallet: 10, unitsPerBox: 24, factory: { _id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
-    //   pricesByList: [{ priceList: { _id: '1111', name: 'Supermercados' }, price: 150 }, { priceList: {_id: '2222', name: 'Distribuidoras'}, price: 540 }] },
-    //   price: 540, quantity: 1, bonus: 0, subtotal: 540 }
-    //   ], netTotal: 3210, netTotalWithDiscount: 3049.5, invoicedAmount: 1524.75, remitAmount: 1524.75, ivaAmount: 320.1975,
-    //   discounts: [5, 5]
-    //   }, isPaid: true
-    //   }
-    // }
-  ];
+  paidOrders: Array<Order> = [];
   showForm: boolean = false;
-  paidUpdate: Payment = {} as Payment;
+  paymentUpdate: Order = {} as Order;
   @ViewChild(PaidFormDialogComponent) formDialog!: PaidFormDialogComponent;
   
-  constructor(private confirmation: ConfirmationService, private message: MessageService) {}
+  constructor(private confirmation: ConfirmationService, private message: MessageService,
+    private orderService: OrderService) {}
   
   ngOnInit(): void {
-    // throw new Error('Method not implemented.');
+    this.orderService.findAll('PAID')
+      .subscribe({
+        next: res => {
+          this.paidOrders = res;
+        },
+        error: err => {
+          console.log(err);
+          this.message.add({ severity: 'error', summary: 'ERROR!',
+            detail: 'Ha ocurrido un error al intentar obtener todos los Pedidos Pagos.'})
+        }
+      });
   }
 
   onAction(action: TableEvent<Order>): void {
@@ -83,7 +49,7 @@ export class PaidComponent implements OnInit{
       break;
       case 'edit':
         console.log('EDIT PAGO');
-        // this.paidUpdate = action.data;
+        this.paymentUpdate = action.data;
         // console.table(this.paidUpdate);
         // this.formDialog.updateFormValues();
         this.showForm = true;
@@ -137,16 +103,24 @@ export class PaidComponent implements OnInit{
   }
 
   onPaidFormSubmit(dialogData: DialogData<Order>): void {
-    console.log(dialogData.data);
-    // this.showForm = false;
-    // if(dialogData.data.id) {
-    //   // update paid service;
-    //   const index = this.paidOrders.findIndex(value => value.id === dialogData.data.id);
-    //   (index !== -1) ? this.paidOrders[index] = dialogData.data : '';
-    //   this.paidOrders = [...this.paidOrders];
-    //   console.log(this.paidOrders);
-    //   this.message.add({ severity: 'info', summary: 'Informacion', 
-    //     detail: 'El pago se ha actualizado exitosamente.'});
-    // }
+
+    const { __v, createdAt, updatedAt, ...orderData } = dialogData.data;
+    this.orderService.update(orderData)
+      .subscribe({
+        next: res => {
+          console.log(res);
+          const index = this.paidOrders.findIndex(val => val._id === res._id);
+          (index !== -1) ? this.paidOrders[index] = res : '';
+          this.paidOrders = [...this.paidOrders];
+          this.message.add({ severity: 'success', summary: 'Informacion',
+            detail: 'El Pago se a modificado exitosamente.'});
+        }, 
+        error: err => {
+          console.log(err);
+          this.message.add({ severity: 'error', summary: 'ERROR!',
+            detail: 'Ha ocurrido un error al intentar modificar el Pago.'});
+        }
+      });
+    this.showForm = false;
   }
 }
