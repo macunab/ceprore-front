@@ -70,14 +70,22 @@ export class PaidComponent implements OnInit{
       header: 'Confirmar Eliminacion',
       message: 'Desea eliminar el pago seleccionado?',
       accept: () => {
-        // try {
-        //   // delete paid service.
-        //   this.paidOrders = this.paidOrders.filter(value => value._id !== paid._id);
-        //   this.paidOrders = [...this.paidOrders];
-        // } catch(error) {
-        //   this.message.add({severity: 'error', summary: 'ERROR!', 
-        //     detail: 'Ha ocurrido un error al intentar eliminar el pago seleccionado.'});
-        // }
+        const { __v, createdAt, updatedAt, ...orderData } = order;
+        orderData.status = 'INVOICED';
+        this.orderService.removePayment(orderData)
+          .subscribe({
+            next: res => {
+              this.paidOrders = this.paidOrders.filter(val => val._id !== res._id);
+              this.paidOrders = [...this.paidOrders];
+              this.message.add({ severity: 'success', summary: 'Informacion',
+                detail: 'El Pago se ha eliminado exitosamente.'});
+            },
+            error: err => {
+              console.log(err);
+              this.message.add({ severity: 'error', summary: 'ERROR!',
+                detail: 'Ha ocurrido un erro al intentar eliminar un Pago.'});
+            }
+          });
       }
     });
   }
@@ -87,6 +95,7 @@ export class PaidComponent implements OnInit{
       header: 'Confirmar Rendicion',
       message: 'Desea habilitar el Pago para rendicion?',
       accept: () => {
+       
         // try {
         //   paid.isAccountable = true;
         //   // update paid sarvice

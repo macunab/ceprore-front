@@ -60,6 +60,18 @@ export class OrderService {
       );
   }
 
+  removePayment(order: Order): Observable<Order> {
+
+    const { _id, ...orderData } = order;
+    const url: string = `${this.baseUrl}/payment-delete/${_id}`;
+    return this.http.patch<Order>(url, orderData)
+      .pipe(
+        catchError(({error}) => {
+          return throwError(() => `Error: ${error.message}`)
+        })
+      );
+  }
+
   delete(id: string): Observable<Order> {
 
     const url: string = `${this.baseUrl}/${id}`;
