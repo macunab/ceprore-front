@@ -95,18 +95,22 @@ export class PaidComponent implements OnInit{
       header: 'Confirmar Rendicion',
       message: 'Desea habilitar el Pago para rendicion?',
       accept: () => {
-       
-        // try {
-        //   paid.isAccountable = true;
-        //   // update paid sarvice
-        //   this.paidOrders = this.paidOrders.filter(value => value.id !== paid.id);
-        //   this.message.add({ severity: 'info', summary: 'Informacion', 
-        //     detail: 'El pago seleccionado ha sido marcado para rendicion exitosamente.'})
-
-        // } catch(error) {
-        //   this.message.add({ severity: 'error', summary: 'ERROR!', 
-        //     detail: 'Ha ocurrido un error al intentar rendir un pago.'});
-        // }
+        const { __v, createdAt, updatedAt, ...orderData } = order;
+        orderData.status = 'SURRENDER';
+        this.orderService.update(orderData)
+          .subscribe({
+            next: res => {
+              this.paidOrders = this.paidOrders.filter(val => val._id !== res._id);
+              this.paidOrders = [...this.paidOrders];
+              this.message.add({ severity: 'success', summary: 'Informacion',
+                detail: 'El Pago se a rendido exitosamente.'});
+            },
+            error: err => {
+              console.log(err);
+              this.message.add({ severity: 'error', summary: 'ERROR!',
+                detail: 'Ha ocurrido un erro al intentar rendir el Pago.'});
+            }
+          });
       }
     });
   }

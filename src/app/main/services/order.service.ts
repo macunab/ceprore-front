@@ -95,7 +95,7 @@ export class OrderService {
       );
   }
 
-  printInvoice(order: Order) {
+  printInvoice(order: Order): Observable<Blob> {
 
     const { _id, createdAt, updatedAt, __v, ...orderData } = order;
     const url: string = `${this.baseUrl}/invoice-pdf`;
@@ -113,6 +113,34 @@ export class OrderService {
     const { _id, createdAt, updatedAt, __v, ...orderData } = order;
     const url: string = `${this.baseUrl}/payment-pdf`;
     return this.http.post(url, orderData, { responseType: 'blob'})
+      .pipe(
+        catchError(({error}) => {
+          return throwError(() => `Error: ${error.message}`)
+        })
+      );
+  }
+
+  countAllOrders(query?: string): Observable<number> {
+
+    query = query?.trim();
+    const options = query ? 
+      { params: new HttpParams().set('status', query) } : {};
+    const url: string = `${this.baseUrl}/count`;
+    return this.http.get<number>(url, options)
+      .pipe(
+        catchError(({error}) => {
+          return throwError(() => `Error: ${error.message}`)
+        })
+      );
+  }
+
+  countAllOrdersLastWeek(query?: string): Observable<number> {
+
+    query = query?.trim();
+    const options = query ? 
+      { params: new HttpParams().set('status', query ) } : {};
+    const url: string = `${this.baseUrl}/count-lastweek`;
+    return this.http.get<number>(url, options)
       .pipe(
         catchError(({error}) => {
           return throwError(() => `Error: ${error.message}`)
