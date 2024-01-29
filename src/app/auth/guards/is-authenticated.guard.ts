@@ -10,7 +10,7 @@ export const isAuthenticatedGuard: CanActivateFn = (route, state) => {
   if(authService.tokenValidation()) {
     return true;
   }
-  console.log('NO EXISTE EL TOKEN');
+  
   router.navigateByUrl('/login');
   return false;
 };

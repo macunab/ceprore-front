@@ -7,6 +7,7 @@ import { ToastModule } from 'primeng/toast';
 import { CommonModule } from '@angular/common';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -26,7 +27,7 @@ export class LoginComponent {
   });
 
   constructor(private fb: FormBuilder, private message: MessageService,
-    private authService: AuthService) {}
+    private authService: AuthService, private router: Router) {}
 
   /**
    * Rememberme function: if true must be create a token and save in the cookies/localstorage
@@ -40,17 +41,18 @@ export class LoginComponent {
       this.loginForm.markAllAsTouched();
       return;
     }
-    const { email, password, rememberme } = this.loginForm.value;
-    try {
-      // login service... then
-      throw new Error();
-      if(rememberme) {
-        // remember token and email
-      }
-    } catch(error) {
-      this.message.add({ severity: 'error', summary: 'Server Error!', 
-        detail: 'Ha ocurrido un error al intentar ingresar al sistema, espere un momento e intentelo de nuevo.'})
-    }
+    const { email, password } = this.loginForm.value;
+    this.authService.login(email, password)
+      .subscribe({
+        next: () => {
+          this.router.navigateByUrl('main/home');
+        },
+        error: err => {
+          console.log(err);
+          this.message.add({ severity: 'error', summary: 'Credenciales no validas!',
+            detail: 'El email o password no son validos.'});
+        }
+      });
   }
 
   isInvalid(field: string): boolean | null {

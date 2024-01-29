@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthResponse, CheckTokenResponse, User } from '../interfaces/auth.interface';
 import { environment } from '../../../environments/environment.development';
-import { Observable, catchError, map, of, tap } from 'rxjs';
+import { Observable, catchError, map, of, tap, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +11,6 @@ export class AuthService {
 
   private baseUrl: string = `${environment.baseUrl}/auth`;
   private _user!: User;
-  private headers = new HttpHeaders()
-    .set('token', localStorage.getItem('token') || '');
 
   constructor(private http: HttpClient) { }
 
@@ -28,7 +26,8 @@ export class AuthService {
     const body = { email, password };
     return this.http.post<CheckTokenResponse>(url, body)
       .pipe(
-        tap(({user, token}) => this.saveToken(user, token))
+        tap(({user, token}) => this.saveToken(user, token)),
+        catchError(err => throwError(() => err.error.message))
       );
   }
 
@@ -37,16 +36,22 @@ export class AuthService {
     const url: string = `${ this.baseUrl }/check-token`;
     const token = localStorage.getItem('token');
     if(!token) {
+      this.logout();
       return of(false);
     }
-    return this.http.get<CheckTokenResponse>(url)
+    const headers = new HttpHeaders()
+      .set('Authorization', `Beared ${token}`);
+    return this.http.get<CheckTokenResponse>(url, { headers })
       .pipe(
         map(({user, token}) => this.saveToken(user, token)),
         catchError( () => of(false))
       );
   }
 
-  logout() {}
+  logout() {
+    localStorage.removeItem('token');
+    // set _user to null or {}?
+  }
 
   get user() {
     return { ...this._user };
