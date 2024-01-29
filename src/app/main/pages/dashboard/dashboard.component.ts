@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderService } from '../../services/order.service';
+import { CustomerService } from '../../services/customer.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,12 +12,13 @@ import { OrderService } from '../../services/order.service';
 export class DashboardComponent implements OnInit {
 
   totalOrders: number = 0;
+  totalCustomers: number = 0;
   startedOrders: number = 0
   invoicedOrders: number = 0;
   invoicedLastWeeks: number = 0;
   paidOrders: number = 0;
 
-  constructor(private orderService: OrderService) {}
+  constructor(private orderService: OrderService, private customerService: CustomerService) {}
 
   ngOnInit(): void {
     // throw new Error('Method not implemented.');
@@ -43,6 +45,15 @@ export class DashboardComponent implements OnInit {
       .subscribe({
         next: res => {
           this.invoicedLastWeeks = res;
+        },
+        error: err => {
+          console.log(err);
+        }
+      });
+    this.customerService.countAllCustomers()
+      .subscribe({
+        next: res => {
+          this.totalCustomers = res;
         },
         error: err => {
           console.log(err);

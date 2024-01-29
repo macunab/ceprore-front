@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { Customer } from '../interfaces/customer.interface';
 
@@ -58,4 +58,17 @@ export class CustomerService {
       );
   }
 
+  countAllCustomers(query?: string): Observable<number> {
+
+    query = query?.trim();
+    const options = query ? 
+      { params: new HttpParams().set('status', query) } : {};
+    const url: string = `${this.baseUrl}/count`;
+    return this.http.get<number>(url, options)
+      .pipe(
+        catchError(({error}) => {
+          return throwError(() => `Error: ${error.message}`)
+        })
+      );
+  }
 }
