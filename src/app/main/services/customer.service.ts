@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { Customer } from '../interfaces/customer.interface';
 
@@ -9,15 +9,15 @@ import { Customer } from '../interfaces/customer.interface';
 })
 export class CustomerService {
 
-  // ToDo JWT headers
-
   private readonly baseUrl: string = `${environment.baseUrl}/customer`;
 
   constructor(private http: HttpClient) { }
 
   findAll(): Observable<Array<Customer>> {
 
-    return this.http.get<Array<Customer>>(this.baseUrl)
+    const headers = new HttpHeaders()
+      .set('authorization', `Beared ${localStorage.getItem('token')}`);
+    return this.http.get<Array<Customer>>(this.baseUrl, { headers })
       .pipe(
         catchError(({error}) => {
           return throwError(() => `Error: ${error.message}`);
@@ -29,7 +29,9 @@ export class CustomerService {
 
     const { _id, ...customerData } = customer;
     const url: string = `${this.baseUrl}/${_id}`;
-    return this.http.patch<Customer>(url, customerData)
+    const headers = new HttpHeaders()
+    .set('authorization', `Beared ${localStorage.getItem('token')}`);
+    return this.http.patch<Customer>(url, customerData, { headers })
       .pipe(
         catchError(({error}) => {
           return throwError(() => `Error: ${error.message}`);
@@ -40,7 +42,9 @@ export class CustomerService {
   delete(id: string): Observable<Customer> {
 
     const url: string = `${this.baseUrl}/${id}`;
-    return this.http.delete<Customer>(url)
+    const headers = new HttpHeaders()
+    .set('authorization', `Beared ${localStorage.getItem('token')}`);
+    return this.http.delete<Customer>(url, { headers })
       .pipe(
         catchError(({error}) => {
           return throwError(() => `Error: ${error.message}`)
@@ -50,7 +54,9 @@ export class CustomerService {
 
   create(customer: Customer): Observable<Customer> {
 
-    return this.http.post<Customer>(this.baseUrl, customer)
+    const headers = new HttpHeaders()
+    .set('authorization', `Beared ${localStorage.getItem('token')}`);
+    return this.http.post<Customer>(this.baseUrl, customer, { headers })
       .pipe(
         catchError(({error}) => {
           return throwError(() => `Error: ${error.message}`)
@@ -61,8 +67,10 @@ export class CustomerService {
   countAllCustomers(query?: string): Observable<number> {
 
     query = query?.trim();
+    const headers = new HttpHeaders()
+    .set('authorization', `Beared ${localStorage.getItem('token')}`);
     const options = query ? 
-      { params: new HttpParams().set('status', query) } : {};
+      { params: new HttpParams().set('status', query), headers } : {};
     const url: string = `${this.baseUrl}/count`;
     return this.http.get<number>(url, options)
       .pipe(

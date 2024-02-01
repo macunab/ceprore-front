@@ -13,6 +13,7 @@ import { PendingComponent } from "./pages/pending/pending.component";
 import { InvoicedComponent } from "./pages/invoiced/invoiced.component";
 import { PaidComponent } from "./pages/paid/paid.component";
 import { PendingFormComponent } from "./pages/pending-form/pending-form.component";
+import { isAuthenticatedGuard } from "../auth/guards/is-authenticated.guard";
 
 
 const routes: Routes = [

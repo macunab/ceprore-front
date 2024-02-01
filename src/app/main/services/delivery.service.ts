@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { Delivery } from '../interfaces/delivery.interface';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Customer } from '../interfaces/customer.interface';
-import { Observable, catchError, of, throwError } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +15,9 @@ export class DeliveryService {
 
   create(delivery: Delivery): Observable<Delivery> { 
 
-    return this.http.post<Delivery>(this.baseUrl, delivery)
+    const headers = new HttpHeaders()
+    .set('authorization', `Beared ${localStorage.getItem('token')}`);
+    return this.http.post<Delivery>(this.baseUrl, delivery, { headers })
       .pipe(
         catchError(error => {
           return throwError(() => `Error: ${error.error.message}`);
@@ -26,10 +27,9 @@ export class DeliveryService {
 
   findAll(): Observable<Array<Delivery>> { 
     
-    // const token = localStorage.getItem('token');
-    // const headers = new HttpHeaders()
-    //   .set('Authorization', `Beared ${token}`);
-    return this.http.get<Array<Delivery>>(this.baseUrl)
+    const headers = new HttpHeaders()
+    .set('authorization', `Beared ${localStorage.getItem('token')}`);
+    return this.http.get<Array<Delivery>>(this.baseUrl, { headers })
       .pipe(
         catchError( error => {
           return throwError(() => `Error: ${error.error.message}`)
@@ -41,7 +41,9 @@ export class DeliveryService {
 
     const { _id, ...deliveryData } = delivery;
     const url: string = `${this.baseUrl}/${_id}`;
-    return this.http.patch<Delivery>(url, deliveryData)
+    const headers = new HttpHeaders()
+    .set('authorization', `Beared ${localStorage.getItem('token')}`);
+    return this.http.patch<Delivery>(url, deliveryData, { headers })
       .pipe(
         catchError(error => {
           return throwError(() => `Error: ${error.error.message}`)
@@ -52,7 +54,9 @@ export class DeliveryService {
   delete(id: string): Observable<Delivery> {
 
     const url: string = `${this.baseUrl}/${id}`;
-    return this.http.delete<Delivery>(url)
+    const headers = new HttpHeaders()
+    .set('authorization', `Beared ${localStorage.getItem('token')}`);
+    return this.http.delete<Delivery>(url, { headers })
       .pipe(
         catchError(error => {
           return throwError(() => `Error: ${error.error.message}`)

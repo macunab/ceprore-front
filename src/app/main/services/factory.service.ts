@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Factory } from '../interfaces/factory.interface';
 import { Observable, catchError, throwError } from 'rxjs';
 
@@ -9,15 +9,15 @@ import { Observable, catchError, throwError } from 'rxjs';
 })
 export class FactoryService {
 
-  // ToDo JWT headers for GUARDs
-
   private readonly baseUrl: string = `${environment.baseUrl}/factory`;
 
   constructor(private http: HttpClient) { }
 
   create(factory: Factory): Observable<Factory> {
 
-    return this.http.post<Factory>(this.baseUrl, factory)
+    const headers = new HttpHeaders()
+    .set('authorization', `Beared ${localStorage.getItem('token')}`);
+    return this.http.post<Factory>(this.baseUrl, factory, { headers })
       .pipe(
         catchError(error => {
           return throwError(() => `Error: ${error.error.message}`)
@@ -27,7 +27,9 @@ export class FactoryService {
 
   findAll(): Observable<Array<Factory>> {
 
-    return this.http.get<Array<Factory>>(this.baseUrl)
+    const headers = new HttpHeaders()
+    .set('authorization', `Beared ${localStorage.getItem('token')}`);
+    return this.http.get<Array<Factory>>(this.baseUrl, { headers })
       .pipe(
         catchError(error => {
           return throwError(() => `Error: ${error.error.message}`)
@@ -39,7 +41,9 @@ export class FactoryService {
 
     const { _id, ...factoryData } = factory;
     const url: string = `${this.baseUrl}/${_id}`;
-    return this.http.patch<Factory>(url, factoryData)
+    const headers = new HttpHeaders()
+    .set('authorization', `Beared ${localStorage.getItem('token')}`);
+    return this.http.patch<Factory>(url, factoryData, { headers })
       .pipe(
         catchError(error => {
           return throwError(() => `Error: ${error.error.message}`)
@@ -50,7 +54,9 @@ export class FactoryService {
   delete(id: string): Observable<Factory> {
 
     const url: string = `${this.baseUrl}/${id}`;
-    return this.http.delete<Factory>(url)
+    const headers = new HttpHeaders()
+    .set('authorization', `Beared ${localStorage.getItem('token')}`);
+    return this.http.delete<Factory>(url, { headers })
       .pipe(
         catchError(error => {
           return throwError(() => `Error: ${error.error.message}`)

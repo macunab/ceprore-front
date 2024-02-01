@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Product } from '../interfaces/product.interface';
 import { Observable, catchError, throwError } from 'rxjs';
 
@@ -15,7 +15,9 @@ export class ProductService {
 
   create(product: Product): Observable<Product> {
 
-    return this.http.post<Product>(this.baseUrl, product)
+    const headers = new HttpHeaders()
+    .set('authorization', `Beared ${localStorage.getItem('token')}`);
+    return this.http.post<Product>(this.baseUrl, product, { headers })
       .pipe(
         catchError(error => {
           return throwError(() => `Error: ${error.error.message}`)
@@ -26,8 +28,10 @@ export class ProductService {
   findAll(query?: string): Observable<Array<Product>> {
 
     query = query?.trim();
+    const headers = new HttpHeaders()
+    .set('authorization', `Beared ${localStorage.getItem('token')}`);
     const options = query ? 
-      { params: new HttpParams().set('factory', query) } : {};
+      { params: new HttpParams().set('factory', query), headers } : {};
     return this.http.get<Array<Product>>(this.baseUrl, options)
       .pipe(
         catchError(error => {
@@ -39,8 +43,9 @@ export class ProductService {
   findByFactory(factoryId: string): Observable<Array<Product>> {
 
     const url: string = `${this.baseUrl}/${factoryId}`;
-    console.log(url);
-    return this.http.get<Array<Product>>(url)
+    const headers = new HttpHeaders()
+    .set('authorization', `Beared ${localStorage.getItem('token')}`);
+    return this.http.get<Array<Product>>(url, { headers })
     .pipe(
       catchError(error => {
         return throwError(() => `Error: ${error.error.message}`)
@@ -52,7 +57,9 @@ export class ProductService {
 
     const { _id, ...productData } = product;
     const url: string = `${this.baseUrl}/${_id}`;
-    return this.http.patch<Product>(url, productData)
+    const headers = new HttpHeaders()
+    .set('authorization', `Beared ${localStorage.getItem('token')}`);
+    return this.http.patch<Product>(url, productData, { headers })
       .pipe(
         catchError(({error}) => {
           return throwError(() => `Error: ${error.message}`)
@@ -63,7 +70,9 @@ export class ProductService {
   delete(id: string): Observable<Product> {
 
     const url: string = `${this.baseUrl}/${id}`;
-    return this.http.delete<Product>(url)
+    const headers = new HttpHeaders()
+    .set('authorization', `Beared ${localStorage.getItem('token')}`);
+    return this.http.delete<Product>(url, { headers })
       .pipe(
         catchError(({error}) => {
           return throwError(() => `Error: ${error.message}`)

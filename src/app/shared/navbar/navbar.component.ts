@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, inject } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { MenubarModule } from 'primeng/menubar';
+import { AuthService } from '../../auth/services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -12,8 +13,9 @@ import { MenubarModule } from 'primeng/menubar';
 export class NavbarComponent {
 
   @Output('onAction') emitter =  new EventEmitter();
+  private authService: AuthService = inject(AuthService);
 
   logOut() {
-    
+    this.authService.logout();
   }
 }
