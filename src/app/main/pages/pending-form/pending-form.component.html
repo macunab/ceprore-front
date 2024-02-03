@@ -46,10 +46,10 @@
     </div>
     <div class="formgrid grid">
         <div class="field col-10 md:col-11">
-            <input class="w-full" type="number" formControlName="cascadeDiscount" pInputText placeholder="Descuento"
-                aria-describedby="cascadeDiscount-help" (change)="selectProductsEvent(false)">
-            @if(isValid('cascadeDiscount')) {
-                <small class="form-error" id="cascadeDiscount-help">El descuento tiene que ser un numero.</small>
+            <input class="w-full" type="number" formControlName="customerDiscount" pInputText placeholder="Descuento cliente."
+                aria-describedby="customerDiscount-help" (change)="selectProductsEvent(false)" [min]="0">
+            @if(isValid('customerDiscount')) {
+                <small class="form-error" id="customerDiscount-help">El descuento tiene que ser un numero.</small>
             }
         </div>
         <div class="field col-2 md:col-1">
@@ -131,10 +131,11 @@
     </form>
 </p-card>
 
+<!-- Customer selection dialog. -->
 <p-dialog header="Seleccione un cliente" [modal]="true" [(visible)]="showCustomers" 
-    [breakpoints]="{ '960px': '95vw' }" [style]="{ width: '40vw', height: '460px' }">
+    [breakpoints]="{ '960px': '95vw' }" [style]="{ width: '40vw', height: '510px' }">
     <p-table #tableCustomers [value]="customers" [(selection)]="selectedCustomer" dataKey="_id"
-    [paginator]="true" [rows]="4" [globalFilterFields]="filters">
+    [paginator]="true" [rows]="3" [globalFilterFields]="filters">
     <ng-template pTemplate="caption">
         <div class="flex align-items-center justify-content-between">
             <h3 class="m-0">Clientes</h3>
@@ -167,6 +168,7 @@
     <button pButton type="button" (click)="customerSelection()" label="Seleccionar" class="p-button-info mt-3"></button>
 </p-dialog>
 
+<!-- Products selection dialog. -->
 <p-dialog header="Selecione los productos" [modal]="true" [(visible)]="showProducts"
     [breakpoints]="{ '960px': '95vw' }" [style]="{ width: '60vw', height: '500px' }">
     <p-table [value]="products" [(selection)]="selectedProducts" dataKey="product._id" [tableStyle]="{'min-width': '50rem'}"

@@ -24,6 +24,7 @@ export interface Order {
     ivaAmount?: number;
     discounts?: Array<number>;
     cascadeDiscount?: number;
+    customerDiscount?: number; // 
     netTotalWithDiscount?: number;
     netTotal?: number;
     total?: number;

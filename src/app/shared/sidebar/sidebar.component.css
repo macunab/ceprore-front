@@ -1,0 +1,8 @@
+.p-panelmenu .p-toggleable-content {
+    height: 0;
+    }
+.p-panelmenu .p-toggleable-content.p-panelmenu-expanded {
+    height: auto;
+}
+    
+    

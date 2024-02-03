@@ -31,7 +31,7 @@ export class OrderService {
     const headers = new HttpHeaders()
     .set('authorization', `Beared ${localStorage.getItem('token')}`);
     const options = query ?
-      { params: new HttpParams().set('status', query), headers } : {};
+      { params: new HttpParams().set('status', query), headers } : { headers };
 
     return this.http.get<Array<Order>>(this.baseUrl, options)
       .pipe(

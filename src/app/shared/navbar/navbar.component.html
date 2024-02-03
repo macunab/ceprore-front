@@ -3,6 +3,7 @@
         <p-button icon="pi pi-align-justify" [rounded]="true" [text]="true" (click)="emitter.emit()"></p-button>
     </ng-template>
     <ng-template pTemplate="end">
-        <p-button icon="pi pi-power-off" [rounded]="true" [text]="true" severity="secondary" (click)="logOut()"></p-button>
+        <p-button icon="pi pi-power-off" [rounded]="true" [text]="true" severity="secondary" (click)="logOut()"
+            pTooltip="Salir"></p-button>
     </ng-template>
 </p-menubar>

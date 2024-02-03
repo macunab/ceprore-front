@@ -43,7 +43,7 @@ export class PendingFormComponent implements OnInit {
     delivery: [''],
     invoicedPercent: ['', [Validators.required]],
     observations: [''],
-    cascadeDiscount: ['',[Validators.required]],
+    customerDiscount: ['',[Validators.required]],
     discounts: this.fb.array([])
   });
   orderUpdate: Order = {} as Order;
@@ -117,7 +117,13 @@ export class PendingFormComponent implements OnInit {
           this.selectedProductsDisplayed = this.orderUpdate.productsCart!;
           this.orderForm.get('factory')?.setValue(this.orderUpdate.factory);
           this.loadProducts();
-          this.selectProductsEvent(false);
+          this.netTotal = this.orderUpdate.netTotal!;
+          this.finalDiscount = this.orderUpdate.cascadeDiscount!;
+          this.netTotalWithDiscount =  this.orderUpdate.netTotalWithDiscount!;
+          this.invoicedAmount = this.orderUpdate.invoicedAmount!;
+          this.remitAmount = this.orderUpdate.remitAmount!;
+          this.ivaAmount = this.orderUpdate.ivaAmount!;
+          this.total = this.orderUpdate.total!;
         }
       }
 
@@ -177,7 +183,6 @@ export class PendingFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-   // console.log(this.selectedCustomer);
     if(this.orderForm.invalid) {
       this.orderForm.markAllAsTouched();
       return;
@@ -186,11 +191,9 @@ export class PendingFormComponent implements OnInit {
       return val.discount;
     });
     if(this.orderUpdate._id) {
-      console.log('UPDATE');
       this.orderUpdate = { ...this.orderForm.value, _id: this.orderUpdate._id,customer: this.selectedCustomer, discounts: discountNumberArray, productsCart: this.selectedProductsDisplayed,
         invoicedAmount: this.invoicedAmount, remitAmount: this.remitAmount, ivaAmount: this.ivaAmount, 
-        netTotalWithDiscount: this.netTotalWithDiscount, netTotal: this.netTotal, total: this.total };
-      console.table(this.orderUpdate); 
+        netTotalWithDiscount: this.netTotalWithDiscount, netTotal: this.netTotal, total: this.total, cascadeDiscount: this.finalDiscount };
       this.orderService.update(this.orderUpdate)
         .subscribe({
           next: res => {
@@ -204,9 +207,7 @@ export class PendingFormComponent implements OnInit {
           }
         });
     } else {
-      console.log('CREATE');
-      // this.orderForm.get('customer')?.setValue(this.selectedCustomer);
-      const orderCreate: Order = { ...this.orderForm.value, customer: this.selectedCustomer, discounts: discountNumberArray, productsCart: this.selectedProductsDisplayed,
+      const orderCreate: Order = { ...this.orderForm.value, cascadeDiscount: this.finalDiscount, customer: this.selectedCustomer, discounts: discountNumberArray, productsCart: this.selectedProductsDisplayed,
         invoicedAmount: this.invoicedAmount, remitAmount: this.remitAmount, ivaAmount: this.ivaAmount, 
         netTotalWithDiscount: this.netTotalWithDiscount, netTotal: this.netTotal, total: this.total };
       this.orderService.create(orderCreate)
@@ -253,7 +254,7 @@ export class PendingFormComponent implements OnInit {
     let customerFactory: CustomerFactory = this.selectedCustomer
       .discountsByFactory?.find(val => val.factory._id === selectedFactory._id)!;
     this.orderForm.get('delivery')?.setValue(customerFactory.delivery);
-    this.orderForm.get('cascadeDiscount')?.setValue(customerFactory.cascadeDiscount*100);
+    this.orderForm.get('customerDiscount')?.setValue(customerFactory.cascadeDiscount*100);
     this.loadProducts();
   }
 
@@ -289,16 +290,14 @@ export class PendingFormComponent implements OnInit {
         (acc, cu) => acc + cu.subtotal, 0,
       )
       this.finalDiscount = this.calculateFinalDiscount() !== 0 ?
-      (1 - (1 - this.calculateFinalDiscount()) * (1 - this.orderForm.get('cascadeDiscount')?.value/100)) 
-      : this.orderForm.get('cascadeDiscount')?.value/100;
+      (1 - (1 - this.calculateFinalDiscount()) * (1 - this.orderForm.get('customerDiscount')?.value/100)) 
+      : this.orderForm.get('customerDiscount')?.value/100;
       this.netTotalWithDiscount = this.netTotal - (this.netTotal*this.finalDiscount);
       this.invoicedAmount = this.netTotalWithDiscount*this.orderForm.get('invoicedPercent')?.value.percentNumber;
       this.remitAmount = this.netTotalWithDiscount - this.invoicedAmount;
       this.ivaAmount = (this.invoicedAmount*0.21);
       this.total = this.invoicedAmount + this.remitAmount + this.ivaAmount;
-      console.log(this.selectedProductsDisplayed)
       this.selectedProductsDisplayed = this.selectedProducts;
-      console.log(this.selectedProducts);
     } else {
       if(!remove) this.message.add({ severity: 'warn', summary: 'Aviso!', detail: 'Seleccione el porcentaje facturado antes que los productos'});
     }

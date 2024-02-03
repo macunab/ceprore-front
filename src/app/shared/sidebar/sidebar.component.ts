@@ -34,7 +34,6 @@ export class SidebarComponent {
     { label: 'Productos', icon: 'pi pi-gift', routerLink: '/main/products', command: () => { this.hideSidebar() }},
     { label: 'Listas de precio', icon: 'pi pi-book', routerLink: '/main/priceLists', command: () => { this.hideSidebar() }},
     { label: 'Transportes', icon: 'pi pi-truck', routerLink: '/main/deliveries', command: () => { this.hideSidebar() }},
-    // { label: 'Cuenta corriente', icon: 'pi pi-wallet', routerLink: '/main/checking-accounts', command: () => { this.hideSidebar() }},
     { label: 'Cuenta Corriente', icon: 'pi pi-wallet', items: [
       { label: 'A Rendir', routerLink: '/main/checking-accounts', command: () => { this.hideSidebar() }},
       { label: 'Historico', routerLink: '/main/', command: () => { this.hideSidebar() }}
