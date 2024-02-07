@@ -49,6 +49,15 @@ export class DashboardComponent implements OnInit {
           console.log(err);
         }
       });
+    this.orderService.countAllOrders('PAID')
+      .subscribe({
+        next: res => {
+          this.paidOrders = res;
+        },
+        error: err => {
+          console.log(err);
+        }
+      });
     this.orderService.countAllOrders('SURRENDER')
       .subscribe({
         next: res => {

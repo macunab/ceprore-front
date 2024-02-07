@@ -37,7 +37,8 @@ export class CustomerFormComponent implements OnInit {
     address: ['', [Validators.required]],
     email: [''],
     ivaCondition: ['', [Validators.required]],
-    priceList: ['', [Validators.required]]
+    priceList: ['', [Validators.required]],
+    cuil: ['', [Validators.required]]
   });
   ivaCondition: Array<string> = ['Responsable inscripto', 'Afiliado al gremio!'];
   priceList: Array<PriceList> = [
@@ -110,7 +111,6 @@ export class CustomerFormComponent implements OnInit {
           }
         });
     }
-    console.table(this.customer);
     this.router.navigateByUrl('main/customers');
   }
 

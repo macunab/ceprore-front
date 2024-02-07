@@ -29,6 +29,11 @@
                 <input pInputText id="email" formControlName="email" class="w-full" placeholder="Correo"/>
             </div>
             <div class="field col-12 md:col">
+                <input type="text" pInputText id="cuil" formControlName="cuil" class="w-full" placeholder="CUIL/CUIT">
+            </div>
+        </div>
+        <div class="formgrid grid">
+            <div class="field col-12 md:col">
                 <p-dropdown formControlName="ivaCondition" [options]="ivaCondition" placeholder="Condicion IVA"
                     styleClass="w-full" aria-describedby="ivaCondition-help"></p-dropdown>
                 <div class="block-error">
@@ -37,10 +42,8 @@
                     }                    
                 </div>
             </div>
-        </div>
-        <div class="formgrid grid">
-            <div class="field col md:col">
-                <p-dropdown formControlName="priceList" [options]="priceList" optionLabel="name" placeholder="List de precio"
+            <div class="field col-12 md:col">
+                <p-dropdown formControlName="priceList" [options]="priceList" optionLabel="name" placeholder="Lista de precio"
                     styleClass="w-full" aria-describedby="priceList-help"></p-dropdown>
                 <div class="block-error">
                     @if(isValid('priceList')) {
