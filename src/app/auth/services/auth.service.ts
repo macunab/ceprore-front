@@ -43,6 +43,7 @@ export class AuthService {
     const url: string = `${ this.baseUrl }/check-token`;
     const token = localStorage.getItem('token');
     if(!token) {
+      console.log('ENTRA EN IF');
       this.logout();
       return of(false);
     }

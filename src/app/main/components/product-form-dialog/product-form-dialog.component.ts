@@ -76,10 +76,16 @@ export class ProductFormDialogComponent implements OnChanges, OnInit{
   }
 
   setUpdatePricesArray(prices: Array<ProductPrice>) {
-    prices.map( p => {
-      const priceForm = this.createPrice(p.priceList, p.price);
-      this.pricesByList.push(priceForm);
-    })
+    this.priceLists.forEach( val => {
+      let price: number = 0;
+      prices.map( p => {
+        if(p.priceList.name === val.name) {
+          price = p.price;
+        }
+      });
+      const priceFormGroup: FormGroup = this.createPrice(val, price);
+      this.pricesByList.push(priceFormGroup);
+    });
   }
 
   createPrice(priceList: PriceList, price?: number): FormGroup {

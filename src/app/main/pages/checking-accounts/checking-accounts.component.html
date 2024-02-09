@@ -1,1 +1,44 @@
-<p>checking-accounts works!</p>
+<p-toast position="top-center"></p-toast>
+<p-fieldset legend="Ordenes a rendir">
+    <p class="m-0 mb-3">
+        Seleccione una representada para ver las ordenes que se encuentrar listas para rendir.
+    </p>
+    <!-- <hr> -->
+    <div class="formgrid grid">
+        <div class="field col-10 md:col-11">
+            <p-dropdown [options]="factories" [(ngModel)]="selectedFactory" 
+                optionLabel="name" placeholder="Seleccione una representada"
+                styleClass="w-full"></p-dropdown>
+        </div>
+        <div class="field col-2 md:col-1">
+            <button pButton icon="pi pi-search" type="button" class="p-button-help" (click)="onSurrendersSearch()"></button>
+        </div>
+    </div>
+</p-fieldset>
+
+<p-card header="Ordenes a rendir" styleClass="mt-3">
+    <p-table [value]="surrenderOrders" [tableStyle]="{ 'min-width': '50rem' }">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Fecha</th>
+                <th>Cliente</th>
+                <th>Representada</th>
+                <th>Total</th>
+                <th>Comision</th>
+                <th>Opciones</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-surrender>
+            <tr>
+                <td>{{ surrender.createdAt | date:'shortDate' }}</td>
+                <td>{{ surrender.customer.name }}</td>
+                <td>{{ surrender.factory.name }}</td>
+                <td>{{ surrender.invoice.total | currency:'USD':'symbol':'3.0-3'}}</td>
+                <td>{{ surrender.payment.commission | currency:'USD':'symbol':'3.0-3' }}</td>
+                <td>
+                    
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</p-card>

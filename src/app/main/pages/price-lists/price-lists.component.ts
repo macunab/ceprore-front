@@ -85,7 +85,7 @@ export class PriceListsComponent implements OnInit{
             next: (res) => {
               this.priceLists = this.priceLists.filter( value => value._id !== res._id);
               this.priceLists = [...this.priceLists];
-              this.messageService.add({ severity: 'info', summary: 'Informacion', 
+              this.messageService.add({ severity: 'success', summary: 'Informacion', 
                 detail: `La lista de precio: "${res.name}", se ha eliminado exitosamente. `})
             },
             error: (error) => {
@@ -113,7 +113,7 @@ export class PriceListsComponent implements OnInit{
             const index = this.priceLists.findIndex( value => value._id === res._id);
             (index !== -1) ? this.priceLists[index] = res : '';
             this.priceLists = [...this.priceLists];
-            this.messageService.add({ severity: 'info', summary: 'Informacion', 
+            this.messageService.add({ severity: 'success', summary: 'Informacion', 
               detail: `La lista de precio: "${res.name}", fue modificada exitosamente.`});
           },
           error: (error) => {
@@ -128,7 +128,7 @@ export class PriceListsComponent implements OnInit{
           next: (res) => {
             this.priceLists.push(res);
             this.priceLists = [...this.priceLists];
-            this.messageService.add({ severity: 'info', summary: 'Informacion',
+            this.messageService.add({ severity: 'success', summary: 'Informacion',
               detail: `Se ha creado exitosamente la Lista de precio: ${res.name}`});
           },
           error: (error) => {

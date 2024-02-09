@@ -8,7 +8,18 @@ export const isAuthenticatedGuard: CanActivateFn = (route, state) => {
   const authService: AuthService = inject(AuthService);
   const router = inject(Router);
   
+  authService.tokenValidation()
+    .subscribe({
+      next: res => {
+        console.log(res);
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
+    
   if(authService.authStatus() === AuthStatus.authenticated) {
+    console.log('ESTA AUTENTICADO',authService.tokenValidation());
     return true;
   }
 

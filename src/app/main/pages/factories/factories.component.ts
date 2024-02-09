@@ -84,7 +84,7 @@ export class FactoriesComponent implements OnInit {
           .subscribe({
             next: (res) => {
               this.factories = this.factories.filter(value => value._id !== res._id);
-              this.messageService.add({ severity: 'info', summary: 'Informacion',
+              this.messageService.add({ severity: 'success', summary: 'Informacion',
                 detail: `La Fabrica: ${res.name}, se ha eliminado exitosamente.`})
             },
             error: (error) => {

@@ -41,6 +41,23 @@ export class OrderService {
       );
   }
 
+  findAllSurrendersByFactory(query: string): Observable<Array<Order>> {
+
+    query = query.trim();
+    const headers = new HttpHeaders()
+      .set('authorization', `Beared ${localStorage.getItem('token')}`);
+    const options = query ? 
+      { params: new HttpParams()
+          .set('factory', query)
+          .set('status', 'SURRENDER'), headers } : { headers };
+    return this.http.get<Array<Order>>(this.baseUrl, options)
+      .pipe(
+        catchError(({error}) => {
+          return throwError(() => `Error: ${error.message}`);
+        })
+      );
+  }
+
   update(order: Order): Observable<Order> {
 
     const { _id, ...orderData } = order;

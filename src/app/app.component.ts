@@ -1,6 +1,6 @@
 import { Component, computed, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { AuthService } from './auth/services/auth.service';
 import { AuthStatus } from './auth/interfaces/auth-status.enum';
 
@@ -18,7 +18,6 @@ export class AppComponent {
   private router: Router = inject(Router);
 
   public finishedAuthCheck = computed<boolean>(() => {
-    console.log(this.authService.authStatus())
     if(this.authService.authStatus() === AuthStatus.checking) {
       return false;
     }
@@ -30,7 +29,6 @@ export class AppComponent {
       case AuthStatus.checking:
         return;
       case AuthStatus.authenticated:
-        this.router.navigateByUrl('main/home');
         return;
       case AuthStatus.notAuthenticated:
         this.router.navigateByUrl('login');

@@ -21,22 +21,21 @@ const routes: Routes = [
         path: '',
         component: HomeComponent,
         children: [
-            { path: 'customers', component: CustomersComponent },
-            { path: 'customer', component: CustomerFormComponent },
-            { path: 'home', component: DashboardComponent },
-            { path: 'factories', component: FactoriesComponent },
-            { path: 'products', component: ProductsComponent },
-            { path: 'priceLists', component: PriceListsComponent },
-            { path: 'deliveries', component: DeliveriesComponent },
-            { path: 'checking-accounts', component: CheckingAccountsComponent },
-            { path: 'pending-orders', component: PendingComponent },
-            { path: 'pending-order', component: PendingFormComponent },
-            { path: 'invoiced', component: InvoicedComponent },
-            { path: 'paid', component: PaidComponent },
+            { path: 'customers', component: CustomersComponent, canActivate: [isAuthenticatedGuard] },
+            { path: 'customer', component: CustomerFormComponent, canActivate: [isAuthenticatedGuard] },
+            { path: 'home', component: DashboardComponent, canActivate: [isAuthenticatedGuard] },
+            { path: 'factories', component: FactoriesComponent, canActivate: [isAuthenticatedGuard] },
+            { path: 'products', component: ProductsComponent, canActivate: [isAuthenticatedGuard] },
+            { path: 'priceLists', component: PriceListsComponent, canActivate: [isAuthenticatedGuard] },
+            { path: 'deliveries', component: DeliveriesComponent, canActivate: [isAuthenticatedGuard] },
+            { path: 'checking-accounts', component: CheckingAccountsComponent, canActivate: [isAuthenticatedGuard] },
+            { path: 'pending-orders', component: PendingComponent, canActivate: [isAuthenticatedGuard] },
+            { path: 'pending-order', component: PendingFormComponent, canActivate: [isAuthenticatedGuard] },
+            { path: 'invoiced', component: InvoicedComponent, canActivate: [isAuthenticatedGuard] },
+            { path: 'paid', component: PaidComponent, canActivate: [isAuthenticatedGuard] },
             { path: '**', redirectTo: 'home' }
         ]
     },
-    // { path: '**', redirectTo: 'home'}
 ];
 
 @NgModule({

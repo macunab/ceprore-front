@@ -88,7 +88,7 @@ export class DeliveriesComponent implements OnInit{
           .subscribe({
             next: (res) => {
               this.deliveries = this.deliveries.filter(value => value._id !== res._id);
-              this.messageService.add({severity: 'info', summary: 'Informacion',
+              this.messageService.add({severity: 'success', summary: 'Informacion',
                 detail: `El transporte: "${res.name}", se ha eliminado exitosamente.`})
             },
             error: (error) => {
@@ -116,7 +116,7 @@ export class DeliveriesComponent implements OnInit{
             const index = this.deliveries.findIndex(val => val._id === res._id);
             (index != -1) ? this.deliveries[index] = res : '';
             this.deliveries = [...this.deliveries];
-            this.messageService.add({ severity: 'info', summary: 'Informacion',
+            this.messageService.add({ severity: 'success', summary: 'Informacion',
               detail: `El Transporte: "${res.name}", fue modificado exitosamente`});
           },
           error: (error) => {
@@ -130,7 +130,7 @@ export class DeliveriesComponent implements OnInit{
           next: (res) => {
             this.deliveries.push(res);
             this.deliveries = [...this.deliveries];
-            this.messageService.add({severity: 'info', summary: 'Informacion',
+            this.messageService.add({severity: 'success', summary: 'Informacion',
               detail: `Se ha creado exitosamente el transporte: "${res.name}"`});
           },
           error: (error) => {
