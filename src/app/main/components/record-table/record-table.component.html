@@ -1,9 +1,8 @@
-
-<p-table #table responsiveLayout="stack" [value]="paidOrders" [globalFilterFields]="filters"
+<p-table #table responsiveLayout="stack" [value]="records" [globalFilterFields]="filters"
     [rows]="3" [paginator]="true">
     <ng-template pTemplate="caption">
         <div class="flex align-items-center justify-content-between">
-            <h3 class="m-0">Cobros</h3>
+            <h3 class="m-0">Historicos</h3>
             <span class="p-input-icon-left">
                 <i class="pi pi-search"></i>
                 <input #search class="w-full" pInputText type="text" (input)="table.filterGlobal(search.value, 'contains')" placeholder="Buscar..." />
@@ -14,8 +13,7 @@
         <tr>
             <th>Fecha</th>
             <th>Cliente</th>
-            <th>Fabrica</th>
-            <th>Pago a Cuenta</th>
+            <th>Representada</th>
             <th>Total</th>
             <th>Comision</th>
             <th>Opciones</th>
@@ -26,21 +24,12 @@
             <td>{{ order.payment.createdAt | date:'shortDate' }}</td>
             <td>{{ order.customer.name }}</td>
             <td>{{ order.factory.name }}</td>
-            <td>{{ order.payment.paymentOnAccount | currency:'USD':'symbol':'0.0-3' }}</td>
             <td>{{ order.payment.total | currency:'USD':'symbol':'0.0-3' }}</td>
             <td>{{ order.payment.commission | currency:'USD':'symbol':'0.0-3' }}</td>
             <td>
                 <button
-                    pButton icon="pi pi-arrow-circle-right" class="p-button-sm p-button-help p-button-rounded p-button-text mr-2"
-                    pTooltip="Rendir Pago" tooltipPosition="top" (click)="emitter.emit({ data: order, type: 'surrender' })">
-                </button>
-                <button
-                    pButton icon="pi pi-pencil" class="p-button-sm p-button-info p-button-rounded p-button-text mr-2"
-                    pTooltip="Editar" tooltipPosition="top" (click)="emitter.emit({ data: order, type: 'edit' })">
-                </button>
-                <button
-                    pButton icon="pi pi-trash" class="p-button-sm p-button-danger p-button-rounded p-button-text mr-2"
-                    pTooltip="Eliminar" tooltipPosition="top" (click)="emitter.emit({ data: order, type: 'delete' })">
+                    pButton icon="pi pi-print" class="p-button-sm p-button-secondary p-button-rounded p-button-text mr-2"
+                    pTooltip="Imprimir" tooltipPosition="top" (click)="emitter.emit({ data: order, type: 'print' })">
                 </button>
             </td>
         </tr>

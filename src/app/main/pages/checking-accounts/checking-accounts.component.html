@@ -17,28 +17,43 @@
 </p-fieldset>
 
 <p-card header="Ordenes a rendir" styleClass="mt-3">
-    <p-table [value]="surrenderOrders" [tableStyle]="{ 'min-width': '50rem' }">
-        <ng-template pTemplate="header">
-            <tr>
-                <th>Fecha</th>
-                <th>Cliente</th>
-                <th>Representada</th>
-                <th>Total</th>
-                <th>Comision</th>
-                <th>Opciones</th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-surrender>
-            <tr>
-                <td>{{ surrender.createdAt | date:'shortDate' }}</td>
-                <td>{{ surrender.customer.name }}</td>
-                <td>{{ surrender.factory.name }}</td>
-                <td>{{ surrender.invoice.total | currency:'USD':'symbol':'3.0-3'}}</td>
-                <td>{{ surrender.payment.commission | currency:'USD':'symbol':'3.0-3' }}</td>
-                <td>
-                    
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>
+    @if(selectedFactory !== undefined && surrenderOrders.length > 0) {
+        <p-table [value]="surrenderOrders" responsiveLayout="stack" styleClass="p-datatable-gridlines">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Representada</th>
+                    <th>Total</th>
+                    <th>Comision</th>
+                    <th>Opciones</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-surrender>
+                <tr>
+                    <td>{{ surrender.createdAt | date:'shortDate' }}</td>
+                    <td>{{ surrender.customer.name }}</td>
+                    <td>{{ surrender.factory.name }}</td>
+                    <td>{{ surrender.invoice.total | currency:'USD':'symbol':'3.0-3'}}</td>
+                    <td>{{ surrender.payment.commission | currency:'USD':'symbol':'3.0-3' }}</td>
+                    <td>
+                        <button
+                            pButton icon="pi pi-print" class="p-button-sm p-button-secondary p-button-rounded p-button-text mr-2"
+                            pTooltip="Imprimir Pedido" tooltipPosition="top" (click)="printSurrender(surrender)">
+                        </button>
+                        <button
+                            pButton icon="pi pi-arrow-circle-right" class="p-button-sm p-button-help p-button-rounded p-button-text mr-2"
+                            pTooltip="Marcar Pedido como rendido" tooltipPosition="top" (click)="recordSurrender(surrender)">
+                        </button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    } @else {
+        <div class="flex flex-wrap justify-content-center">
+            <div class="align-item-center font-bold text-pink-200 text-5xl">
+                ...
+            </div>
+        </div>
+    }
 </p-card>

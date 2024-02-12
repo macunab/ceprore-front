@@ -34,7 +34,8 @@
             <input pInputText class="w-full" type="text" formControlName="address" placeholder="Direccion">
         </div>
         <div class="field col-12 md:col">
-            <input pInputText class="w-full" type="number" formControlName="limitDays" placeholder="Limite de entrega">
+            <input pInputText class="w-full" type="number" formControlName="limitDays" placeholder="Limite de entrega"
+                [min]="0">
         </div>
     </div>
     <div class="formgrid grid">

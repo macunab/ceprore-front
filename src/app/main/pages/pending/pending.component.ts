@@ -73,8 +73,7 @@ export class PendingComponent implements OnInit{
         next: res => {
           this.pendingOrders = res;
         },
-        error: err => {
-          console.log(err);
+        error: () => {
           this.message.add({ severity: 'error', summary: 'ERROR!',
             detail: 'Ha ocurrido un erro al intentar obtener todos los Pedidos Pendientes.'});
         }
@@ -110,8 +109,7 @@ export class PendingComponent implements OnInit{
           let pdfUrl = window.URL.createObjectURL(blob);
           window.open(pdfUrl, '_blank');
         },
-        error: err => {
-          console.log(err);
+        error: () => {
           this.message.add({ severity: 'error', summary: 'ERROR!',
             detail: 'Ha ocurrido un erro al intentar imprimir el Pedido.'});
         }
@@ -141,8 +139,7 @@ export class PendingComponent implements OnInit{
               this.message.add({ severity: 'success', summary: 'Informacion',
                 detail: 'El Pedido ha sido eliminado exitosamente.'});
             },
-            error: err => {
-              console.log(err);
+            error: () => {
               this.message.add({ severity: 'error', summary: 'ERROR!',
                 detail: 'Ha ocurrido un error al intentar eliminar un Pedido pendiente.'});
             }
@@ -158,7 +155,6 @@ export class PendingComponent implements OnInit{
   // Facturacion de Pedido Pendiente.
   onDialogClose(dialogData: DialogData<Order>): void {
     this.showInvoiceForm = false;
-    console.log(dialogData.data)
     const { __v, createdAt, updatedAt, ...order } = dialogData.data;
       this.orderService.update(order)
         .subscribe({
@@ -168,12 +164,10 @@ export class PendingComponent implements OnInit{
             this.message.add({ severity: 'success', summary: 'Informacion',
               detail: 'El Pedido ha sido Facturado exitosamente.'});
           },
-          error: err => {
-            console.log(err);
+          error: () => {
             this.message.add({ severity: 'error', summary: 'ERROR!',
               detail: 'Ha ocurrido un error al intentar crear una nueva Factura'});
           }
         });
   }
-
 }

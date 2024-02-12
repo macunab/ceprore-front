@@ -30,8 +30,8 @@ export class ProductFormDialogComponent implements OnChanges, OnInit{
     code: ['', [Validators.required]],
     name: ['', [Validators.required]],
     description: [''],
-    boxesPerPallet: [0],
-    unitsPerBox: [0],
+    boxesPerPallet: ['', [Validators.required, Validators.min(0)]],
+    unitsPerBox: ['', [Validators.required, Validators.min(0)]],
     factory: ['', [Validators.required]],
     pricesByList: this.fb.array([])
   });
@@ -66,8 +66,6 @@ export class ProductFormDialogComponent implements OnChanges, OnInit{
     if(this.productUpdate._id) {
       this.pricesByList.clear();
       this.productForm.patchValue(this.productUpdate);
-    } else {
-      console.log('ENTRA EN EL CREATE');
     }
   }
 
@@ -123,5 +121,4 @@ onHide(): void {
   this.pricesByList.clear();
   this.productForm.reset();
 }
-
 }

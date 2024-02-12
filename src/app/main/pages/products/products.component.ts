@@ -54,8 +54,7 @@ export class ProductsComponent implements OnInit{
           this.products = res;
           console.log(res);
         },
-        error: err => {
-          console.log(err);
+        error: () => {
           this.messageService.add({ severity: 'error', summary: 'ERROR!', 
             detail: 'Ha ocurrido un error al intentar obtener todos los Productos'});
         }
@@ -96,8 +95,7 @@ export class ProductsComponent implements OnInit{
               this.messageService.add({ severity: 'success', summary: 'Informacion',
                 detail: `El Producto: "${res.name}", se ha eliminado exitosamente`});
             },
-            error: err => {
-              console.log(err);
+            error: () => {
               this.messageService.add({ severity: 'error', summary: 'ERROR!',
                 detail: `Ha ocurrido un error al intentar eliminar el Producto: "${product.name}"`});
             }
@@ -113,13 +111,11 @@ export class ProductsComponent implements OnInit{
   }
 
   onFormClose(dialogData: DialogData<Product>): void {
-    console.log(dialogData.data);
     this.showForm = false;
     if(dialogData.data._id) {
       this.productService.update(dialogData.data)
         .subscribe({
           next: res => {
-            console.log(res);
             const index = this.products.findIndex(value => value._id === res._id);
             (index !== -1) ? this.products[index] = res : '';
             this.products = [...this.products];
@@ -135,13 +131,12 @@ export class ProductsComponent implements OnInit{
       this.productService.create(dialogData.data)
         .subscribe({
           next: res => {
-            console.log(res);
             this.products.push(res);
             this.products = [...this.products];
             this.messageService.add({ severity: 'success', summary: 'Informacion',
               detail: `El Producto: "${res.name}", se ha creado exitosamente.`});
           },
-          error: err => {
+          error: () => {
             this.messageService.add({ severity: 'error', summary: 'ERROR!',
               detail: 'Ha ocurrido un error al intentar crear un nuevo Producto.'});
           }

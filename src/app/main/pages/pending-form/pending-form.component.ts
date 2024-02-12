@@ -16,7 +16,6 @@ import { Factory } from '../../interfaces/factory.interface';
 import { Customer, CustomerFactory } from '../../interfaces/customer.interface';
 import { PriceList } from '../../interfaces/priceList.interface';
 import { Delivery } from '../../interfaces/delivery.interface';
-import { Product } from '../../interfaces/product.interface';
 import { CurrencyPipe, PercentPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { PriceListService } from '../../services/price-list.service';
@@ -113,10 +112,10 @@ export class PendingFormComponent implements OnInit {
           this.orderForm.patchValue(this.orderUpdate);
           this.setCustomersValues();
           this.orderForm.get('priceList')?.setValue(this.orderUpdate.priceList);
+          this.orderForm.get('factory')?.setValue(this.orderUpdate.factory);
+          this.loadProducts(this.orderUpdate.productsCart!);
           this.selectedProducts = this.orderUpdate.productsCart!;
           this.selectedProductsDisplayed = this.orderUpdate.productsCart!;
-          this.orderForm.get('factory')?.setValue(this.orderUpdate.factory);
-          this.loadProducts();
           this.netTotal = this.orderUpdate.netTotal!;
           this.finalDiscount = this.orderUpdate.cascadeDiscount!;
           this.netTotalWithDiscount =  this.orderUpdate.netTotalWithDiscount!;
@@ -133,8 +132,7 @@ export class PendingFormComponent implements OnInit {
         next: res => {
           this.priceLists = res;
         },
-        error: err => {
-          console.log(err);
+        error: () => {
           this.message.add({ severity: 'error', summary: 'ERROR!',
             detail: 'Ha ocurrido un error al intentar obtener todas las Listas de precios.'});
         }
@@ -144,8 +142,7 @@ export class PendingFormComponent implements OnInit {
         next: res => {
           this.deliveries = res;
         },
-        error: err => {
-          console.log(err);
+        error: () => {
           this.message.add({ severity: 'error', summary: 'ERROR!',
             detail: 'Ha ocurrido un erro al intentar obtener todos los Transportes.'});
         }
@@ -155,8 +152,7 @@ export class PendingFormComponent implements OnInit {
         next: res => {
           this.customers = res;
         },
-        error: err => {
-          console.log(err);
+        error: () => {
           this.message.add({ severity: 'error', summary: 'ERROR!',
             detail: 'Ha ocurrido un error al intentar obtener todos los Clientes.'});
         }
@@ -196,12 +192,10 @@ export class PendingFormComponent implements OnInit {
         netTotalWithDiscount: this.netTotalWithDiscount, netTotal: this.netTotal, total: this.total, cascadeDiscount: this.finalDiscount };
       this.orderService.update(this.orderUpdate)
         .subscribe({
-          next: res => {
-            console.log(res);
+          next: () => {
             this.router.navigateByUrl('main/pending-orders');
           },
-          error: err => {
-            console.warn(err);
+          error: () => {
             this.message.add({ severity: 'error', summary: 'ERROR!',
               detail: 'Ha ocurrido un error al intentar modificar un Pedido.'});
           }
@@ -212,12 +206,10 @@ export class PendingFormComponent implements OnInit {
         netTotalWithDiscount: this.netTotalWithDiscount, netTotal: this.netTotal, total: this.total };
       this.orderService.create(orderCreate)
         .subscribe({
-          next: res => {
-            console.log(res);
+          next: () => {
             this.router.navigateByUrl('main/pending-orders');
           },
-          error: err => {
-            console.log(err);
+          error: () => {
             this.message.add({ severity: 'error', summary: 'ERROR!',
               detail: 'Ha ocurrido un error al intentar crear un nuevo Pedido.'});
           }
@@ -258,7 +250,8 @@ export class PendingFormComponent implements OnInit {
     this.loadProducts();
   }
 
-  loadProducts(): void {
+  // leave only one return
+  loadProducts(selectedProducts?: Array<Cart>): void {
 
     const factory: Factory = this.orderForm.get('factory')?.value;
     if(this.orderForm.get('factory')?.value !== '') {
@@ -267,11 +260,20 @@ export class PendingFormComponent implements OnInit {
           next: res => {
             this.products = res.map(value => {
               let price  = value.pricesByList.find(value => value.priceList._id === this.orderForm.get('priceList')?.value._id);
-              return { product: value, price: price?.price!, quantity: 1, bonus: 0, subtotal: price?.price!};
+              let cart: Cart = { product: value, price: price?.price!, quantity: 1, bonus: 0, subtotal: price?.price!};
+              if(selectedProducts) {
+                selectedProducts.forEach(val => {
+                  if(val.product._id === value._id) {
+                    cart = val;
+                  }
+                });
+                return cart;
+              } else {
+                return cart;
+              }
             });
           },
-          error: err => {
-            console.log(err);
+          error: () => {
             this.message.add({ severity: 'error', summary: 'ERROR!',
               detail: 'Ha ocurrido un error al intentar obtener todos los Productos.'});
           }

@@ -36,11 +36,23 @@
         </div>
         <div class="field col-12 md:col-6">
             <input pInputText type="number" class="w-full" formControlName="boxesPerPallet" placeholder="Cajas x Pallet"
-                id="boxesPerPallet">                
+                id="boxesPerPallet" [min]="0" aria-describedby="boxesPerPallet-help"
+                [ngClass]="isValid('boxesPerPallet') ? 'ng-invalid ng-dirty' : ''"> 
+                <div class="block-error">
+                    @if(isValid('boxesPerPallet')) {
+                        <small id="boxesPerPallet-help" class="form-error">Ingrese un numero valido.</small>
+                    }
+                </div>               
         </div>
         <div class="field col-12 md:col-6">
             <input pInputText type="number" class="w-full" formControlName="unitsPerBox" placeholder="Unidades x Caja"
-                id="unitsPerBox">
+                id="unitsPerBox" [min]="0" aria-describedby="unitsPerBox-help"
+                [ngClass]="isValid('unitsPerBox') ? 'ng-invalid ng-dirty' : ''">
+                <div class="block-error">
+                    @if(isValid('unitsPerBox')) {
+                        <small id="unitsPerBox-help" class="form-error">Ingrese un numero valido.</small>
+                    }
+                </div>  
         </div>
     </div>
     <p-divider align="left" type="dotted">Precios x Lista</p-divider>
@@ -48,7 +60,7 @@
         @for( p of pricesByList.controls; track $index) {
             <ng-container [formGroupName]="$index" class="field grid" >
                 <label for="$index" class="col-fixed" style="width:100px">{{p.get('priceList')?.value.name}}</label>
-                <input pInputText type="number" class="w-full" formControlName="price" id="$index">
+                <input pInputText type="number" class="w-full" formControlName="price" id="$index" [min]="0">
             </ng-container>
         }
     </ng-container>

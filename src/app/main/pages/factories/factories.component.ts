@@ -46,14 +46,12 @@ export class FactoriesComponent implements OnInit {
       private factoryService: FactoryService) {}
 
   ngOnInit(): void {
-    console.log('Se cargan los factories de la db por medio de un servicio');
     this.factoryService.findAll()
       .subscribe({
         next: (res) => {
           this.factories = res;
         },
-        error: (error) => {
-          console.log(error);
+        error: () => {
           this.messageService.add({ severity: 'error', summary: 'ERROR!',
             detail: 'Ha ocurrido un error al intentar obtener todas las fabricas/Representadas'});
         }
@@ -87,8 +85,7 @@ export class FactoriesComponent implements OnInit {
               this.messageService.add({ severity: 'success', summary: 'Informacion',
                 detail: `La Fabrica: ${res.name}, se ha eliminado exitosamente.`})
             },
-            error: (error) => {
-              console.log(error);
+            error: () => {
               this.messageService.add({ severity: 'error', summary: 'ERROR!',
                 detail: `Ha ocurrido un error al intentar eliminar la Fabrica: ${factory.name}.`});
             }
@@ -127,7 +124,6 @@ export class FactoriesComponent implements OnInit {
           }
         });
     } else {
-      console.log(dialogData.data);
       this.factoryService.create(dialogData.data)
         .subscribe({
           next: (res) => {
@@ -143,5 +139,4 @@ export class FactoriesComponent implements OnInit {
         })
     }
   }
-
 }

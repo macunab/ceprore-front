@@ -81,7 +81,6 @@ export class CustomerFactoryDialogComponent implements OnInit{
   }
 
   removeDiscount(itemIndex: number): void {
-    //console.log(this.discounts.at(itemIndex).value, itemIndex);
     this.discounts.removeAt(itemIndex);
   }
 
@@ -95,7 +94,6 @@ export class CustomerFactoryDialogComponent implements OnInit{
       return val.discount;
     })
     if(toArray.length) {
-      console.log('ENTRA A TOARRAY')
       const realDiscount = toArray.reduce((acc, cu) => {
         let count = (acc >= 1) ? (1-(acc/100))*(1-(cu/100)) : ((acc) * (1-(cu/100)));
         return count;

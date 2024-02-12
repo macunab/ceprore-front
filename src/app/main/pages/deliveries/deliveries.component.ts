@@ -51,7 +51,7 @@ export class DeliveriesComponent implements OnInit{
         next: (res) => {
           this.deliveries = res;
         },
-        error: (error) => {
+        error: () => {
           this.messageService.add({severity: 'error', summary: 'ERROR!',
             detail: 'Ha ocurrido un error al intentar obtener todos los transportes del sistema'});
         }
@@ -91,8 +91,7 @@ export class DeliveriesComponent implements OnInit{
               this.messageService.add({severity: 'success', summary: 'Informacion',
                 detail: `El transporte: "${res.name}", se ha eliminado exitosamente.`})
             },
-            error: (error) => {
-              console.error(error);
+            error: () => {
               this.messageService.add({ severity: 'error', summary: 'ERROR!',
                 detail: `Ha ocurrido un error al intentar eliminar el Transporte: "${delivery.name}".`});
             }
@@ -119,7 +118,7 @@ export class DeliveriesComponent implements OnInit{
             this.messageService.add({ severity: 'success', summary: 'Informacion',
               detail: `El Transporte: "${res.name}", fue modificado exitosamente`});
           },
-          error: (error) => {
+          error: () => {
             this.messageService.add({ severity: 'error', summary: 'ERROR!',
               detail: `Ha ocurrido un error al intentar editar el Transporte: "${dialogData.data.name}"`});
           }
@@ -133,15 +132,11 @@ export class DeliveriesComponent implements OnInit{
             this.messageService.add({severity: 'success', summary: 'Informacion',
               detail: `Se ha creado exitosamente el transporte: "${res.name}"`});
           },
-          error: (error) => {
-            console.log(error);
+          error: () => {
             this.messageService.add({ severity: 'error', summary: 'ERROR!',
               detail: 'Ha ocurrido un error al intentar crear un nuevo Transporte'});
           }
         });
     }
   }
-
-
-
 }

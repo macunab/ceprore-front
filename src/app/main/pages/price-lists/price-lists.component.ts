@@ -46,8 +46,7 @@ export class PriceListsComponent implements OnInit{
     this.priceListService.findAll()
       .subscribe({
         next: (res) => this.priceLists = res,
-        error: (error) => {
-          console.log(error);
+        error: () => {
           this.messageService.add({ severity: 'error', summary: 'ERROR!',
             detail: 'Ha ocurrido un error al intentar obtener todas las listas de precio'});
         }
@@ -88,8 +87,7 @@ export class PriceListsComponent implements OnInit{
               this.messageService.add({ severity: 'success', summary: 'Informacion', 
                 detail: `La lista de precio: "${res.name}", se ha eliminado exitosamente. `})
             },
-            error: (error) => {
-              console.log(error);
+            error: () => {
               this.messageService.add({ severity: 'error', summary: 'ERROR!',
                 detail: `Ha occurrido un error al intentar eliminar la Lista de precios: ${priceList.name}`});
             }
@@ -116,8 +114,7 @@ export class PriceListsComponent implements OnInit{
             this.messageService.add({ severity: 'success', summary: 'Informacion', 
               detail: `La lista de precio: "${res.name}", fue modificada exitosamente.`});
           },
-          error: (error) => {
-            console.log(error);
+          error: () => {
             this.messageService.add({ severity: 'error', summary: 'ERROR!',
               detail: `Ha ocurrido un error al intentar modificar la Lista de precio: ${dialogData.data.name}`});
           }
@@ -131,7 +128,7 @@ export class PriceListsComponent implements OnInit{
             this.messageService.add({ severity: 'success', summary: 'Informacion',
               detail: `Se ha creado exitosamente la Lista de precio: ${res.name}`});
           },
-          error: (error) => {
+          error: () => {
             this.messageService.add({ severity: 'error', summary: 'ERROR!',
               detail: `Ha ocurrido un error al intentar crear una nueva Lista de precio`});
           }

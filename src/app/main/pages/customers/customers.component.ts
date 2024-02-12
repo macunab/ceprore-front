@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { Customer } from '../../interfaces/customer.interface';
-import { ButtonConfig, Column, TableEvent } from '../../../shared/interfaces/genericTable.interface';
-import { GenericTableComponent } from '../../../shared/generic-table/generic-table.component';
 import { Router } from '@angular/router';
+
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+
+import { Customer } from '../../interfaces/customer.interface';
 import { CustomerService } from '../../services/customer.service';
+import { GenericTableComponent } from '../../../shared/generic-table/generic-table.component';
+import { ButtonConfig, Column, TableEvent } from '../../../shared/interfaces/genericTable.interface';
 
 
 @Component({
@@ -39,7 +41,7 @@ export class CustomersComponent implements OnInit{
     { field: 'email', title: 'Correo' },
     { field: 'address', title: 'Direccion' }
   ];
-  tableTitle: string = 'Clientes';
+  tableTitle: string = '';
 
   constructor(private router: Router, private confirmationService: ConfirmationService, 
       private messageService: MessageService, private customerSevice: CustomerService) {}
@@ -61,15 +63,12 @@ export class CustomersComponent implements OnInit{
   onActions(action: TableEvent<Customer>): void {
     switch(action.type) {
       case 'edit':
-        console.log('EDIT');
         this.router.navigateByUrl('main/customer', { state: action.data });
       break;
       case 'delete':
-        console.log('DELETE');
         this.deleteCustomer(action.data);
       break;
       case 'create':
-        console.log('CREATE EDIT');
         this.router.navigateByUrl('main/customer');
       break;
     }

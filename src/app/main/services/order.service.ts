@@ -155,6 +155,20 @@ export class OrderService {
       );
   }
 
+  printSurrender(order: Order): Observable<Blob> {
+
+    const { _id, createdAt, updatedAt, __v, ...orderData } = order;
+    const url: string = `${ this.baseUrl }/surrender-pdf`;
+    const headers = new HttpHeaders()
+      .set('authorization', `Beared ${localStorage.getItem('token')}`);
+    return this.http.post(url, orderData, { responseType: 'blob', headers })
+      .pipe(
+        catchError(({error}) => {
+          return throwError(() => `Error: ${error.message}`)
+        })
+      );
+  } 
+
   countAllOrders(query?: string): Observable<number> {
 
     query = query?.trim();

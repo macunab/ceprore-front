@@ -51,7 +51,6 @@ export class InvoiceFormDialogComponent implements OnChanges{
       this.invoiceForm.markAllAsTouched();
       return;
     }
-    console.log(this.invoiceForm.get('ivaAmount')!.value);
     if(this.order.invoice !== undefined) {
       this.invoice = { ...this.invoiceForm.value,
         ivaAmount: this.invoiceForm.get('ivaAmount')!.value };
@@ -61,7 +60,6 @@ export class InvoiceFormDialogComponent implements OnChanges{
       this.order.status = 'INVOICED';
       this.order.invoice = this.invoice;
     }
-    console.log(this.order);
     this.emmiter.emit({ data: this.order });
   }
 

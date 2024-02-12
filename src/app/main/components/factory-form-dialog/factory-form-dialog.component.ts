@@ -33,7 +33,6 @@ export class FactoryFormDialogComponent implements OnChanges {
   // ToDO fix performance
   ngOnChanges(changes: SimpleChanges): void {
     if(this.factoryUpdate._id) {
-      // this.factoryUpdate.commission = this.factoryUpdate.commission! * 100;
       this.factoryForm.patchValue(this.factoryUpdate);
     } else {
       this.factoryForm.reset({ retainCommission: false });

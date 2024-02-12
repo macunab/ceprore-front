@@ -26,7 +26,6 @@ export class InvoicedComponent implements OnInit{
 
   invoicedOrders: Array<Order> = [];
   orderUpdate: Order = {} as Order;
-  // invoiceUpdate: Invoice = {} as Invoice;
   orderPaid: Order = {} as Order;
   showInvoiceForm: boolean = false;
   showPaidForm: boolean = false;
@@ -40,8 +39,7 @@ export class InvoicedComponent implements OnInit{
         next: res => {
           this.invoicedOrders = res;
         },
-        error: err => {
-          console.log(err);
+        error: () => {
           this.message.add({ severity: 'error', summary: 'ERROR!',
             detail: 'Ha ocurrido un error al intentar obtener todos los Pedidos Facturados.'});
         }
@@ -81,14 +79,12 @@ export class InvoicedComponent implements OnInit{
         this.orderService.removeInvoice(updatedOrder)
           .subscribe({
             next: res => {
-              console.warn(res);
               this.invoicedOrders = this.invoicedOrders.filter(val => val._id !== res._id);
               this.invoicedOrders = [...this.invoicedOrders];
               this.message.add({ severity: 'success', summary: 'Informacion',
                 detail: 'Se ha eliminado la Factura exitosamente.'});
             },
-            error: err => {
-              console.log(err);
+            error: () => {
               this.message.add({ severity: 'error', summary: 'ERROR',
                 detail: 'Ha ocurrido un error al intentar eliminar la Factura.'});
             }
@@ -109,15 +105,13 @@ export class InvoicedComponent implements OnInit{
     this.orderService.update(orderUpdate)
       .subscribe({
         next: res => {
-          console.log(res);
           const index = this.invoicedOrders.findIndex(val => val._id === res._id);
           (index !== -1) ? this.invoicedOrders[index] = res : '';
           this.invoicedOrders = [...this.invoicedOrders];
           this.message.add({ severity: 'success', summary: 'Informacion',
             detail: 'La Factura ha sido modificada exitosamente.'});
         },
-        error: err => {
-          console.log(err);
+        error: () => {
           this.message.add({ severity: 'error', summary: 'ERROR!',
             detail: 'Ha ocurrido un error al intentar modificar una Factura.'});
         }
@@ -126,7 +120,6 @@ export class InvoicedComponent implements OnInit{
   }
 
   onPaidFormSubmit(dialogData: DialogData<Order>): void {
-    console.log(dialogData.data);
     const { __v, createdAt, updatedAt, ...orderData } = dialogData.data;
     this.orderService.update(orderData)
       .subscribe({
@@ -136,8 +129,7 @@ export class InvoicedComponent implements OnInit{
           this.message.add({ severity: 'success', summary: 'Informacion',
             detail: 'Se ha creado un Pago exitosamente.'});
         },
-        error: err => {
-          console.log(err);
+        error: () => {
           this.message.add({ severity: 'error', summary: 'ERROR!',
             detail: 'Ha ocurrido un error al intentar crear un Pago.'});
         }
@@ -153,13 +145,10 @@ export class InvoicedComponent implements OnInit{
           let pdfUrl = window.URL.createObjectURL(blob);
           window.open(pdfUrl, '_blank');
         },
-        error: err => {
-          console.log(err);
+        error: () => {
           this.message.add({ severity: 'error', summary: 'ERROR!',
             detail: 'Ha ocurrido un erro al intentar de imprimir una Factura.'});
         }
       });
   }
-
-
 }

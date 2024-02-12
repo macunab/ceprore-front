@@ -25,7 +25,7 @@
     <ng-container formArrayName="discounts" class="flex flex-column">
         @for( d of discounts.controls; track $index){
             <ng-container [formGroupName]="$index" class="formgrid grid">
-                <input pInputText type="number" formControlName="discount" class="col-10">
+                <input pInputText type="number" formControlName="discount" class="col-10" [min]="0">
                 <button type="button" pButton icon="pi pi-trash" class="col-1 p-button-sm p-button-danger p-button-rounded p-button-text mr-2"
                     (click)="removeDiscount($index)"></button> 
             </ng-container>
