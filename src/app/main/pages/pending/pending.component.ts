@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Order } from '../../interfaces/order.interface';
-import { ButtonConfig, Column, TableEvent } from '../../../shared/interfaces/genericTable.interface';
+import { TableEvent } from '../../../shared/interfaces/genericTable.interface';
 import { PendingTableComponent } from '../../components/pending-table/pending-table.component';
 import { Router } from '@angular/router';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -9,9 +9,7 @@ import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 import { InvoiceFormDialogComponent } from '../../components/invoice-form-dialog/invoice-form-dialog.component';
 import { DialogData } from '../../interfaces/dialogData.interface';
-import { Invoice } from '../../interfaces/invoice.interface';
 import { OrderService } from '../../services/order.service';
-import { ThisReceiver } from '@angular/compiler';
 
 @Component({
   selector: 'app-pending',
@@ -23,46 +21,10 @@ import { ThisReceiver } from '@angular/compiler';
 })
 export class PendingComponent implements OnInit{
   
-  pendingOrders: Array<Order> = [
-    { _id: '1111', createdAt: new Date(2020,8,15), code: 'ASD-324', status: 'Pendiente', total: 3369.6975,
-      customer: {
-        _id: '1111', name: 'Carlo Juarez', address: 'San juan 1234', email: 'carlos@gmail.com', 
-          discountsByFactory: [
-            { factory: { _id: '1111', name: 'Fabrica1', address: 'San juan 232', email: 'factory1@gmail.com'},
-            delivery: { _id: '1111', name: 'Cruz Azul', address: 'San Martin 124', email: 'cruzAzul@viajes.com' },
-            discounts: [5, 5], cascadeDiscount: 0.0975 },
-            { factory: { _id: '1212', name: 'Carilo SA', address: 'Suipacha 123', email: 'carilo@gmail.com' },
-            delivery: { _id: '3333', name: 'Fedex Arg', address: 'Carlos Gardel 233', email: 'fedexArg@fedex.com'},
-            discounts: [5], cascadeDiscount: 0.05 },
-            { factory: { _id: '2222', name: 'Sancor Productos', address: 'Ituzaingo 232', email: 'sancor@gmail.com' },
-            delivery: { _id: '2222', name: 'Carlitos SA', address: 'Inigo de la pascua 123', email: 'carlitos@gmail.com' },
-            discounts: [5], cascadeDiscount: 0.05 }
-          ], priceList: { _id: '2222', name: 'Distribuidoras' }
-      },
-      priceList: { _id: '2222', name: 'Distribuidoras' }, 
-      delivery: { _id: '2222', name: 'Carlitos SA', address: 'Inigo de la pascua 123', email: 'carlitos@gmail.com' },
-      factory: { _id: '2222', name: 'Sancor Productos', address: 'Ituzaingo 232', email: 'sancor@gmail.com' },
-      observations: 'Se vendera la mitad por remito pero se retirara en fecha acordada. Sin envio la parte de remito.',
-      cascadeDiscount: 5, invoicedPercent: { percentString: '50%', percentNumber: 0.5},
-      productsCart: [
-        { product: { _id: '1111', code: 'CA-1231', name: 'Gallete Cracker', description: 'Galleta cracker multicereal Ceralmix. Fabrica Otonello',
-        boxesPerPallet: 10, unitsPerBox: 24, factory: { _id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
-        pricesByList: [{ priceList: { _id: '1111', name: 'Supermercados' }, price: 150 }, { priceList: {_id: '2222', name: 'Distribuidoras'}, price: 170 }] }, price: 170,
-      quantity: 1, bonus: 0,subtotal: 170 },
-      { product: { _id: '2222', code: 'CA-1231', name: 'Confites de aniz', description: 'Galleta cracker multicereal Ceralmix. Fabrica Otonello',
-      boxesPerPallet: 10, unitsPerBox: 24, factory: { _id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
-      pricesByList: [{ priceList: { _id: '1111', name: 'Supermercados' }, price: 150 }, { priceList: {_id: '2222', name: 'Distribuidoras'}, price: 250 }] },
-      price: 250, quantity: 10, bonus: 0, subtotal: 2500 },
-      { product: { _id: '4444', code: 'CA-1231', name: 'Chocolate aguila', description: 'Galleta cracker multicereal Ceralmix. Fabrica Otonello',
-      boxesPerPallet: 10, unitsPerBox: 24, factory: { _id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
-      pricesByList: [{ priceList: { _id: '1111', name: 'Supermercados' }, price: 150 }, { priceList: {_id: '2222', name: 'Distribuidoras'}, price: 540 }] },
-      price: 540, quantity: 1, bonus: 0, subtotal: 540 }
-      ], netTotal: 3210, netTotalWithDiscount: 3049.5, invoicedAmount: 1524.75, remitAmount: 1524.75, ivaAmount: 320.1975,
-      discounts: [5, 5]
-    },
-  ];
+  pendingOrders: Array<Order> = [];
   orderUpdate: Order = {} as Order;
   showInvoiceForm: boolean = false;
+  loadingTable: boolean = true;
 
   constructor(private confirmation: ConfirmationService, private message: MessageService,
       private router: Router, private orderService: OrderService) {}
@@ -72,6 +34,7 @@ export class PendingComponent implements OnInit{
       .subscribe({
         next: res => {
           this.pendingOrders = res;
+          this.loadingTable = false;
         },
         error: () => {
           this.message.add({ severity: 'error', summary: 'ERROR!',

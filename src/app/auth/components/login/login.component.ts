@@ -25,6 +25,7 @@ export class LoginComponent {
     password: ['', [Validators.required]],
     rememberme: [false]
   });
+  loadingButton: boolean = false;
 
   constructor(private fb: FormBuilder, private message: MessageService,
     private authService: AuthService, private router: Router) {}
@@ -41,14 +42,17 @@ export class LoginComponent {
       this.loginForm.markAllAsTouched();
       return;
     }
+    this.loadingButton = true;
     const { email, password } = this.loginForm.value;
     this.authService.login(email, password)
       .subscribe({
         next: () => {
+          this.loadingButton = false;
           this.router.navigateByUrl('main/home');
         },
         error: err => {
           console.log(err);
+          this.loadingButton = false;
           this.message.add({ severity: 'error', summary: 'Credenciales no validas!',
             detail: 'El email o password no son validos.'});
         }

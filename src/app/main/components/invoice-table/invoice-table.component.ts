@@ -18,6 +18,7 @@ import { Order } from '../../interfaces/order.interface';
 export class InvoiceTableComponent {
 
   @Input() invoicedOrders: Array<Order> = [];
+  @Input() loading: boolean = true;
   @Output('onAction') emitter = new EventEmitter();
   filters: Array<string> = ['order.customer.name', 'order.factory.name', 'order.invoice.invoiceCode'];
 }

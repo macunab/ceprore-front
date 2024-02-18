@@ -17,16 +17,18 @@ import { MessageService } from 'primeng/api';
 export class HistoricComponent implements OnInit{
   
   records: Array<Order> = [];
+  loadingTable: boolean = true;
   
   constructor(private orderService: OrderService,
      private message: MessageService) {}
 
   ngOnInit(): void {
 
-    this.orderService.findAll('SURRENDER')
+    this.orderService.findAll('ENDED')
       .subscribe({
         next: res => {
           this.records = res;
+          this.loadingTable = false;
         },
         error: () => {
           this.message.add({ severity: 'error', summary: 'ERROR!',
@@ -39,7 +41,19 @@ export class HistoricComponent implements OnInit{
     
     switch(action.type) {
       case 'print':
-        console.log('PRINT');
+        console.log(action.data);
+        this.orderService.printSurrender(action.data)
+          .subscribe({
+            next: res => {
+              let blob = new Blob([res], { type: 'application/pdf' });
+              let pdfUrl = window.URL.createObjectURL(blob);
+              window.open(pdfUrl, '_blank');
+            },
+            error: () => {
+              this.message.add({ severity: 'error', summary: 'ERROR!',
+                detail: 'Ha ocurrido un error al intentar generar un archivo pdf.'});
+            }
+          });
       break;
     }
   }

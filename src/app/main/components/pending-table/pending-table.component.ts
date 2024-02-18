@@ -18,6 +18,7 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
 export class PendingTableComponent {
 
   @Input() pendingOrders: Array<Order> = [];
+  @Input() loadingTable: boolean = true;
   @Output('onAction') emitter = new EventEmitter();
   filters: Array<string> = ['customer.name', 'factory.name'];
 

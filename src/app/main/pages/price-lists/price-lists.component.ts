@@ -20,12 +20,7 @@ import { PriceListService } from '../../services/price-list.service';
 })
 export class PriceListsComponent implements OnInit{
   
-  priceLists: Array<PriceList> = [
-    { _id: '1111', name: 'Supermercados' },
-    { _id: '2222', name: 'Distribuidoras' },
-    { _id: '3333', name: 'Cliente frecuentes' },
-    { _id: '4444', name: 'Campo Agroindustria' }
-  ]
+  priceLists: Array<PriceList> = []
   showForm: boolean = false;
   formTitle: string = '';
   tableTitle: string = 'Listas de precio';
@@ -38,6 +33,7 @@ export class PriceListsComponent implements OnInit{
     { field: 'name', title: 'Nombre' }
   ];
   priceListUpdate: PriceList = {} as PriceList;
+  loadingTable: boolean = true;
 
   constructor(private messageService: MessageService, private confirmationService: ConfirmationService,
       private priceListService: PriceListService) {}
@@ -45,7 +41,10 @@ export class PriceListsComponent implements OnInit{
   ngOnInit(): void {
     this.priceListService.findAll()
       .subscribe({
-        next: (res) => this.priceLists = res,
+        next: (res) => {
+          this.priceLists = res;
+          this.loadingTable = false;
+        },
         error: () => {
           this.messageService.add({ severity: 'error', summary: 'ERROR!',
             detail: 'Ha ocurrido un error al intentar obtener todas las listas de precio'});

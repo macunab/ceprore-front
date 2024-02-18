@@ -21,12 +21,7 @@ import { FactoryService } from '../../services/factory.service';
 })
 export class FactoriesComponent implements OnInit {
 
-  factories: Array<Factory> = [
-    { _id: '1111', name: 'Carilo SA', address: 'Suipacha 123', email: 'carilo@gmail.com' },
-    { _id: '2222', name: 'Sancor Productos', address: 'Ituzaingo 232', email: 'sancor@gmail.com' },
-    { _id: '3333', name: 'Holidays SA', address: 'Olaen 232', email: 'holidays@gmail.com' },
-    { _id: '4444', name: 'Arcor', address: 'Ruta 2 232', email: 'arcor@gmail.com' }
-  ];
+  factories: Array<Factory> = [];
   buttons: Array<ButtonConfig> = [
     { class: 'p-button-sm p-button-info p-button-rounded p-button-text mr-2', functionType: 'edit', icon: 'pi pi-pencil', tooltipText: 'Editar' },
     { class: 'p-button-sm p-button-danger p-button-rounded p-button-text mr-2', functionType: 'delete', icon: 'pi pi-trash', tooltipText: 'Eliminar' }
@@ -40,7 +35,8 @@ export class FactoriesComponent implements OnInit {
   showCreateFactory: boolean = false;
   formTitle: string = '';
   factoryUpdate: Factory = {} as Factory;
-  tableTitle: string = 'Fabricas';
+  tableTitle: string = 'Representadas';
+  loadingTable: boolean = true;
 
   constructor(private messageService: MessageService, private confirmationService: ConfirmationService,
       private factoryService: FactoryService) {}
@@ -50,6 +46,7 @@ export class FactoriesComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.factories = res;
+          this.loadingTable = false;
         },
         error: () => {
           this.messageService.add({ severity: 'error', summary: 'ERROR!',

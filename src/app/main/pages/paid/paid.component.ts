@@ -24,6 +24,7 @@ export class PaidComponent implements OnInit{
   showForm: boolean = false;
   paymentUpdate: Order = {} as Order;
   @ViewChild(PaidFormDialogComponent) formDialog!: PaidFormDialogComponent;
+  loadingTable: boolean = true;
   
   constructor(private confirmation: ConfirmationService, private message: MessageService,
     private orderService: OrderService) {}
@@ -33,6 +34,7 @@ export class PaidComponent implements OnInit{
       .subscribe({
         next: res => {
           this.paidOrders = res;
+          this.loadingTable = false;
         },
         error: () => {
           this.message.add({ severity: 'error', summary: 'ERROR!',

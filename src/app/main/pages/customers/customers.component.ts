@@ -22,15 +22,7 @@ import { ButtonConfig, Column, TableEvent } from '../../../shared/interfaces/gen
 })
 export class CustomersComponent implements OnInit{
 
-  customers: Array<Customer> = [
-    { _id: '1111', name: 'Carlo Juarez', address: 'San juan 1234', email: 'carlos@gmail.com', 
-      discountsByFactory: [
-        { factory: { _id: '1111', name: 'Fabrica1', address: 'San juan 232', email: 'factory1@gmail.com'},
-        delivery: { _id: '232323', name: 'Transporte1', address: 'Felipe boero 23', email: 'transporte1@gmail.com'},
-        discounts: [5, 5], cascadeDiscount: 0.0975}
-      ]},
-    { _id: '2222', name: 'Juan Garcias', address: 'Simon Bolivar 221', email: 'juan@gmail.com'}
-  ];
+  customers: Array<Customer> = [];
   buttons: Array<ButtonConfig> = [
     { class: 'p-button-sm p-button-info p-button-rounded p-button-text mr-2', functionType: 'edit', icon: 'pi pi-pencil', tooltipText: 'Editar' },
     { class: 'p-button-sm p-button-danger p-button-rounded p-button-text mr-2', functionType: 'delete', icon: 'pi pi-trash', tooltipText: 'Eliminar' }
@@ -42,6 +34,7 @@ export class CustomersComponent implements OnInit{
     { field: 'address', title: 'Direccion' }
   ];
   tableTitle: string = '';
+  loadingTable: boolean = true;
 
   constructor(private router: Router, private confirmationService: ConfirmationService, 
       private messageService: MessageService, private customerSevice: CustomerService) {}
@@ -51,6 +44,7 @@ export class CustomersComponent implements OnInit{
       .subscribe({
         next: res => {
           this.customers = res;
+          this.loadingTable = false;
         },
         error: err => {
           console.log(err);

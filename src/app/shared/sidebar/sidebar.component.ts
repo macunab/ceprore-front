@@ -1,12 +1,13 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { SidebarModule } from 'primeng/sidebar';
-import { PanelMenuModule } from 'primeng/panelmenu';
-import { MenuItem } from 'primeng/api';
+import { RippleModule } from 'primeng/ripple';
+import { StyleClassModule } from 'primeng/styleclass';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [SidebarModule, PanelMenuModule],
+  imports: [SidebarModule, RippleModule, StyleClassModule, RouterModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
 })
@@ -21,23 +22,5 @@ export class SidebarComponent {
   hideSidebar() {
     this._showSidebar = false;
   }
-
-  items: MenuItem[] = [
-    { label: 'Home', icon: 'pi pi-home', routerLink: 'main/home', command: () => { this.hideSidebar() }},
-    { label: 'Ordenes', icon: 'pi pi-shopping-cart', items: [
-      { label: 'Pendientes', routerLink: '/main/pending-orders', command: () => { this.hideSidebar() }},
-      { label: 'Facturadas', routerLink: '/main/invoiced', command: () => { this.hideSidebar() }},
-      { label: 'Cobradas', routerLink: '/main/paid', command: () => { this.hideSidebar() } }
-    ]},
-    { label: 'Clientes', icon: 'pi pi-users', routerLink: '/main/customers', command: () => { this.hideSidebar() }},
-    { label: 'Fabricas', icon: 'pi pi-building', routerLink: '/main/factories', command: () => { this.hideSidebar() }},
-    { label: 'Productos', icon: 'pi pi-gift', routerLink: '/main/products', command: () => { this.hideSidebar() }},
-    { label: 'Listas de precio', icon: 'pi pi-book', routerLink: '/main/priceLists', command: () => { this.hideSidebar() }},
-    { label: 'Transportes', icon: 'pi pi-truck', routerLink: '/main/deliveries', command: () => { this.hideSidebar() }},
-    { label: 'Cuenta Corriente', icon: 'pi pi-wallet', items: [
-      { label: 'A Rendir', routerLink: '/main/checking-accounts', command: () => { this.hideSidebar() }},
-      { label: 'Historico', routerLink: '/main/records', command: () => { this.hideSidebar() }}
-    ]},
-  ]
 
 }

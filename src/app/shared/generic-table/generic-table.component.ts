@@ -21,6 +21,7 @@ export class GenericTableComponent<T> {
   @Input() buttons: Array<ButtonConfig> = [];
   @Input() filters: Array<string> = [];
   @Input() tableTitle: string = '';
+  @Input() loading: boolean = true;
   @Output('onAction') emitter = new EventEmitter();
 
 }

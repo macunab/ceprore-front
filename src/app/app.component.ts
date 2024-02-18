@@ -1,13 +1,14 @@
 import { Component, computed, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { AuthService } from './auth/services/auth.service';
 import { AuthStatus } from './auth/interfaces/auth-status.enum';
+import { SpinnerComponent } from './shared/spinner/spinner.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet],
+  imports: [CommonModule, RouterOutlet, SpinnerComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -29,6 +30,7 @@ export class AppComponent {
       case AuthStatus.checking:
         return;
       case AuthStatus.authenticated:
+        this.router.navigateByUrl('home')
         return;
       case AuthStatus.notAuthenticated:
         this.router.navigateByUrl('login');

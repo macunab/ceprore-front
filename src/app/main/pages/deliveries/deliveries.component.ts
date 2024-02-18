@@ -21,11 +21,7 @@ import { DeliveryService } from '../../services/delivery.service';
 })
 export class DeliveriesComponent implements OnInit{
 
-  deliveries: Array<Delivery> = [
-    { _id: '1111', name: 'Cruz Azul', address: 'San Martin 124', email: 'cruzAzul@viajes.com' },
-    { _id: '2222', name: 'Carlitos SA', address: 'Inigo de la pascua 123', email: 'carlitos@gmail.com' },
-    { _id: '3333', name: 'Fedex Arg', address: 'Carlos Gardel 233', email: 'fedexArg@fedex.com'}
-  ];
+  deliveries: Array<Delivery> = [];
   showForm: boolean = false;
   buttons: Array<ButtonConfig> = [
     { class: 'p-button-sm p-button-info p-button-rounded p-button-text mr-2', functionType: 'edit', icon: 'pi pi-pencil', tooltipText: 'Editar' },
@@ -40,16 +36,17 @@ export class DeliveriesComponent implements OnInit{
   deliveryUpdate: Delivery = {} as Delivery;
   formTitle: string = '';
   tableTitle: string = 'Transportes';
+  loadingTable: boolean = true;
 
   constructor(private messageService: MessageService, private confirmationService: ConfirmationService,
     private deliveryService: DeliveryService) {}
   
   ngOnInit(): void {
-    console.info('Se cargan los deliveries existentes en la db');
     this.deliveryService.findAll()
       .subscribe({
         next: (res) => {
           this.deliveries = res;
+          this.loadingTable = false;
         },
         error: () => {
           this.messageService.add({severity: 'error', summary: 'ERROR!',

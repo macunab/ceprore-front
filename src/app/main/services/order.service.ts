@@ -60,7 +60,7 @@ export class OrderService {
 
   update(order: Order): Observable<Order> {
 
-    const { _id, ...orderData } = order;
+    const { _id, createdAt, updatedAt, __v, ...orderData } = order;
     const url: string = `${this.baseUrl}/${_id}`;
     const headers = new HttpHeaders()
     .set('authorization', `Beared ${localStorage.getItem('token')}`);

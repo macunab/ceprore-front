@@ -9,21 +9,22 @@ import { FieldsetModule } from 'primeng/fieldset';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 import { Factory } from '../../interfaces/factory.interface';
 import { FactoryService } from '../../services/factory.service';
 import { Order } from '../../interfaces/order.interface';
 import { OrderService } from '../../services/order.service';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-checking-accounts',
   standalone: true,
-  imports: [FieldsetModule, DropdownModule, ButtonModule,
+  imports: [FieldsetModule, DropdownModule, ButtonModule, ConfirmDialogModule,
     FormsModule, CardModule, TableModule, ToastModule, DatePipe, CurrencyPipe, TooltipModule],
   templateUrl: './checking-accounts.component.html',
   styleUrl: './checking-accounts.component.css',
-  providers: [MessageService]
+  providers: [ConfirmationService, MessageService]
 })
 export class CheckingAccountsComponent implements OnInit{
 
@@ -32,7 +33,7 @@ export class CheckingAccountsComponent implements OnInit{
   selectedFactory: Factory | undefined;
 
   constructor(private factoryService: FactoryService, private orderService: OrderService, 
-      private messageService: MessageService) {}
+      private messageService: MessageService, private confirmationService: ConfirmationService,) {}
 
   ngOnInit(): void {
     this.factoryService.findAll()
@@ -68,7 +69,7 @@ export class CheckingAccountsComponent implements OnInit{
   }
 
   printSurrender(surrender: Order): void {
-    console.log('print surrender service...', surrender);
+
     this.orderService.printSurrender(surrender)
       .subscribe({
         next: res => {
@@ -86,5 +87,26 @@ export class CheckingAccountsComponent implements OnInit{
 
   recordSurrender(surrender: Order): void {
     console.log('record the selected surrender...');
+    this.confirmationService.confirm({
+      message: 'Esta seguro que desea marcar el pedido como finalizado?',
+      header: 'Confirmar Finalizacion',
+      icon: 'pi pi-info-delete',
+      accept: () => {
+        surrender.status = 'ENDED';
+        this.orderService.update(surrender)
+          .subscribe({
+            next: res => {
+              this.surrenderOrders = this.surrenderOrders.filter(val => val._id !== res._id);
+              this.surrenderOrders = [...this.surrenderOrders];
+              this.messageService.add({ severity: 'success', summary: 'Informacion',
+                detail: 'El Pedido seleccionado ha sido finalizado exitosamente.'})
+            },
+            error: () => {
+              this.messageService.add({ severity: 'error', summary: 'ERROR!',
+                detail: 'Ha ocurrido un erro al intentar finalizar el Pedido seleccionado.'});
+            }
+          });
+      }
+    });
   }
 }

@@ -21,7 +21,6 @@ export class AuthService {
   }
 
   saveToken(user: User, token: string): boolean {
-    
     this._user = user;
     this._authStatus.set(AuthStatus.authenticated);
     localStorage.setItem('token', token);
@@ -39,11 +38,9 @@ export class AuthService {
   }
 
   tokenValidation(): Observable<boolean> {
-
     const url: string = `${ this.baseUrl }/check-token`;
     const token = localStorage.getItem('token');
     if(!token) {
-      console.log('ENTRA EN IF');
       this.logout();
       return of(false);
     }

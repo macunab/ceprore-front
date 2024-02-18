@@ -18,6 +18,7 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
 export class RecordTableComponent {
 
   @Input() records: Array<Order> = [];
+  @Input() loading: boolean = true;
   @Output('onAction') emitter = new EventEmitter();
   filters: Array<string> = ['customer.name', 'factory.name', 'payment.createdAt'];
 

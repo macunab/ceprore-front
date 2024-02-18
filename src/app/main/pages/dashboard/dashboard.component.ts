@@ -13,10 +13,13 @@ export class DashboardComponent implements OnInit {
 
   totalOrders: number = 0;
   startedOrders: number = 0
+  startedLastWeek: number = 0;
   invoicedOrders: number = 0;
   invoicedLastWeeks: number = 0;
   paidOrders: number = 0;
+  paidLastWeek: number = 0;
   surrenderOrders: number = 0;
+  surrenderLastWeek: number = 0;
 
   constructor(private orderService: OrderService) {}
 
@@ -49,6 +52,7 @@ export class DashboardComponent implements OnInit {
           console.log(err);
         }
       });
+
     this.orderService.countAllOrders('PAID')
       .subscribe({
         next: res => {
@@ -66,6 +70,18 @@ export class DashboardComponent implements OnInit {
         error: err => {
           console.log(err);
         }
+      });
+    this.orderService.countAllOrdersLastWeek('STARTED')
+      .subscribe( res => {
+        this.startedLastWeek = res;
+      });
+    this.orderService.countAllOrdersLastWeek('PAID')
+      .subscribe( res => {
+        this.paidLastWeek = res;
+      });
+    this.orderService.countAllOrdersLastWeek('SURRENDER')
+      .subscribe(res => {
+        this.surrenderLastWeek = res;
       });
   }
 

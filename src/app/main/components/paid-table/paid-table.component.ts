@@ -18,6 +18,7 @@ import { Order } from '../../interfaces/order.interface';
 export class PaidTableComponent {
 
   @Input() paidOrders: Array<Order> = [];
+  @Input() loading: boolean = true;
   @Output('onAction') emitter = new EventEmitter();
   filters: Array<string> = [];
 

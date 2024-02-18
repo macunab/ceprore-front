@@ -21,11 +21,7 @@ import { ProductService } from '../../services/product.service';
 })
 export class ProductsComponent implements OnInit{
 
-  products: Array<Product> = [
-    { _id: '1111', code: 'CA-1231', name: 'Gallete Cracker', description: 'Galleta cracker multicereal Ceralmix. Fabrica Otonello',
-        boxesPerPallet: 10, unitsPerBox: 24, factory: { _id: '1111', name: 'factory1', address: 'asdasdasd', email: 'asas@gmail.com'},
-        pricesByList: [{ priceList: { _id: '1111', name: 'Supermercados' }, price: 150 }, { priceList: {_id: '2222', name: 'Kioscos'}, price: 170 }] }
-  ];
+  products: Array<Product> = [];
   buttons: Array<ButtonConfig> = [
     { class: 'p-button-sm p-button-info p-button-rounded p-button-text mr-2', 
         functionType: 'edit', icon: 'pi pi-pencil', tooltipText: 'Editar' },
@@ -43,6 +39,7 @@ export class ProductsComponent implements OnInit{
   showForm: boolean = false;
   productUpdate: Product = {} as Product;
   @ViewChild(ProductFormDialogComponent) formDialog!: ProductFormDialogComponent;
+  loadingTable: boolean = true;
 
   constructor(private confirmationService: ConfirmationService, private messageService: MessageService,
     private productService: ProductService) {}
@@ -52,7 +49,7 @@ export class ProductsComponent implements OnInit{
       .subscribe({
         next: res => {
           this.products = res;
-          console.log(res);
+          this.loadingTable = false;
         },
         error: () => {
           this.messageService.add({ severity: 'error', summary: 'ERROR!', 

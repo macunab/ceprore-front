@@ -29,6 +29,7 @@ export class InvoicedComponent implements OnInit{
   orderPaid: Order = {} as Order;
   showInvoiceForm: boolean = false;
   showPaidForm: boolean = false;
+  loadingTable: boolean = true;
 
   constructor(private confirmation: ConfirmationService, private message: MessageService, 
       private orderService: OrderService) {}
@@ -38,6 +39,7 @@ export class InvoicedComponent implements OnInit{
       .subscribe({
         next: res => {
           this.invoicedOrders = res;
+          this.loadingTable = false;
         },
         error: () => {
           this.message.add({ severity: 'error', summary: 'ERROR!',

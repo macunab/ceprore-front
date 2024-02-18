@@ -15,6 +15,7 @@ import { PaidComponent } from "./pages/paid/paid.component";
 import { PendingFormComponent } from "./pages/pending-form/pending-form.component";
 import { isAuthenticatedGuard } from "../auth/guards/is-authenticated.guard";
 import { HistoricComponent } from "./pages/historic/historic.component";
+import { SettingsComponent } from "./pages/settings/settings.component";
 
 
 const routes: Routes = [
@@ -35,6 +36,7 @@ const routes: Routes = [
             { path: 'invoiced', component: InvoicedComponent, canActivate: [isAuthenticatedGuard] },
             { path: 'paid', component: PaidComponent, canActivate: [isAuthenticatedGuard] },
             { path: 'records', component: HistoricComponent, canActivate: [isAuthenticatedGuard] },
+            { path: 'settings', component: SettingsComponent, canActivate: [isAuthenticatedGuard] },
             { path: '**', redirectTo: 'home' }
         ]
     },
