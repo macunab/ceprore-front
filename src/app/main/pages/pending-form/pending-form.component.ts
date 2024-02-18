@@ -51,39 +51,9 @@ export class PendingFormComponent implements OnInit {
   selectedCustomer: Customer = {} as Customer;
   products: Array<Cart> = []
   factories: Array<Factory> = [];
-  customers: Array<Customer> = [{
-    _id: '1111', name: 'Carlo Juarez', address: 'San juan 1234', email: 'carlos@gmail.com', 
-      discountsByFactory: [
-        { factory: { _id: '1111', name: 'Fabrica1', address: 'San juan 232', email: 'factory1@gmail.com'},
-        delivery: { _id: '1111', name: 'Cruz Azul', address: 'San Martin 124', email: 'cruzAzul@viajes.com' },
-        discounts: [5, 5], cascadeDiscount: 0.0975 },
-        { factory: { _id: '1212', name: 'Carilo SA', address: 'Suipacha 123', email: 'carilo@gmail.com' },
-        delivery: { _id: '3333', name: 'Fedex Arg', address: 'Carlos Gardel 233', email: 'fedexArg@fedex.com'},
-        discounts: [5], cascadeDiscount: 0.05 },
-        { factory: { _id: '2222', name: 'Sancor Productos', address: 'Ituzaingo 232', email: 'sancor@gmail.com' },
-        delivery: { _id: '2222', name: 'Carlitos SA', address: 'Inigo de la pascua 123', email: 'carlitos@gmail.com' },
-        discounts: [5], cascadeDiscount: 0.05 }
-      ], priceList: { _id: '2222', name: 'Distribuidoras' }
-  },
-  {
-    _id: '2222', name: 'Pedro Alonso', address: 'Bolivar 231', email: 'pedro@gmail.com', 
-    discountsByFactory: [
-      { factory: { _id: '1111', name: 'Fabrica1', address: 'San juan 232', email: 'factory1@gmail.com'},
-      delivery: { _id: '1111', name: 'Cruz Azul', address: 'San Martin 124', email: 'cruzAzul@viajes.com' },
-      discounts: [5, 5], cascadeDiscount: 0.0975 }], priceList: { _id: '2222', name: 'Distribuidoras' }
-  }
-];
-  priceLists: Array<PriceList> = [
-    { _id: '1111', name: 'Supermercados' },
-    { _id: '2222', name: 'Distribuidoras' },
-    { _id: '3333', name: 'Cliente frecuentes' },
-    { _id: '4444', name: 'Campo Agroindustria' }
-  ];
-  deliveries: Array<Delivery> = [
-    { _id: '1111', name: 'Cruz Azul', address: 'San Martin 124', email: 'cruzAzul@viajes.com' },
-    { _id: '2222', name: 'Carlitos SA', address: 'Inigo de la pascua 123', email: 'carlitos@gmail.com' },
-    { _id: '3333', name: 'Fedex Arg', address: 'Carlos Gardel 233', email: 'fedexArg@fedex.com'}
-  ];
+  customers: Array<Customer> = [];
+  priceLists: Array<PriceList> = [];
+  deliveries: Array<Delivery> = [];
   formTitle: string = 'Nuevo Pedido';
   percentOptions: Array<InvoicedPercent> = [{ percentString: '0%', percentNumber: 0}, 
   { percentString: '50%', percentNumber: 0.5}, { percentString: '100%', percentNumber: 1 }];
@@ -96,7 +66,8 @@ export class PendingFormComponent implements OnInit {
   finalDiscount: number = 0;
   netTotalWithDiscount: number = 0;
   total: number = 0;
-  filters: Array<string> = ['name']
+  filters: Array<string> = ['name'];
+  loadingSubmit: boolean = false;
 
   constructor(private fb: FormBuilder, private message: MessageService, 
       private router: Router, private priceListService: PriceListService, private deliveryService: DeliveryService,
@@ -183,6 +154,7 @@ export class PendingFormComponent implements OnInit {
       this.orderForm.markAllAsTouched();
       return;
     }
+    this.loadingSubmit = true;
     const discountNumberArray: Array<number> = this.discounts.value.map(function(val: any) {
       return val.discount;
     });
@@ -193,6 +165,7 @@ export class PendingFormComponent implements OnInit {
       this.orderService.update(this.orderUpdate)
         .subscribe({
           next: () => {
+            this.loadingSubmit = false;
             this.router.navigateByUrl('main/pending-orders');
           },
           error: () => {

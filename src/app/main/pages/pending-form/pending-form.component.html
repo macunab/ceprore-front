@@ -127,7 +127,8 @@
 
     </table>
 }
-    <button pButton label="Guardar" type="submit" class="p-button-success mt-3" [disabled]="isSubmitDisabled()"></button>
+    <button pButton pRipple label="Guardar" type="submit" class="p-button-success mt-3" 
+        [disabled]="isSubmitDisabled()" [loading]="loadingSubmit"></button>
     </form>
 </p-card>
 
@@ -216,5 +217,6 @@
             </tr>
         </ng-template>
     </p-table>
-    <button pButton class="p-button-info mt-3" type="button" (click)="selectProductsEvent(false)" label="Seleccionar"></button>
+    <button pButton class="p-button-info mt-3" type="button" 
+        (click)="selectProductsEvent(false)" label="Seleccionar"></button>
 </p-dialog>
