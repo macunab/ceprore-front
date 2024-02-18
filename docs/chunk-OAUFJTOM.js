@@ -1,1 +1,0 @@
-import{Hb as o,Ib as i,nb as e,s as t}from"./chunk-3S6R5EUG.js";var h=(a,n)=>{let r=t(i),u=t(e);return r.tokenValidation().subscribe({}),r.authStatus()===o.authenticated?!0:(u.navigateByUrl("login"),!1)};export{h as a};
