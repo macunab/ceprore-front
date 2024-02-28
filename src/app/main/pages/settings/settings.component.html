@@ -1,1 +1,37 @@
-<p>SECCION EN CONSTRUCCION</p>
+<p-toast position="top-center"></p-toast>
+<p-fieldset legend="Cambio de Password">
+    <p class="m-0 mb-3">
+        Cambie el password para ingresar al sistema por medio del siguiente formulario.
+        La proxima vez que ingrese al sistema tendra que utilizar el nuevo password.
+    </p>
+    <form autocomplete="off"
+    [formGroup]="changePasswordForm"
+    (ngSubmit)="onSubmit()">
+        <div class="flex flex-column">
+            <label for="actualPass">Password Actual</label>
+            <p-password formControlName="actualPass" [toggleMask]="true" id="actualPass"
+                aria-describedby="actualPass-help"></p-password>
+            @if(isInvalid('actualPass')) {
+                <small id="actualPass-help" class="form-error">Ingrese el passwor actual.</small>
+            }
+        </div>
+        <div class="flex flex-column">
+            <label for="newPass">Nuevo Password</label>
+            <p-password formControlName="newPass" [toggleMask]="true" id="newPass"
+                aria-describedby="newPass-help"></p-password>
+            @if(isInvalid('newPass')) {
+                <small id="newPass-help" class="form-error">Ingrese un password valido.</small>
+            }
+        </div>
+        <div class="flex flex-column">
+            <label for="repeatNewPass">Repita Nuevo Password</label>
+            <p-password formControlName="repeatNewPass" [toggleMask]="true" id="repeatNewPass"
+                aria-describedby="repeatNewPass-help"></p-password>
+            @if(isInvalid('repeatNewPass')) {
+                <small id="repeatNewPass-help" class="form-error">El password no coincide.</small>
+            }
+        </div>
+        <button pButton class="p-button-success mt-4" label="Guardar cambios" 
+            type="submit" [loading]="loadingButton" [disabled]="changePasswordForm.status !== 'VALID'"></button>
+    </form>
+</p-fieldset>

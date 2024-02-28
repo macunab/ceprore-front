@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
-import { Order } from '../../interfaces/order.interface';
+import { InvoicedPercent, Order } from '../../interfaces/order.interface';
 
 @Component({
   selector: 'app-paid-form-dialog',
@@ -30,6 +30,7 @@ export class PaidFormDialogComponent implements OnChanges{
     commission: [{ value: 0, disabled: true }]
   });
   @Input() order: Order = {} as Order;
+  @Input() loadingButton: boolean = false;
   @Output('onSubmit') emitter = new EventEmitter();
   orderPaid: Order = {} as Order;
 
@@ -42,9 +43,8 @@ export class PaidFormDialogComponent implements OnChanges{
       this.paidForm.get('customer')?.patchValue(this.order.customer?.name);
       this.paidForm.get('factory')?.patchValue(this.order.factory?.name);
       this.paidForm.get('invoiceAmount')?.patchValue(this.order.invoice?.total);
-      this.paidForm.get('commission')?.patchValue(this.order.factory?.commission!/100*totalCommission);
-      console.log(this.order.invoice.ivaAmount);
-      console.log('COMISION: ',this.order.factory?.commission!/100*totalCommission)
+      // this.paidForm.get('commission')?.patchValue(this.order.factory?.commission!/100*totalCommission);
+      this.paidForm.get('commission')?.patchValue(this.calculateCommission(this.order.invoice.total, this.order.invoicedPercent!, this.order.factory?.commission!));
     }
     if(this.order.payment) {
       this.paidForm.patchValue(this.order.payment);
@@ -73,14 +73,30 @@ export class PaidFormDialogComponent implements OnChanges{
     const paidOnAccount: number = this.paidForm.get('paymentOnAccount')!.value;
     if(debitNote+withholdings+paidOnAccount < this.order.invoice!.total) {
       const newTotal: number = this.order.invoice!.total - this.paidForm.get('justifiedDebitNote')!.value;
-      const totalCommission: number = (this.order.invoice?.invoicedAmount! + this.order.invoice?.remitAmount!) - this.paidForm.get('justifiedDebitNote')!.value;
+      // const totalCommission: number = (this.order.invoice?.invoicedAmount! + this.order.invoice?.remitAmount!) - this.paidForm.get('justifiedDebitNote')!.value;
       this.paidForm.get('total')?.patchValue(newTotal - this.paidForm.get('paymentOnAccount')?.value 
         - this.paidForm.get('withholdings')?.value);
-      this.paidForm.get('commission')?.patchValue(totalCommission * this.order.factory?.commission!/100);
+      // this.paidForm.get('commission')?.patchValue(totalCommission * this.order.factory?.commission!/100);
+      this.paidForm.get('commission')?.patchValue(this.calculateCommission(newTotal, this.order.invoicedPercent!, this.order.factory?.commission!))
     } else {
       this.paidForm.controls[field].patchValue(0);
       this.onChangePaidAmounts(field);
       return;
     }
+  }
+
+  // test new function
+  calculateCommission(total: number, invoicedPercent: InvoicedPercent, commissionPercent: number): number {
+
+    let commissionAmount: number = 0;
+    if(invoicedPercent.percentNumber === 100) {
+      commissionAmount = (total/1.21)*commissionPercent/100;
+    } else if(invoicedPercent.percentNumber === 50) {
+      commissionAmount = (total/1.105)*commissionPercent/100;
+    } else {
+      commissionAmount = total*(commissionPercent/100);
+    }
+
+    return commissionAmount;
   }
 }

@@ -5,5 +5,6 @@
 
 <p-dialog [header]="formTitle" [modal]="true" [(visible)]="showCreateFactory" 
     [breakpoints]="{ '960px': '95vw' }" [style]="{ width: '60vw', height: '450px' }">
-    <app-factory-form-dialog (onClose)="onDialogClose($event)" [factoryUpdate]="factoryUpdate"></app-factory-form-dialog>
+    <app-factory-form-dialog (onClose)="onDialogClose($event)" [factoryUpdate]="factoryUpdate"
+        [loadingButton]="loadingButton"></app-factory-form-dialog>
 </p-dialog>

@@ -17,6 +17,7 @@ export class DeliveryFormDialogComponent implements OnChanges{
 
   @Output('onClose') emmiter = new EventEmitter();
   @Input() deliveryUpdate!: Delivery;
+  @Input() loadingButton: boolean = false;
   deliveryForm: FormGroup = this.fb.group({
     name: ['', [Validators.required]],
     address: [''],

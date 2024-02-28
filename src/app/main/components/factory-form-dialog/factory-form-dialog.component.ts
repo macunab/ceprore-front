@@ -17,6 +17,7 @@ export class FactoryFormDialogComponent implements OnChanges {
 
   @Output('onClose') emmiter = new EventEmitter();
   @Input() factoryUpdate!: Factory;
+  @Input() loadingButton: boolean = false;
   factoryForm: FormGroup = this.fb.group({
     name: ['', [Validators.required]],
     province: [''],
@@ -35,7 +36,9 @@ export class FactoryFormDialogComponent implements OnChanges {
     if(this.factoryUpdate._id) {
       this.factoryForm.patchValue(this.factoryUpdate);
     } else {
-      this.factoryForm.reset({ retainCommission: false });
+      if(!changes['loadingButton']) {
+        this.factoryForm.reset({ retainCommission: false });
+      }
     }
   }
 

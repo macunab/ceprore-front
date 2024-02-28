@@ -25,6 +25,7 @@ export class PendingComponent implements OnInit{
   orderUpdate: Order = {} as Order;
   showInvoiceForm: boolean = false;
   loadingTable: boolean = true;
+  loadingButton: boolean = false;
 
   constructor(private confirmation: ConfirmationService, private message: MessageService,
       private router: Router, private orderService: OrderService) {}
@@ -117,7 +118,8 @@ export class PendingComponent implements OnInit{
 
   // Facturacion de Pedido Pendiente.
   onDialogClose(dialogData: DialogData<Order>): void {
-    this.showInvoiceForm = false;
+
+    this.loadingButton = true;
     const { __v, createdAt, updatedAt, ...order } = dialogData.data;
       this.orderService.update(order)
         .subscribe({
@@ -126,10 +128,13 @@ export class PendingComponent implements OnInit{
             this.pendingOrders = [...this.pendingOrders];
             this.message.add({ severity: 'success', summary: 'Informacion',
               detail: 'El Pedido ha sido Facturado exitosamente.'});
+            this.showInvoiceForm = false;
+            this.loadingButton = false;
           },
           error: () => {
             this.message.add({ severity: 'error', summary: 'ERROR!',
               detail: 'Ha ocurrido un error al intentar crear una nueva Factura'});
+            this.loadingButton = false;
           }
         });
   }

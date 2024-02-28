@@ -30,6 +30,7 @@ export class InvoicedComponent implements OnInit{
   showInvoiceForm: boolean = false;
   showPaidForm: boolean = false;
   loadingTable: boolean = true;
+  loadingButton: boolean = false;
 
   constructor(private confirmation: ConfirmationService, private message: MessageService, 
       private orderService: OrderService) {}
@@ -103,6 +104,7 @@ export class InvoicedComponent implements OnInit{
   // Edit Invoice Form Submit
   onInvoiceFormSubmit(dialogData: DialogData<Order>): void {
 
+    this.loadingButton = true;
     const { __v, createdAt, updatedAt, ...orderUpdate } = dialogData.data;
     this.orderService.update(orderUpdate)
       .subscribe({
@@ -112,17 +114,21 @@ export class InvoicedComponent implements OnInit{
           this.invoicedOrders = [...this.invoicedOrders];
           this.message.add({ severity: 'success', summary: 'Informacion',
             detail: 'La Factura ha sido modificada exitosamente.'});
+          this.showInvoiceForm = false;
+          this.loadingButton = false;
         },
         error: () => {
           this.message.add({ severity: 'error', summary: 'ERROR!',
             detail: 'Ha ocurrido un error al intentar modificar una Factura.'});
+          this.loadingButton = false;            
         }
       });
-      this.showInvoiceForm = false;
   }
 
   onPaidFormSubmit(dialogData: DialogData<Order>): void {
+
     const { __v, createdAt, updatedAt, ...orderData } = dialogData.data;
+    this.loadingButton = true;
     this.orderService.update(orderData)
       .subscribe({
         next: res => {
@@ -130,13 +136,15 @@ export class InvoicedComponent implements OnInit{
           this.invoicedOrders = [...this.invoicedOrders];
           this.message.add({ severity: 'success', summary: 'Informacion',
             detail: 'Se ha creado un Pago exitosamente.'});
+          this.showPaidForm = false;
+          this.loadingButton = false;  
         },
         error: () => {
           this.message.add({ severity: 'error', summary: 'ERROR!',
             detail: 'Ha ocurrido un error al intentar crear un Pago.'});
+          this.loadingButton = false;
         }
       });
-      this.showPaidForm = false;
   }
 
   print(order: Order): void {

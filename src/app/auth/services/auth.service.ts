@@ -21,6 +21,7 @@ export class AuthService {
   }
 
   saveToken(user: User, token: string): boolean {
+    delete user.password;
     this._user = user;
     this._authStatus.set(AuthStatus.authenticated);
     localStorage.setItem('token', token);
@@ -64,5 +65,30 @@ export class AuthService {
 
   get user() {
     return { ...this._user };
+  }
+
+  checkPass(email: string, password: string): Observable<boolean> {
+
+    const url: string = `${this.baseUrl}/check-pass`;
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders()
+      .set('authorization', `Beared ${token}`);
+    const body = { email, password };
+    return this.http.post<boolean>(url, body, { headers });
+  }
+
+  updatePass(id: string, password: string) {
+    
+    const url: string = `${this.baseUrl}/${id}`;
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders()
+      .set('authorization', `Beared ${token}`);
+    const body = { password };
+    return this.http.patch<User>(url, body, { headers })
+      .pipe(
+        catchError(({error}) => {
+          return throwError(() => `Error: ${error.message}`);
+        })
+      );
   }
 }

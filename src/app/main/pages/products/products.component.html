@@ -5,5 +5,6 @@
 
 <p-dialog [header]="formTitle" [modal]="true" [(visible)]="showForm" (onHide)="onHide()" (onShow)="onShow()"
     [breakpoints]="{ '960px': '95vw' }" [style]="{ width: '60vw', height: '400px' }">
-    <app-product-form-dialog (onClose)="onFormClose($event)" [productUpdate]="productUpdate"></app-product-form-dialog>
+    <app-product-form-dialog (onClose)="onFormClose($event)" [productUpdate]="productUpdate"
+        [loadingButton]="loadingButton"></app-product-form-dialog>
 </p-dialog>

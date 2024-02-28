@@ -29,6 +29,7 @@ export class InvoiceFormDialogComponent implements OnChanges{
   });
   @Input() order!: Order;
   @Input() invoiceUpdate!: Invoice;
+  @Input() loadingButton: boolean = false;
   @Output('onClose') emmiter = new EventEmitter();
   invoice: Invoice = {} as Invoice;
 

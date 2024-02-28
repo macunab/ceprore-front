@@ -35,12 +35,9 @@ export class ProductFormDialogComponent implements OnChanges, OnInit{
     factory: ['', [Validators.required]],
     pricesByList: this.fb.array([])
   });
-  priceLists: Array<PriceList> = [{ _id: '1111', name: 'Supermercados'}, { _id: '2222', name: 'Kioscos' }];
-  factories: Array<Factory> = [
-    { _id: '1111', name: 'Factory1', address: 'San juan 123', email: 'factory1@gmail.com' },
-    { _id: '2222', name: 'Factory2', address: 'Ituzaingo 123', email: 'factory2@gmail.com' },
-    { _id: '3333', name: 'Factory3', address: 'Simon Bolivar 123', email: 'factory3@gmail.com' }
-  ];
+  @Input() loadingButton: boolean = false;
+  priceLists: Array<PriceList> = [];
+  factories: Array<Factory> = [];
 
   constructor(private fb: FormBuilder, private factoryService: FactoryService,
     private priceListService: PriceListService) {}

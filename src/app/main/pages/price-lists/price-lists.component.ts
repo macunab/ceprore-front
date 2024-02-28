@@ -34,6 +34,7 @@ export class PriceListsComponent implements OnInit{
   ];
   priceListUpdate: PriceList = {} as PriceList;
   loadingTable: boolean = true;
+  loadingButton: boolean = false;
 
   constructor(private messageService: MessageService, private confirmationService: ConfirmationService,
       private priceListService: PriceListService) {}
@@ -102,7 +103,8 @@ export class PriceListsComponent implements OnInit{
   }
 
   onFormClose(dialogData: DialogData<PriceList>): void {
-    this.showForm = false;
+
+    this.loadingButton = true;
     if(dialogData.data._id) {
       this.priceListService.edit(dialogData.data)
         .subscribe({
@@ -112,10 +114,13 @@ export class PriceListsComponent implements OnInit{
             this.priceLists = [...this.priceLists];
             this.messageService.add({ severity: 'success', summary: 'Informacion', 
               detail: `La lista de precio: "${res.name}", fue modificada exitosamente.`});
+            this.showForm = false;
+            this.loadingButton = false;  
           },
           error: () => {
             this.messageService.add({ severity: 'error', summary: 'ERROR!',
               detail: `Ha ocurrido un error al intentar modificar la Lista de precio: ${dialogData.data.name}`});
+            this.loadingButton = false;
           }
         });
     } else {
@@ -126,10 +131,13 @@ export class PriceListsComponent implements OnInit{
             this.priceLists = [...this.priceLists];
             this.messageService.add({ severity: 'success', summary: 'Informacion',
               detail: `Se ha creado exitosamente la Lista de precio: ${res.name}`});
+            this.showForm = false;
+            this.loadingButton = false;
           },
           error: () => {
             this.messageService.add({ severity: 'error', summary: 'ERROR!',
               detail: `Ha ocurrido un error al intentar crear una nueva Lista de precio`});
+            this.loadingButton = false;
           }
         });
     }

@@ -37,6 +37,7 @@ export class DeliveriesComponent implements OnInit{
   formTitle: string = '';
   tableTitle: string = 'Transportes';
   loadingTable: boolean = true;
+  loadingButton: boolean = false;
 
   constructor(private messageService: MessageService, private confirmationService: ConfirmationService,
     private deliveryService: DeliveryService) {}
@@ -104,7 +105,8 @@ export class DeliveriesComponent implements OnInit{
   }
 
   onFormClose(dialogData: DialogData<Delivery>): void {
-    this.showForm = false;
+    
+    this.loadingButton = true;
     if(dialogData.data._id) {
       this.deliveryService.update(dialogData.data)
         .subscribe({
@@ -114,10 +116,13 @@ export class DeliveriesComponent implements OnInit{
             this.deliveries = [...this.deliveries];
             this.messageService.add({ severity: 'success', summary: 'Informacion',
               detail: `El Transporte: "${res.name}", fue modificado exitosamente`});
+            this.showForm = false;
+            this.loadingButton = false;  
           },
           error: () => {
             this.messageService.add({ severity: 'error', summary: 'ERROR!',
               detail: `Ha ocurrido un error al intentar editar el Transporte: "${dialogData.data.name}"`});
+            this.loadingButton = false;  
           }
         });
     } else {
@@ -128,10 +133,13 @@ export class DeliveriesComponent implements OnInit{
             this.deliveries = [...this.deliveries];
             this.messageService.add({severity: 'success', summary: 'Informacion',
               detail: `Se ha creado exitosamente el transporte: "${res.name}"`});
+              this.showForm = false;
+              this.loadingButton = false;  
           },
           error: () => {
             this.messageService.add({ severity: 'error', summary: 'ERROR!',
               detail: 'Ha ocurrido un error al intentar crear un nuevo Transporte'});
+            this.loadingButton = false;          
           }
         });
     }

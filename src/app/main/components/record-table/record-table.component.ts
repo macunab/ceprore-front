@@ -20,6 +20,6 @@ export class RecordTableComponent {
   @Input() records: Array<Order> = [];
   @Input() loading: boolean = true;
   @Output('onAction') emitter = new EventEmitter();
-  filters: Array<string> = ['customer.name', 'factory.name', 'payment.createdAt'];
+  filters: Array<string> = ['customer.name', 'factory.name', 'payment.createdAt', 'invoice.invoiceCode'];
 
 }

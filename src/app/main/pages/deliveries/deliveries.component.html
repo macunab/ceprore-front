@@ -5,5 +5,6 @@
 
 <p-dialog [header]="formTitle" [modal]="true" [(visible)]="showForm" 
     [breakpoints]="{ '960px': '95vw' }" [style]="{ width: '40vw', height: '450px' }">
-    <app-delivery-form-dialog (onClose)="onFormClose($event)" [deliveryUpdate]="deliveryUpdate"></app-delivery-form-dialog>
+    <app-delivery-form-dialog (onClose)="onFormClose($event)" [deliveryUpdate]="deliveryUpdate"
+        [loadingButton]="loadingButton"></app-delivery-form-dialog>
 </p-dialog>

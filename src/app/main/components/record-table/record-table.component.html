@@ -12,6 +12,7 @@
     <ng-template pTemplate="header">
         <tr>
             <th>Fecha</th>
+            <th>Factura</th>
             <th>Cliente</th>
             <th>Representada</th>
             <th>Total</th>
@@ -22,6 +23,7 @@
     <ng-template pTemplate="body" let-order>
         <tr>
             <td>{{ order.payment.createdAt | date:'shortDate' }}</td>
+            <td>{{ order.invoice.invoiceCode }}</td>
             <td>{{ order.customer.name }}</td>
             <td>{{ order.factory.name }}</td>
             <td>{{ order.payment.total | currency:'USD':'symbol':'0.0-3' }}</td>

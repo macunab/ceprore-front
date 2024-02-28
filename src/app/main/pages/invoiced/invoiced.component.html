@@ -4,9 +4,11 @@
     [loading]="loadingTable"></app-invoice-table>
 <p-dialog header="Crear Pago" [modal]="true" [(visible)]="showPaidForm"
     [breakpoints]="{ '960px': '95vw' }" [style]="{ width: '60vw', height: '500px' }">
-    <app-paid-form-dialog [order]="orderPaid" (onSubmit)="onPaidFormSubmit($event)" ></app-paid-form-dialog>
+    <app-paid-form-dialog [order]="orderPaid" (onSubmit)="onPaidFormSubmit($event)"
+        [loadingButton]="loadingButton"></app-paid-form-dialog>
 </p-dialog>
 <p-dialog header="Editar Factura" [modal]="true" [(visible)]="showInvoiceForm"
     [breakpoints]="{ '960px': '95vw' }" [style]="{ width: '60vw', height: '500px' }">
-    <app-invoice-form-dialog [order]="orderUpdate" (onClose)="onInvoiceFormSubmit($event)"></app-invoice-form-dialog>
+    <app-invoice-form-dialog [order]="orderUpdate" (onClose)="onInvoiceFormSubmit($event)"
+        [loadingButton]="loadingButton"></app-invoice-form-dialog>
 </p-dialog>

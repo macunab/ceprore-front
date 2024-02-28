@@ -37,6 +37,7 @@ export class FactoriesComponent implements OnInit {
   factoryUpdate: Factory = {} as Factory;
   tableTitle: string = 'Representadas';
   loadingTable: boolean = true;
+  loadingButton: boolean = false;
 
   constructor(private messageService: MessageService, private confirmationService: ConfirmationService,
       private factoryService: FactoryService) {}
@@ -104,7 +105,8 @@ export class FactoriesComponent implements OnInit {
   }
 
   onDialogClose(dialogData: DialogData<Factory>): void {
-    this.showCreateFactory = false;
+    
+    this.loadingButton = true;
     if(dialogData.data._id) {
       this.factoryService.update(dialogData.data)
         .subscribe({
@@ -114,10 +116,13 @@ export class FactoriesComponent implements OnInit {
             this.factories = [...this.factories];
             this.messageService.add({ severity: 'success', summary: 'Informacion',
               detail: `La fabrica ${res.name}, se ha modificado exitosamente.`});
+            this.showCreateFactory = false;
+            this.loadingButton = false;
           },
           error: () => {
             this.messageService.add({ severity: 'error', summary: 'ERROR!',
               detail: `Ha ocurrido un error al intentar modificar la Fabrica: ${dialogData.data.name}.`});
+            this.loadingButton = false;
           }
         });
     } else {
@@ -128,10 +133,13 @@ export class FactoriesComponent implements OnInit {
             this.factories = [...this.factories];
             this.messageService.add({ severity: 'success', summary: 'Informacion',
               detail: `La Fabrica: "${res.name}", se ha creado exitosamente.`})
+            this.showCreateFactory = false;
+            this.loadingButton = false;  
           },
           error: () => {
             this.messageService.add({ severity: 'error', summary: 'ERROR!',
               detail: 'Ha ocurrido un error al intentar crear una nueva Fabrica.'});
+            this.loadingButton = false;
           }
         })
     }

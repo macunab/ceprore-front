@@ -40,6 +40,7 @@ export class ProductsComponent implements OnInit{
   productUpdate: Product = {} as Product;
   @ViewChild(ProductFormDialogComponent) formDialog!: ProductFormDialogComponent;
   loadingTable: boolean = true;
+  loadingButton: boolean = false;
 
   constructor(private confirmationService: ConfirmationService, private messageService: MessageService,
     private productService: ProductService) {}
@@ -108,7 +109,8 @@ export class ProductsComponent implements OnInit{
   }
 
   onFormClose(dialogData: DialogData<Product>): void {
-    this.showForm = false;
+
+    this.loadingButton = true;
     if(dialogData.data._id) {
       this.productService.update(dialogData.data)
         .subscribe({
@@ -118,10 +120,13 @@ export class ProductsComponent implements OnInit{
             this.products = [...this.products];
             this.messageService.add({ severity: 'success', summary: 'Informacion',
               detail: `El Producto: "${res.name}", se ha modificado exitosamente.`});
+            this.showForm = false;
+            this.loadingButton = false;  
           },
           error: () => {
             this.messageService.add({ severity: 'error', summary: 'ERROR!',
               detail: `Ha ocurrido un error al intentar modificar el Producto: "${dialogData.data.name}"`});
+            this.loadingButton = false;
           }
         })
     } else {
@@ -132,10 +137,13 @@ export class ProductsComponent implements OnInit{
             this.products = [...this.products];
             this.messageService.add({ severity: 'success', summary: 'Informacion',
               detail: `El Producto: "${res.name}", se ha creado exitosamente.`});
+            this.showForm = false;
+            this.loadingButton = false;
           },
           error: () => {
             this.messageService.add({ severity: 'error', summary: 'ERROR!',
               detail: 'Ha ocurrido un error al intentar crear un nuevo Producto.'});
+            this.loadingButton = false;
           }
       })
     }

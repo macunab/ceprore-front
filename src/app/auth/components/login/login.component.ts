@@ -47,8 +47,8 @@ export class LoginComponent {
     this.authService.login(email, password)
       .subscribe({
         next: () => {
-          this.loadingButton = false;
           this.router.navigateByUrl('main/home');
+          this.loadingButton = false;
         },
         error: err => {
           console.log(err);

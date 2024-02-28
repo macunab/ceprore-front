@@ -25,6 +25,7 @@ export class PaidComponent implements OnInit{
   paymentUpdate: Order = {} as Order;
   @ViewChild(PaidFormDialogComponent) formDialog!: PaidFormDialogComponent;
   loadingTable: boolean = true;
+  loadingButton: boolean = false;
   
   constructor(private confirmation: ConfirmationService, private message: MessageService,
     private orderService: OrderService) {}
@@ -109,6 +110,7 @@ export class PaidComponent implements OnInit{
   onPaidFormSubmit(dialogData: DialogData<Order>): void {
 
     const { __v, createdAt, updatedAt, ...orderData } = dialogData.data;
+    this.loadingButton = true;
     this.orderService.update(orderData)
       .subscribe({
         next: res => {
@@ -117,12 +119,14 @@ export class PaidComponent implements OnInit{
           this.paidOrders = [...this.paidOrders];
           this.message.add({ severity: 'success', summary: 'Informacion',
             detail: 'El Pago se a modificado exitosamente.'});
+          this.showForm = false;
+          this.loadingButton = false;
         }, 
         error: () => {
           this.message.add({ severity: 'error', summary: 'ERROR!',
             detail: 'Ha ocurrido un error al intentar modificar el Pago.'});
+          this.loadingButton = false;
         }
       });
-    this.showForm = false;
   }
 }

@@ -16,6 +16,7 @@ export class PriceListFormDialogComponent implements OnChanges{
  
   @Output('onClose') emmiter = new EventEmitter();
   @Input() priceListUpdate!: PriceList;
+  @Input() loadingButton: boolean = false;
   priceListForm: FormGroup = this.fb.group({
     name: ['', [Validators.required]]
   });
@@ -26,7 +27,9 @@ export class PriceListFormDialogComponent implements OnChanges{
     if(this.priceListUpdate._id) {
       this.priceListForm.patchValue(this.priceListUpdate);
     } else {
-      this.priceListForm.reset();
+      if(!changes['loadingButton']) {
+        this.priceListForm.reset();
+      }
     }
   }
 
