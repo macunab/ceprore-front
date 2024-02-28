@@ -89,14 +89,13 @@ export class PaidFormDialogComponent implements OnChanges{
   calculateCommission(total: number, invoicedPercent: InvoicedPercent, commissionPercent: number): number {
 
     let commissionAmount: number = 0;
-    if(invoicedPercent.percentNumber === 100) {
-      commissionAmount = (total/1.21)*commissionPercent/100;
-    } else if(invoicedPercent.percentNumber === 50) {
+    if(invoicedPercent.percentNumber === 1) {
+      commissionAmount = (total/1.21)*(commissionPercent/100);
+    } else if(invoicedPercent.percentNumber === 0.5) {
       commissionAmount = (total/1.105)*commissionPercent/100;
     } else {
       commissionAmount = total*(commissionPercent/100);
     }
-
     return commissionAmount;
   }
 }
