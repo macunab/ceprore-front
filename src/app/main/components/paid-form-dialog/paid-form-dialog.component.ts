@@ -38,12 +38,10 @@ export class PaidFormDialogComponent implements OnChanges{
 
   ngOnChanges(changes: SimpleChanges): void {
     if(this.order.invoice) {
-      const totalCommission: number = this.order.invoice.invoicedAmount + this.order.invoice.remitAmount;
       this.paidForm.patchValue(this.order.invoice!);
       this.paidForm.get('customer')?.patchValue(this.order.customer?.name);
       this.paidForm.get('factory')?.patchValue(this.order.factory?.name);
       this.paidForm.get('invoiceAmount')?.patchValue(this.order.invoice?.total);
-      // this.paidForm.get('commission')?.patchValue(this.order.factory?.commission!/100*totalCommission);
       this.paidForm.get('commission')?.patchValue(this.calculateCommission(this.order.invoice.total, this.order.invoicedPercent!, this.order.factory?.commission!));
     }
     if(this.order.payment) {
@@ -73,10 +71,8 @@ export class PaidFormDialogComponent implements OnChanges{
     const paidOnAccount: number = this.paidForm.get('paymentOnAccount')!.value;
     if(debitNote+withholdings+paidOnAccount < this.order.invoice!.total) {
       const newTotal: number = this.order.invoice!.total - this.paidForm.get('justifiedDebitNote')!.value;
-      // const totalCommission: number = (this.order.invoice?.invoicedAmount! + this.order.invoice?.remitAmount!) - this.paidForm.get('justifiedDebitNote')!.value;
       this.paidForm.get('total')?.patchValue(newTotal - this.paidForm.get('paymentOnAccount')?.value 
         - this.paidForm.get('withholdings')?.value);
-      // this.paidForm.get('commission')?.patchValue(totalCommission * this.order.factory?.commission!/100);
       this.paidForm.get('commission')?.patchValue(this.calculateCommission(newTotal, this.order.invoicedPercent!, this.order.factory?.commission!))
     } else {
       this.paidForm.controls[field].patchValue(0);

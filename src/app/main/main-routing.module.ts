@@ -8,7 +8,7 @@ import { FactoriesComponent } from "./pages/factories/factories.component";
 import { ProductsComponent } from "./pages/products/products.component";
 import { PriceListsComponent } from "./pages/price-lists/price-lists.component";
 import { DeliveriesComponent } from "./pages/deliveries/deliveries.component";
-import { CheckingAccountsComponent } from "./pages/checking-accounts/checking-accounts.component";
+// import { CheckingAccountsComponent } from "./pages/checking-accounts/checking-accounts.component";
 import { PendingComponent } from "./pages/pending/pending.component";
 import { InvoicedComponent } from "./pages/invoiced/invoiced.component";
 import { PaidComponent } from "./pages/paid/paid.component";
@@ -16,6 +16,8 @@ import { PendingFormComponent } from "./pages/pending-form/pending-form.componen
 import { isAuthenticatedGuard } from "../auth/guards/is-authenticated.guard";
 import { HistoricComponent } from "./pages/historic/historic.component";
 import { SettingsComponent } from "./pages/settings/settings.component";
+import { CommissionCheckoutComponent } from "./pages/commission-checkout/commission-checkout.component";
+import { ReportedCommissionComponent } from "./pages/reported-commission/reported-commission.component";
 
 
 const routes: Routes = [
@@ -30,13 +32,14 @@ const routes: Routes = [
             { path: 'products', component: ProductsComponent, canActivate: [isAuthenticatedGuard] },
             { path: 'priceLists', component: PriceListsComponent, canActivate: [isAuthenticatedGuard] },
             { path: 'deliveries', component: DeliveriesComponent, canActivate: [isAuthenticatedGuard] },
-            { path: 'checking-accounts', component: CheckingAccountsComponent, canActivate: [isAuthenticatedGuard] },
+            { path: 'checking-accounts', component: CommissionCheckoutComponent, canActivate: [isAuthenticatedGuard] },
             { path: 'pending-orders', component: PendingComponent, canActivate: [isAuthenticatedGuard] },
             { path: 'pending-order', component: PendingFormComponent, canActivate: [isAuthenticatedGuard] },
             { path: 'invoiced', component: InvoicedComponent, canActivate: [isAuthenticatedGuard] },
             { path: 'paid', component: PaidComponent, canActivate: [isAuthenticatedGuard] },
             { path: 'records', component: HistoricComponent, canActivate: [isAuthenticatedGuard] },
             { path: 'settings', component: SettingsComponent, canActivate: [isAuthenticatedGuard] },
+            { path: 'commisioned', component: ReportedCommissionComponent, canActivate: [isAuthenticatedGuard] },
             { path: '**', redirectTo: 'home' }
         ]
     },

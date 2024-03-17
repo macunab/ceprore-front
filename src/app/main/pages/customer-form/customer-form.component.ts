@@ -58,7 +58,6 @@ export class CustomerFormComponent implements OnInit {
       this.customerForm.patchValue(data);
       this.customer = data as Customer;
       this.customerFactories = this.customer.discountsByFactory ? this.customer.discountsByFactory : [];
-      console.table(this.customer)
     }
   }
 
@@ -68,8 +67,7 @@ export class CustomerFormComponent implements OnInit {
         next: res => {
           this.priceList = res;
         },
-        error: err => {
-          console.log(err);
+        error: () => {
           this.messageService.add({ severity: 'error', summary: 'ERROR!',
             detail: 'Ha ocurrido un error al intentar obtenes todas las Listas de precio.'});
         }
@@ -92,9 +90,9 @@ export class CustomerFormComponent implements OnInit {
         .subscribe({
           next: res => {
             this.customer = res;
+            this.router.navigateByUrl('main/customers');
           },
-          error: err => {
-            console.log(err);
+          error: () => {
             this.messageService.add({ severity: 'error', summary: 'ERROR!',
               detail: 'Ha ocurrido un error al intentar crear un nuevo Cliente.'});
           }
@@ -104,14 +102,15 @@ export class CustomerFormComponent implements OnInit {
       this.customer = { ...this.customerForm.value, discountsByFactory: this.customerFactories };
       this.customerService.create(this.customer)
         .subscribe({
-          error: err => {
-            console.log(err);
+          next: () => {
+            this.router.navigateByUrl('main/customers');
+          },
+          error: () => {
             this.messageService.add({ severity: 'error', summary: 'ERROR!',
               detail: `Ha ocurrido un error al intentar crear el Cliente: "${this.customer.name}"`});
           }
         });
     }
-    this.router.navigateByUrl('main/customers');
   }
 
   addFactoryDiscount() {

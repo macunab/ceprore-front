@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable, catchError, tap, throwError } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 import { Order } from '../interfaces/order.interface';
 
 @Injectable({
@@ -197,6 +197,24 @@ export class OrderService {
       .pipe(
         catchError(({error}) => {
           return throwError(() => `Error: ${error.message}`)
+        })
+      );
+  }
+
+  findSurrendersBetweenDates(from: Date, until: Date, factoryId: string): Observable<Array<Order>> {
+
+    factoryId = factoryId?.trim();
+    const headers = new HttpHeaders()
+      .set('authorization', `Beared ${localStorage.getItem('token')}`);
+    const options = { params: new HttpParams()
+      .set('from', from.toJSON())
+      .set('until', until.toJSON())
+      .set('factory', factoryId), headers };
+    const url: string = `${this.baseUrl}/between-dates`;
+    return this.http.get<Array<Order>>(url, options)
+      .pipe(
+        catchError(({error}) => {
+          return throwError(() => `Error: ${error.message}`);
         })
       );
   }

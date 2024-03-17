@@ -1,0 +1,68 @@
+<p-toast position="top-center"></p-toast>
+<p-confirmDialog [style]="{width: '50vw'}" [breakpoints]="{ '960px': '95vw' }"></p-confirmDialog>
+<p-fieldset legend="Ordenes a rendir">
+    <p class="m-0 mb-3">
+
+    </p>
+    <!-- <hr> -->
+    <div class="formgrid grid">
+        <div class="field col-12 md:col-3">
+            <p-calendar styleClass="w-full" [(ngModel)]="rangeDates" selectionMode="range" [readonlyInput]="true"
+                [showClear]="true"></p-calendar>
+        </div>
+        <div class="field col-10 md:col-8">
+            <p-dropdown [options]="factories" [(ngModel)]="selectedFactory" 
+                optionLabel="name" placeholder="Seleccione una representada"
+                styleClass="w-full"></p-dropdown>
+        </div>
+        <div class="field col-2 md:col-1">
+            <button pButton icon="pi pi-search" type="button" class="p-button-help" (click)="searchSurrenderOrders()"
+                [loading]="loadingButton"></button>
+        </div>
+    </div>
+</p-fieldset>
+
+<p-card header="Ordenes a rendir" styleClass="mt-3">
+    @if(selectedFactory !== undefined && surrenderOrders.length > 0) {
+        <p-table [value]="surrenderOrders" responsiveLayout="stack" styleClass="p-datatable-gridlines"
+            [(selection)]="selectedOrders" dataKey="_id" (onRowSelect)="onSelectOrder()" (onRowUnselect)="onSelectOrder()">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th></th>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Representada</th>
+                    <th>Total</th>
+                    <th>Comision</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-surrender>
+                <tr>
+                    <td>
+                        <p-tableCheckbox [value]="surrender"></p-tableCheckbox>
+                    </td>
+                    <td>{{ surrender.createdAt | date:'dd/MM/yyyy' }}</td>
+                    <td>{{ surrender.customer.name }}</td>
+                    <td>{{ surrender.factory.name }}</td>
+                    <td>{{ surrender.invoice.total | currency:'USD':'symbol':'3.0-3'}}</td>
+                    <td>
+                        <strong>
+                            {{ surrender.payment.commission | currency:'USD':'symbol':'3.0-3' }}
+                        </strong>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="summary">
+                <h4>Comision total: {{totalCommission | currency:'USD':'symbol':'3.0-3'}}</h4>
+            </ng-template>
+        </p-table>
+        <button pButton type="button" class="p-button-success mt-4" [disabled]="selectedOrders.length === 0"
+            (click)="onSubmitSelection()">Rendir</button>
+    } @else {
+        <div class="flex flex-wrap justify-content-center">
+            <div class="align-item-center font-bold text-pink-200 text-xl">
+                {{ noSearchResult }}
+            </div>
+        </div>
+    }
+</p-card>

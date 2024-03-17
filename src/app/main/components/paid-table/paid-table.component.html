@@ -23,7 +23,7 @@
     </ng-template>
     <ng-template pTemplate="body" let-order>
         <tr>
-            <td>{{ order.payment.createdAt | date:'shortDate' }}</td>
+            <td>{{ order.payment.createdAt | date:'dd/MM/yyyy' }}</td>
             <td>{{ order.customer.name }}</td>
             <td>{{ order.factory.name }}</td>
             <td>{{ order.payment.paymentOnAccount | currency:'USD':'symbol':'0.0-3' }}</td>

@@ -46,8 +46,7 @@ export class CustomersComponent implements OnInit{
           this.customers = res;
           this.loadingTable = false;
         },
-        error: err => {
-          console.log(err);
+        error: () => {
           this.messageService.add({ severity: 'error', summary: 'ERROR!',
             detail: 'Ha ocurrido un error al intentar obtener todos los Cliente.'});
         }
@@ -63,7 +62,7 @@ export class CustomersComponent implements OnInit{
         this.deleteCustomer(action.data);
       break;
       case 'create':
-        this.router.navigateByUrl('main/customer');
+        this.router.navigateByUrl('main/customer', {onSameUrlNavigation: 'reload'});
       break;
     }
   }
@@ -82,8 +81,7 @@ export class CustomersComponent implements OnInit{
               this.messageService.add({ severity: 'success', summary: 'Informacion',
                 detail: `El Cliente: "${res.name}", se ha eliminado exitosamente.`})
             },
-            error: err => {
-              console.log(err);
+            error: () => {
               this.messageService.add({ severity: 'error', summary: 'ERROR!',
                 detail: `Ha ocurrido un error al intentar eliminar el Cliente: "${customer.name}".`});
             }
@@ -91,5 +89,4 @@ export class CustomersComponent implements OnInit{
       }
     })
   }
-
 }

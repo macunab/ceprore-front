@@ -162,5 +162,4 @@ export class ProductsComponent implements OnInit{
       this.formDialog.setInitialPriceByList();
     }
   }
-
 }

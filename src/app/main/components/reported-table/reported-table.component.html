@@ -2,7 +2,7 @@
     [rows]="3" [paginator]="true" [loading]="loading">
     <ng-template pTemplate="caption">
         <div class="flex align-items-center justify-content-between">
-            <h3 class="m-0">Historicos - Pedidos</h3>
+            <h3 class="m-0">Historicos - Comisiones</h3>
             <span class="p-input-icon-left">
                 <i class="pi pi-search"></i>
                 <input #search class="w-full" pInputText type="text" (input)="table.filterGlobal(search.value, 'contains')" placeholder="Buscar..." />
@@ -12,26 +12,21 @@
     <ng-template pTemplate="header">
         <tr>
             <th>Fecha</th>
-            <th>Factura</th>
-            <th>Cliente</th>
-            <th>Representada</th>
-            <th>Total</th>
-            <th>Comision</th>
-            <th>Opciones</th>
+            <th>Desde</th>
+            <th>Hasta</th>
+            <th>Comision total</th>
         </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-order>
+    <ng-template pTemplate="body" let-report>
         <tr>
-            <td>{{ order.payment.createdAt | date:'dd/MM/yyyy' }}</td>
-            <td>{{ order.invoice.invoiceCode }}</td>
-            <td>{{ order.customer.name }}</td>
-            <td>{{ order.factory.name }}</td>
-            <td>{{ order.payment.total | currency:'USD':'symbol':'0.0-3' }}</td>
-            <td>{{ order.payment.commission | currency:'USD':'symbol':'0.0-3' }}</td>
+            <td>{{ report.createdAt | date:'dd/MM/yyyy' }}</td>
+            <td>{{ report.from === undefined ? 'No Aplica' : (report.from | date:'dd/MM/yyyy') }}</td>
+            <td>{{ report.until === undefined ? 'No Aplica' : (report.until | date:'dd/MM/yyyy') }}</td>
+            <td>{{ report.totalCommission | currency:'USD':'symbol':'0.0-3' }}</td>
             <td>
                 <button
                     pButton icon="pi pi-print" class="p-button-sm p-button-secondary p-button-rounded p-button-text mr-2"
-                    pTooltip="Imprimir" tooltipPosition="top" (click)="emitter.emit({ data: order, type: 'print' })">
+                    pTooltip="Imprimir" tooltipPosition="top" (click)="emitter.emit({ data: report, type: 'print' })">
                 </button>
             </td>
         </tr>

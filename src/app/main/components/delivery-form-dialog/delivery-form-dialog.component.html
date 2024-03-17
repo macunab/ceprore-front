@@ -24,7 +24,13 @@
                 <input pInputText type="text" class="w-full" formControlName="address" placeholder="Direccion">
             </div>
             <div class="field col-12">
-                <input type="text" pInputText class="w-full" formControlName="phone" placeholder="Telefono">
+                <input type="text" pInputText class="w-full" formControlName="phone" placeholder="Telefono"
+                [ngClass]="isValid('phone') ? 'ng-invalid ng-dirty' : ''" id="phone" aria-describedby="phone-help">
+                <div class="block-error">
+                    @if(isValid('phone')) {
+                        <small id="phone-help" class="form-error">El telefono es requerido.</small>
+                    }
+                </div>
             </div>
         </div>
     <button pButton class="mt-4 p-button-success" label="Guardar" type="submit" [loading]="loadingButton"></button>

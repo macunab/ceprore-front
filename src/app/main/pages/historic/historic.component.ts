@@ -41,7 +41,6 @@ export class HistoricComponent implements OnInit{
     
     switch(action.type) {
       case 'print':
-        console.log(action.data);
         this.orderService.printSurrender(action.data)
           .subscribe({
             next: res => {

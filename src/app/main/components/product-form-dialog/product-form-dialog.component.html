@@ -27,7 +27,7 @@
         </div>
         <div class="field col-12">
             <p-dropdown styleClass="w-full" formControlName="factory" [options]="factories" optionLabel="name"
-                placeholder="Fabrica" aria-describedby="factory-help"></p-dropdown>
+                placeholder="Fabrica" aria-describedby="factory-help" appendTo="body"></p-dropdown>
             <div class="block-error">
                 @if(isValid('factory')) {
                     <small id="factory-help" class="form-error">Seleccione una fabrica.</small>

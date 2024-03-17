@@ -15,7 +15,6 @@ export class HomeComponent {
   showSidebar: boolean = false;
 
   onSideBarAction() {
-    console.log('SE ABRE EL SIDEBAR', this.showSidebar);
     this.showSidebar = true;
   }
 

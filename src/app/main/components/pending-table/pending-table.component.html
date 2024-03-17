@@ -25,7 +25,7 @@
     </ng-template>
     <ng-template pTemplate="body" let-order>
         <tr>
-            <td>{{ order.createdAt | date:'shortDate' }}</td>
+            <td>{{ order.createdAt | date:'dd/MM/yyyy' }}</td>
             <td>{{ order.customer.name }}</td>
             <td>{{ order.factory.name }}</td>
             <td>{{ order.total | currency:'USD':'symbol':'3.0-3' }}</td>

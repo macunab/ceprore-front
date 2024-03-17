@@ -44,15 +44,13 @@ export class SettingsComponent {
     this.authService.updatePass(this.authService.user._id!,
        this.changePasswordForm.get('newPass')?.value)
        .subscribe({
-        next: res => {
-          console.log(res);
+        next: () => {
           this.changePasswordForm.reset();
           this.loadingButton = false;
           this.message.add({ severity: 'success', summary: 'Informacion',
             detail: 'Se ha modificado el password exitosamente.'});
         },
-        error: err => {
-          console.log(err);
+        error: () => {
           this.loadingButton = false;
           this.message.add({ severity: 'error', summary: 'ERROR!',
             detail: 'Ha ocurrido un error al intentar modificar el password.'});
