@@ -41,7 +41,8 @@ export class OrderService {
       );
   }
 
-  findAllSurrendersByFactory(query: string): Observable<Array<Order>> {
+  // STARTED, INVOICED, PAID, SURRENDER, SETTLEMENT, ENDED
+  findAllOrderByFactoryAndStatus(query: string, status: string): Observable<Array<Order>> {
 
     query = query.trim();
     const headers = new HttpHeaders()
@@ -49,7 +50,7 @@ export class OrderService {
     const options = query ? 
       { params: new HttpParams()
           .set('factory', query)
-          .set('status', 'SURRENDER'), headers } : { headers };
+          .set('status', status), headers } : { headers };
     return this.http.get<Array<Order>>(this.baseUrl, options)
       .pipe(
         catchError(({error}) => {
@@ -201,7 +202,7 @@ export class OrderService {
       );
   }
 
-  findSurrendersBetweenDates(from: Date, until: Date, factoryId: string): Observable<Array<Order>> {
+  findSettlementBetweenDates(from: Date, until: Date, factoryId: string): Observable<Array<Order>> {
 
     factoryId = factoryId?.trim();
     const headers = new HttpHeaders()
@@ -215,6 +216,20 @@ export class OrderService {
       .pipe(
         catchError(({error}) => {
           return throwError(() => `Error: ${error.message}`);
+        })
+      );
+  }
+
+  findFinishedOrders(): Observable<Array<Order>> {
+
+    const headers = new HttpHeaders()
+    .set('authorization', `Beared ${localStorage.getItem('token')}`);
+    const url: string = `${this.baseUrl}/record`;
+
+    return this.http.get<Array<Order>>(url, { headers })
+      .pipe(
+        catchError(({error}) => {
+          return throwError(() => `ERROR: ${error}`)
         })
       );
   }

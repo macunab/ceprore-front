@@ -31,6 +31,8 @@ export class CheckingAccountsComponent implements OnInit{
   factories: Array<Factory> = [];
   surrenderOrders: Array<Order> = [];
   selectedFactory: Factory | undefined;
+  loadingSearchButton: boolean = false;
+  noResultSearch: string = '...';
 
   constructor(private factoryService: FactoryService, private orderService: OrderService, 
       private messageService: MessageService, private confirmationService: ConfirmationService,) {}
@@ -50,13 +52,18 @@ export class CheckingAccountsComponent implements OnInit{
   onSurrendersSearch(): void {
 
     if(this.selectedFactory !== undefined) {
-      this.orderService.findAllSurrendersByFactory(this.selectedFactory._id!)
+      this.loadingSearchButton = true;
+      this.orderService.findAllOrderByFactoryAndStatus(this.selectedFactory._id!, 'SURRENDER')
         .subscribe({
           next: res => {
             this.surrenderOrders = res;
+            this.loadingSearchButton = false;
+            if(res.length < 1) {
+              this.noResultSearch = `No se han encontrado ordenes para rendir de la Representada: ${this.selectedFactory?.name}`;
+            }
           },
-          error: err => {
-            console.log(err);
+          error: () => {
+            this.loadingSearchButton = false;
             this.surrenderOrders = [];
             this.messageService.add({ severity: 'error', summary: 'ERROR!',
               detail: 'Ha ocurrido un error al intentar obtener los pedidos de la Representada seleccionada.'})
@@ -92,7 +99,7 @@ export class CheckingAccountsComponent implements OnInit{
       header: 'Confirmar Finalizacion',
       icon: 'pi pi-info-delete',
       accept: () => {
-        surrender.status = 'ENDED';
+        surrender.status = 'SETTLEMENT';
         this.orderService.update(surrender)
           .subscribe({
             next: res => {

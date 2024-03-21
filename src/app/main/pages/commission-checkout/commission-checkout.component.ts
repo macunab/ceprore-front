@@ -77,7 +77,7 @@ export class CommissionCheckoutComponent implements OnInit{
 
     if(this.rangeDates === undefined || this.rangeDates === null) {
       this.loadingButton = true;
-      this.orderService.findAllSurrendersByFactory(this.selectedFactory._id!)
+      this.orderService.findAllOrderByFactoryAndStatus(this.selectedFactory._id!, 'SETTLEMENT')
         .subscribe({
           next: res => {
             this.surrenderOrders = res;
@@ -96,7 +96,7 @@ export class CommissionCheckoutComponent implements OnInit{
     } else {
 
       this.loadingButton = true;
-      this.orderService.findSurrendersBetweenDates(this.rangeDates[0], this.rangeDates[1], this.selectedFactory._id!)
+      this.orderService.findSettlementBetweenDates(this.rangeDates[0], this.rangeDates[1], this.selectedFactory._id!)
         .subscribe({
           next: res => {
             this.surrenderOrders = res;

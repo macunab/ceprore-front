@@ -24,7 +24,7 @@ export class HistoricComponent implements OnInit{
 
   ngOnInit(): void {
 
-    this.orderService.findAll('ENDED')
+    this.orderService.findFinishedOrders()
       .subscribe({
         next: res => {
           this.records = res;

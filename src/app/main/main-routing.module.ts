@@ -18,6 +18,7 @@ import { HistoricComponent } from "./pages/historic/historic.component";
 import { SettingsComponent } from "./pages/settings/settings.component";
 import { CommissionCheckoutComponent } from "./pages/commission-checkout/commission-checkout.component";
 import { ReportedCommissionComponent } from "./pages/reported-commission/reported-commission.component";
+import { CheckingAccountsComponent } from "./pages/checking-accounts/checking-accounts.component";
 
 
 const routes: Routes = [
@@ -32,7 +33,7 @@ const routes: Routes = [
             { path: 'products', component: ProductsComponent, canActivate: [isAuthenticatedGuard] },
             { path: 'priceLists', component: PriceListsComponent, canActivate: [isAuthenticatedGuard] },
             { path: 'deliveries', component: DeliveriesComponent, canActivate: [isAuthenticatedGuard] },
-            { path: 'checking-accounts', component: CommissionCheckoutComponent, canActivate: [isAuthenticatedGuard] },
+            { path: 'checking-accounts', component: CheckingAccountsComponent, canActivate: [isAuthenticatedGuard] },
             { path: 'pending-orders', component: PendingComponent, canActivate: [isAuthenticatedGuard] },
             { path: 'pending-order', component: PendingFormComponent, canActivate: [isAuthenticatedGuard] },
             { path: 'invoiced', component: InvoicedComponent, canActivate: [isAuthenticatedGuard] },
@@ -40,6 +41,7 @@ const routes: Routes = [
             { path: 'records', component: HistoricComponent, canActivate: [isAuthenticatedGuard] },
             { path: 'settings', component: SettingsComponent, canActivate: [isAuthenticatedGuard] },
             { path: 'commisioned', component: ReportedCommissionComponent, canActivate: [isAuthenticatedGuard] },
+            { path: 'commission-settlement', component: CommissionCheckoutComponent, canActivate: [isAuthenticatedGuard]},
             { path: '**', redirectTo: 'home' }
         ]
     },
