@@ -26,6 +26,28 @@
         </div>
         <div class="formgrid grid">
             <div class="field col-12 md:col">
+                <input pInputText type="text" formControlName="province" class="w-full"
+                    aria-describedby="province-help" [ngClass]="isValid('province') ? 'ng-invalid ng-dirty' : ''"
+                    placeholder="Provincia" />
+                <div class="block-error">
+                    @if(isValid('province')) {
+                        <small id="province-help" class="form-error">La provincia es requerida.</small>
+                    }
+                </div>    
+            </div>
+            <div class="field col-12 md:col">
+                <input pInputText formControlName="locality" class="w-full" placeholder="Localidad"
+                    aria-describedby="locality-help" [ngClass]="isValid('locality') ? 'ng-invalid ng-dirty' : ''"
+                    placeholder="Localidad"/>
+                <div class="block-error">
+                    @if(isValid('locality')) {
+                        <small id="locality-help" class="form-error">La localidad es requerida.</small>
+                    }    
+                </div>
+            </div>
+        </div>
+        <div class="formgrid grid">
+            <div class="field col-12 md:col">
                 <input pInputText id="email" formControlName="email" class="w-full" placeholder="Correo"/>
             </div>
             <div class="field col-12 md:col">

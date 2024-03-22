@@ -35,12 +35,14 @@ export class CustomerFormComponent implements OnInit {
   customerForm: FormGroup = this.fb.group({
     name: ['', [Validators.required]],
     address: ['', [Validators.required]],
+    province: ['', [Validators.required]],
+    locality: ['', [Validators.required]],
     email: [''],
     ivaCondition: ['', [Validators.required]],
     priceList: ['', [Validators.required]],
     cuil: ['', [Validators.required]]
   });
-  ivaCondition: Array<string> = ['Responsable inscripto', 'Afiliado al gremio!'];
+  ivaCondition: Array<string> = ['Responsable inscripto', 'Monotributo', 'Responsable no inscripto'];
   priceList: Array<PriceList> = [
     { _id: '1111', name: 'Monotributo' },
     { _id: '2222', name: 'Supermercados' }
