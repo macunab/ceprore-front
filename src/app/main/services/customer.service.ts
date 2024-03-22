@@ -17,7 +17,13 @@ export class CustomerService {
 
     const headers = new HttpHeaders()
       .set('authorization', `Beared ${localStorage.getItem('token')}`);
-    return this.http.get<Array<Customer>>(this.baseUrl, { headers })
+    
+    const options = {
+      params: new HttpParams()
+        .set('isDeleted', false),
+      headers
+    }
+    return this.http.get<Array<Customer>>(this.baseUrl, options)
       .pipe(
         catchError(({error}) => {
           return throwError(() => `Error: ${error.message}`);

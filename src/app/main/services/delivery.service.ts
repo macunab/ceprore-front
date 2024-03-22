@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { Delivery } from '../interfaces/delivery.interface';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 
 @Injectable({
@@ -29,7 +29,13 @@ export class DeliveryService {
     
     const headers = new HttpHeaders()
     .set('authorization', `Beared ${localStorage.getItem('token')}`);
-    return this.http.get<Array<Delivery>>(this.baseUrl, { headers })
+
+    const options = {
+      params: new HttpParams()
+        .set('isDeleted', false),
+      headers
+    }
+    return this.http.get<Array<Delivery>>(this.baseUrl, options)
       .pipe(
         catchError( error => {
           return throwError(() => `Error: ${error.error.message}`)

@@ -30,8 +30,12 @@ export class ProductService {
     query = query?.trim();
     const headers = new HttpHeaders()
     .set('authorization', `Beared ${localStorage.getItem('token')}`);
+    
     const options = query ? 
-      { params: new HttpParams().set('factory', query), headers } : { headers };
+      { params: new HttpParams()
+        .set('factory', query)
+        .set('isDeleted', false), headers } : { params: new HttpParams()
+          .set('isDeleted', false), headers };
     return this.http.get<Array<Product>>(this.baseUrl, options)
       .pipe(
         catchError(error => {
@@ -45,7 +49,12 @@ export class ProductService {
     const url: string = `${this.baseUrl}/${factoryId}`;
     const headers = new HttpHeaders()
     .set('authorization', `Beared ${localStorage.getItem('token')}`);
-    return this.http.get<Array<Product>>(url, { headers })
+
+    const options = { params: new HttpParams()
+      .set('factory', factoryId)
+      .set('isDeleted', false), headers };
+
+    return this.http.get<Array<Product>>(url, options)
     .pipe(
       catchError(error => {
         return throwError(() => `Error: ${error.error.message}`)

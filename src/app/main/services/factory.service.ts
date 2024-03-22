@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Factory } from '../interfaces/factory.interface';
 import { Observable, catchError, throwError } from 'rxjs';
 
@@ -29,7 +29,13 @@ export class FactoryService {
 
     const headers = new HttpHeaders()
     .set('authorization', `Beared ${localStorage.getItem('token')}`);
-    return this.http.get<Array<Factory>>(this.baseUrl, { headers })
+
+    const options = {
+      params: new HttpParams()
+        .set('isDeleted', false),
+      headers
+    }
+    return this.http.get<Array<Factory>>(this.baseUrl, options)
       .pipe(
         catchError(error => {
           return throwError(() => `Error: ${error.error.message}`)
