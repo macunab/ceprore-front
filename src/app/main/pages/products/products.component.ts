@@ -9,12 +9,15 @@ import { GenericTableComponent } from '../../../shared/generic-table/generic-tab
 import { ProductFormDialogComponent } from '../../components/product-form-dialog/product-form-dialog.component';
 import { DialogData } from '../../interfaces/dialogData.interface';
 import { ProductService } from '../../services/product.service';
+import { TableModule } from 'primeng/table';
+import { ToolbarModule } from 'primeng/toolbar';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-products',
   standalone: true,
   imports: [GenericTableComponent, ConfirmDialogModule, ToastModule, DialogModule, 
-    ProductFormDialogComponent],
+    ProductFormDialogComponent, TableModule, ToolbarModule, InputTextModule],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
   providers: [ConfirmationService, MessageService]
@@ -28,13 +31,8 @@ export class ProductsComponent implements OnInit{
     { class: 'p-button-sm p-button-danger p-button-rounded p-button-text mr-2', 
         functionType: 'delete', icon: 'pi pi-trash', tooltipText: 'Eliminar' }
   ];
-  filters: Array<string> = ['code', 'name', 'description'];
-  headers: Array<Column<Product>> = [
-    { field: 'code', title: 'Codigo' },
-    { field: 'name', title: 'Nombre' },
-    { field: 'description', title: 'Descripcion' }
-  ];
-  tableTitle: string = 'Productos';
+  filters: Array<string> = ['code', 'name', 'description', 'factory.name'];
+ 
   formTitle: string = '';
   showForm: boolean = false;
   productUpdate: Product = {} as Product;
