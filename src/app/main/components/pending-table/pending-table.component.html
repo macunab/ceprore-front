@@ -4,7 +4,8 @@
     </div> 
 </p-toolbar>
 <p-table #table responsiveLayout="stack" [value]="pendingOrders" [globalFilterFields]="filters"
-    [rows]="3" [paginator]="true" [loading]="loadingTable">
+    [rows]="5" [paginator]="true" [loading]="loadingTable"
+    [rowsPerPageOptions]="[5, 10, 20]">
     <ng-template pTemplate="caption">
         <div class="flex align-items-center justify-content-between">
             <h3 class="m-0">Pendientes</h3>

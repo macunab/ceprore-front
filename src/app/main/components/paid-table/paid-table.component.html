@@ -1,6 +1,7 @@
 
 <p-table #table responsiveLayout="stack" [value]="paidOrders" [globalFilterFields]="filters"
-    [rows]="3" [paginator]="true" [loading]="loading">
+    [rows]="5" [paginator]="true" [loading]="loading"
+    [rowsPerPageOptions]="[5, 10, 20]">
     <ng-template pTemplate="caption">
         <div class="flex align-items-center justify-content-between">
             <h3 class="m-0">Cobros</h3>
