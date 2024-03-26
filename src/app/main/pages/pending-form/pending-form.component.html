@@ -181,6 +181,7 @@
                 <th style="width: 4rem">
                     Selecciones
                 </th>
+                <th>Codigo</th>
                 <th>Producto</th>
                 <th>Precio</th>
                 <th>Cantidad</th>
@@ -193,6 +194,7 @@
                 <td>
                     <p-tableCheckbox [value]="product" [disabled]="!product.price"></p-tableCheckbox>
                 </td>
+                <td>{{ product.product.code }}</td>
                 <td>{{product.product.description }}</td>
                 <td>{{product.price | currency}}</td>
                 <td [pEditableColumn]="product.quantity" pEditableColumnField="quantity">
