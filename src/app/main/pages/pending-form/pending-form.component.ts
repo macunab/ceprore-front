@@ -219,7 +219,8 @@ export class PendingFormComponent implements OnInit {
     let customerFactory: CustomerFactory = this.selectedCustomer
       .discountsByFactory?.find(val => val.factory._id === selectedFactory._id)!;
     this.orderForm.get('delivery')?.setValue(customerFactory.delivery);
-    this.orderForm.get('customerDiscount')?.setValue(customerFactory.cascadeDiscount*100);
+    this.orderForm.get('customerDiscount')?.setValue((customerFactory.cascadeDiscount*100).toFixed(2));
+    console.log(customerFactory.cascadeDiscount*100);
     this.loadProducts();
   }
 
