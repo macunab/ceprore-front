@@ -173,20 +173,20 @@
 
 <!-- Products selection dialog. -->
 <p-dialog header="Selecione los productos" [modal]="true" [(visible)]="showProducts"
-    [breakpoints]="{ '960px': '95vw' }" [style]="{ width: '60vw', height: '500px' }">
+    [breakpoints]="{ '960px': '95vw' }" [style]="{ width: '70vw', height: '650px' }">
     <p-table [value]="products" [(selection)]="selectedProducts" dataKey="product._id" [tableStyle]="{'min-width': '50rem'}"
-        [paginator]="true" [rows]="3">
+        [paginator]="true" [rows]="3" styleClass="p-datatable-striped">
         <ng-template pTemplate="header">
             <tr>
                 <th style="width: 4rem">
-                    Selecciones
+                    #
                 </th>
                 <th>Codigo</th>
                 <th>Producto</th>
                 <th>Precio</th>
                 <th>Cantidad</th>
                 <th>Bonificacion</th>
-                <th>Subtotal</th>
+                <!-- <th>Subtotal</th> -->
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-product>
@@ -217,7 +217,10 @@
                         </ng-template>
                     </p-cellEditor>
                 </td>
-                <td>{{ product.quantity * product.price | currency}}</td>
+                <!-- <td>{{ product.quantity * product.price | currency}}</td> -->
+            </tr>
+            <tr>
+                <td colspan="2"><strong>Subtotal:</strong></td><td colspan="4">{{ product.quantity * product.price | currency}}</td>
             </tr>
         </ng-template>
     </p-table>
