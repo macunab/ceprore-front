@@ -57,6 +57,7 @@ export class PaidFormDialogComponent implements OnChanges{
     this.order.payment = { ...this.paidForm.value, total: this.paidForm.get('total')?.value,
       commission: this.paidForm.get('commission')?.value };
     this.order.status = 'PAID';
+    this.order.createdPaymentDate = new Date();
     this.emitter.emit({ data: this.order });
   }
 

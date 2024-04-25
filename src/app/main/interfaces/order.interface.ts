@@ -30,6 +30,7 @@ export interface Order {
     total?: number;
     invoice?: Invoice;
     payment?: Payment;
+    createdPaymentDate?: Date;
     __v?: number;
 }
 
