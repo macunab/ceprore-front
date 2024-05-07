@@ -36,6 +36,7 @@ export class InvoiceFormDialogComponent implements OnChanges{
   constructor(private fb: FormBuilder) {}
   
   ngOnChanges(changes: SimpleChanges): void {
+    this.invoiceForm.reset();
     if(this.order !== undefined && this.order._id) {
       this.invoiceForm.patchValue(this.order);
     }
@@ -74,5 +75,9 @@ export class InvoiceFormDialogComponent implements OnChanges{
     const total: number = newIvaAmount+this.invoiceForm.get('invoicedAmount')!.value + this.invoiceForm.get('remitAmount')!.value;
     this.invoiceForm.get('total')?.patchValue(total);
     this.invoiceForm.get('ivaAmount')?.patchValue(newIvaAmount);
+  }
+
+  onHideForm(): void {
+    this.invoiceForm.reset();
   }
 }

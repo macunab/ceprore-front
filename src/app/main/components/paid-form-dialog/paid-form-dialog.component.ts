@@ -37,6 +37,7 @@ export class PaidFormDialogComponent implements OnChanges{
   constructor(private fb: FormBuilder) {}
 
   ngOnChanges(changes: SimpleChanges): void {
+    this.paidForm.reset();
     if(this.order.invoice) {
       this.paidForm.patchValue(this.order.invoice!);
       this.paidForm.get('customer')?.patchValue(this.order.customer?.name);

@@ -130,6 +130,7 @@ export class PendingComponent implements OnInit{
               detail: 'El Pedido ha sido Facturado exitosamente.'});
             this.showInvoiceForm = false;
             this.loadingButton = false;
+            // this.orderUpdate = {};
           },
           error: () => {
             this.message.add({ severity: 'error', summary: 'ERROR!',

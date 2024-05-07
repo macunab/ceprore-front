@@ -21,6 +21,7 @@ export class SidebarComponent {
 
   hideSidebar() {
     this._showSidebar = false;
+    console.log('EL ESTADO DEL SIDEBAR ES: ', this._showSidebar)
   }
 
 }

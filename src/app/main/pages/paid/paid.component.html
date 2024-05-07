@@ -3,7 +3,8 @@
 <app-paid-table [paidOrders]="paidOrders" (onAction)="onAction($event)"
     [loading]="loadingTable"></app-paid-table>
 <p-dialog header="Editar Pago" [modal]="true" [(visible)]="showForm"
-    [breakpoints]="{ '960px': '95vw' }" [style]="{ width: '60vw', height: '500px' }">
+    [breakpoints]="{ '960px': '95vw' }" [style]="{ width: '60vw', height: '500px' }"
+    >
     <app-paid-form-dialog [order]="paymentUpdate" (onSubmit)="onPaidFormSubmit($event)"
         [loadingButton]="loadingButton"></app-paid-form-dialog>
 </p-dialog>
