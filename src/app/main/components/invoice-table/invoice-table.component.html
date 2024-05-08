@@ -23,7 +23,7 @@
     </ng-template>
     <ng-template pTemplate="body" let-order>
         <tr>
-            <td>{{ order.invoice.createdAt | date:'dd/MM/yyyy' }}</td>
+            <td>{{ order.invoice.invoiceDate | date:'dd/MM/yyyy' }}</td>
             <td>{{ order.invoice.invoiceCode }}</td>
             <td>{{ order.customer.name }}</td>
             <td>{{ order.factory.name }}</td>

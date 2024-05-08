@@ -40,7 +40,7 @@ export class PendingFormComponent implements OnInit {
     factory: ['', [Validators.required]],
     priceList: ['', [Validators.required]],
     delivery: [''],
-    invoicedPercent: ['', [Validators.required]],
+    invoicedPercent: [{ percentString: '100%', percentNumber: 1 }, [Validators.required]],
     observations: [''],
     customerDiscount: ['',[Validators.required]],
     discounts: this.fb.array([])

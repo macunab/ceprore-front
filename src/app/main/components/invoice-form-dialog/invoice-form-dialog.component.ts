@@ -21,7 +21,7 @@ export class InvoiceFormDialogComponent implements OnChanges{
     invoiceCode: ['', [Validators.required]],
     invoiceDate: ['',[Validators.required]],
     paymentDeadline: [],
-    deliveryTerm: [],
+    deliveryTerm: [30],
     invoicedAmount: [0,[Validators.required]],
     ivaAmount: [{value: '', disabled: true }, [Validators.required]],
     remitAmount: [0, [Validators.required]],
@@ -36,7 +36,7 @@ export class InvoiceFormDialogComponent implements OnChanges{
   constructor(private fb: FormBuilder) {}
   
   ngOnChanges(changes: SimpleChanges): void {
-    this.invoiceForm.reset();
+    this.invoiceForm.reset({ deliveryTerm: 30, paymentDeadline: 30 });
     if(this.order !== undefined && this.order._id) {
       this.invoiceForm.patchValue(this.order);
     }
