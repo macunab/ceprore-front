@@ -29,6 +29,7 @@
                 <tr>
                     <th></th>
                     <th>Fecha</th>
+                    <th>N. Factura</th>
                     <th>Cliente</th>
                     <th>Representada</th>
                     <th>Total</th>
@@ -41,6 +42,7 @@
                         <p-tableCheckbox [value]="surrender"></p-tableCheckbox>
                     </td>
                     <td>{{ surrender.createdPaymentDate | date:'dd/MM/yyyy' }}</td>
+                    <td>{{ surrender.invoice.invoiceCode }}</td>
                     <td>{{ surrender.customer.name }}</td>
                     <td>{{ surrender.factory.name }}</td>
                     <td>{{ surrender.invoice.total | currency:'USD':'symbol':'3.0-3'}}</td>
