@@ -24,7 +24,16 @@
         </div>
         <div class="field col-12 md:col-6">
             <label for="invoiceAmount">Total Factura</label>
-            <input type="number" pInputText formControlName="invoiceAmount" id="invoiceAmount" class="w-full">
+            <p-inputNumber 
+                id="invoiceAmount"
+                class="w-full"
+                formControlName="invoiceAmount" 
+                inputId="currency-us" 
+                mode="currency" 
+                currency="USD" 
+                locale="en-US"
+                [minFractionDigits]="3" /> 
+            <!-- <input type="number" pInputText formControlName="invoiceAmount" id="invoiceAmount" class="w-full"> -->
         </div>
         <div class="field col-12">
             <label for="justifiedDebitNote">Nota Debito</label>
@@ -53,11 +62,29 @@
         </div>
         <div class="field col-12 md:col-6">
             <label for="total">Total</label>
-            <input type="number" [min]="0" pInputText formControlName="total" id="total" class="w-full">
+            <p-inputNumber 
+                id="total"
+                class="w-full"
+                formControlName="total" 
+                inputId="currency-us" 
+                mode="currency" 
+                currency="USD" 
+                locale="en-US"
+                [minFractionDigits]="3" /> 
+            <!-- <input type="number" [min]="0" pInputText formControlName="total" id="total" class="w-full"> -->
         </div>
         <div class="field col-12 md:col-6">
             <label for="commission">Comision</label>
-            <input type="number" [min]="0" pInputText formControlName="commission" id="commission" class="w-full">
+            <p-inputNumber 
+                id="commission"
+                class="w-full"
+                formControlName="commission" 
+                inputId="currency-us" 
+                mode="currency" 
+                currency="USD" 
+                locale="en-US"
+                [minFractionDigits]="3" /> 
+            <!-- <input type="number" [min]="0" pInputText formControlName="commission" id="commission" class="w-full"> -->
         </div>
     </div>
     <button pButton class="p-button-success mt-3" type="submit" [loading]="loadingButton">Guardar</button>

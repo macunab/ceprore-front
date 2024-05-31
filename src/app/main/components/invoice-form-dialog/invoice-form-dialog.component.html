@@ -32,28 +32,68 @@
     <div class="formgrid grid">
         <div class="field col-12 md:col-6">
             <label for="invoicedAmoun">Monto Facturado</label>
-            <input type="number" pInputText formControlName="invoicedAmount" placeholder="Monto Facturado" class="w-full"
-                id="invoicedAmount" [min]="0" (change)="onChangeAmount()"> 
+            <p-inputNumber 
+                id="invoicedAmount"
+                class="w-full"
+                formControlName="invoicedAmount"
+                (onInput)="onChangeAmount()"
+                inputId="currency-us" 
+                mode="currency" 
+                currency="USD" 
+                locale="en-US"
+                [minFractionDigits]="3" /> 
+            <!-- <input type="number" pInputText formControlName="invoicedAmount" placeholder="Monto Facturado" class="w-full"
+                id="invoicedAmount" [min]="0" (change)="onChangeAmount()">  -->
         </div>
         <div class="field col-12 md:col-6">
             <label for="remitAmoun">Monto Remito</label>
-            <input type="number" pInputText formControlName="remitAmount" placeholder="Monto Remito" class="w-full"
-                id="remitAmount" [min]="0" (change)="onChangeAmount()">
+            <p-inputNumber 
+                id="remitAmount"
+                class="w-full"
+                formControlName="remitAmount"
+                (onInput)="onChangeAmount()"
+                inputId="currency-us" 
+                mode="currency" 
+                currency="USD" 
+                locale="en-US"
+                [minFractionDigits]="3" /> 
+            <!-- <input type="number" pInputText formControlName="remitAmount" placeholder="Monto Remito" class="w-full"
+                id="remitAmount" [min]="0" (change)="onChangeAmount()"> -->
         </div>
     </div>
     <div class="formgrid grid">
         <div class="field col-12 md:col-6">
             <label for="ivaAmount">Monto IVA</label>
-            <input type="number" pInputText formControlName="ivaAmount" placeholder="Monto IVA" class="w-full"
-                id="ivaAmount" [min]="0">
+            <p-inputNumber 
+                id="ivaAmount"
+                class="w-full"
+                formControlName="ivaAmount"
+                (onInput)="onChangeAmount()"
+                inputId="currency-us" 
+                mode="currency" 
+                currency="USD" 
+                locale="en-US"
+                [minFractionDigits]="3" /> 
+            <!-- <input type="number" pInputText formControlName="ivaAmount" placeholder="Monto IVA" class="w-full"
+                id="ivaAmount" [min]="0"> -->
             @if(isInvalid('ivaAmount')) {
                 <small class="form-error">El monto de iva es requerido.</small>
             }
         </div>
         <div class="field col-12 md:col-6">
             <label for="total">Total</label>
-            <input type="number" pInputText formControlName="total" placeholder="Monto Total" class="w-full"
-                [ngClass]="isInvalid('total') ? 'ng-invalid ng-dirty' : ''" aria-describedby="total-help" [min]="0">
+            <p-inputNumber 
+                id="total"
+                class="w-full"
+                formControlName="total"
+                (onInput)="onChangeAmount()"
+                inputId="currency-us" 
+                mode="currency" 
+                currency="USD" 
+                locale="en-US"
+                [minFractionDigits]="3" /> 
+            <!-- <input type="number" pInputText formControlName="total" placeholder="Monto Total" class="w-full"
+                [ngClass]="isInvalid('total') ? 'ng-invalid ng-dirty' : ''" aria-describedby="total-help" [min]="0"> -->
             @if(isInvalid('total')) {
                 <small class="form-error">El total es requerido.</small>
             }

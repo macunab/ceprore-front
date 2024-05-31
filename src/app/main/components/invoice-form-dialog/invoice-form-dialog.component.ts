@@ -6,12 +6,13 @@ import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { CalendarModule } from 'primeng/calendar';
 import { Invoice } from '../../interfaces/invoice.interface';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 @Component({
   selector: 'app-invoice-form-dialog',
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, InputTextModule, ButtonModule, CommonModule,
-    CalendarModule],
+    CalendarModule, InputNumberModule],
   templateUrl: './invoice-form-dialog.component.html',
   styleUrl: './invoice-form-dialog.component.css'
 })

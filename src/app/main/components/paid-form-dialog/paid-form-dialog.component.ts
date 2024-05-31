@@ -1,18 +1,21 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { InputNumberModule } from 'primeng/inputnumber';
+
 import { InvoicedPercent, Order } from '../../interfaces/order.interface';
 
 @Component({
   selector: 'app-paid-form-dialog',
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, InputTextModule, ButtonModule, CommonModule, 
-    InputTextareaModule],
+    InputTextareaModule, CurrencyPipe, InputNumberModule],
   templateUrl: './paid-form-dialog.component.html',
-  styleUrl: './paid-form-dialog.component.css'
+  styleUrl: './paid-form-dialog.component.css',
+  providers: [CurrencyPipe]
 })
 export class PaidFormDialogComponent implements OnChanges{
 
@@ -34,7 +37,7 @@ export class PaidFormDialogComponent implements OnChanges{
   @Output('onSubmit') emitter = new EventEmitter();
   orderPaid: Order = {} as Order;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private currencyPipe: CurrencyPipe) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     this.paidForm.reset({ justifiedDebitNote: 0, withholdings: 0, paymentOnAccount: 0 });
@@ -43,7 +46,9 @@ export class PaidFormDialogComponent implements OnChanges{
       this.paidForm.get('customer')?.patchValue(this.order.customer?.name);
       this.paidForm.get('factory')?.patchValue(this.order.factory?.name);
       this.paidForm.get('invoiceAmount')?.patchValue(this.order.invoice?.total);
-      this.paidForm.get('commission')?.patchValue(this.calculateCommission(this.order.invoice.total, this.order.invoicedPercent!, this.order.factory?.commission!));
+      console.log(this.currencyPipe.transform(this.order.invoice?.total, 'USD', 'symbol', '3.0-3'))
+      this.paidForm.get('commission')?.patchValue(this.calculateCommission(this.order.invoice.total, this.order.invoicedPercent!, 
+        this.order.factory?.commission!, this.order.invoice.remitAmount));
     }
     if(this.order.payment) {
       this.paidForm.patchValue(this.order.payment);
@@ -75,7 +80,7 @@ export class PaidFormDialogComponent implements OnChanges{
       const newTotal: number = this.order.invoice!.total - this.paidForm.get('justifiedDebitNote')!.value;
       this.paidForm.get('total')?.patchValue(newTotal - this.paidForm.get('paymentOnAccount')?.value 
         - this.paidForm.get('withholdings')?.value);
-      this.paidForm.get('commission')?.patchValue(this.calculateCommission(newTotal, this.order.invoicedPercent!, this.order.factory?.commission!))
+      this.paidForm.get('commission')?.patchValue(this.calculateCommission(newTotal, this.order.invoicedPercent!, this.order.factory?.commission!, this.order.invoice?.remitAmount))
     } else {
       this.paidForm.controls[field].patchValue(0);
       this.onChangePaidAmounts(field);
@@ -84,10 +89,11 @@ export class PaidFormDialogComponent implements OnChanges{
   }
 
   // test new function
-  calculateCommission(total: number, invoicedPercent: InvoicedPercent, commissionPercent: number): number {
+  calculateCommission(total: number, invoicedPercent: InvoicedPercent, commissionPercent: number, remitAmount?: number): number {
 
     let commissionAmount: number = 0;
-    if(invoicedPercent.percentNumber === 1) {
+    console.log('REMITO ES:', remitAmount);
+    if(invoicedPercent.percentNumber === 1 || remitAmount === 0) {
       commissionAmount = (total/1.21)*(commissionPercent/100);
     } else if(invoicedPercent.percentNumber === 0.5) {
       commissionAmount = (total/1.105)*commissionPercent/100;
