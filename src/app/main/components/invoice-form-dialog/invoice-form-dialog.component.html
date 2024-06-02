@@ -41,7 +41,8 @@
                 mode="currency" 
                 currency="USD" 
                 locale="en-US"
-                [minFractionDigits]="3" /> 
+                [minFractionDigits]="3"
+                [style]="{'width':'100%'}" /> 
             <!-- <input type="number" pInputText formControlName="invoicedAmount" placeholder="Monto Facturado" class="w-full"
                 id="invoicedAmount" [min]="0" (change)="onChangeAmount()">  -->
         </div>
@@ -56,7 +57,8 @@
                 mode="currency" 
                 currency="USD" 
                 locale="en-US"
-                [minFractionDigits]="3" /> 
+                [minFractionDigits]="3"
+                [style]="{'width':'100%'}" /> 
             <!-- <input type="number" pInputText formControlName="remitAmount" placeholder="Monto Remito" class="w-full"
                 id="remitAmount" [min]="0" (change)="onChangeAmount()"> -->
         </div>
@@ -73,7 +75,8 @@
                 mode="currency" 
                 currency="USD" 
                 locale="en-US"
-                [minFractionDigits]="3" /> 
+                [minFractionDigits]="3"
+                [style]="{'width':'100%'}" /> 
             <!-- <input type="number" pInputText formControlName="ivaAmount" placeholder="Monto IVA" class="w-full"
                 id="ivaAmount" [min]="0"> -->
             @if(isInvalid('ivaAmount')) {
@@ -91,7 +94,8 @@
                 mode="currency" 
                 currency="USD" 
                 locale="en-US"
-                [minFractionDigits]="3" /> 
+                [minFractionDigits]="3"
+                [style]="{'width':'100%'}" /> 
             <!-- <input type="number" pInputText formControlName="total" placeholder="Monto Total" class="w-full"
                 [ngClass]="isInvalid('total') ? 'ng-invalid ng-dirty' : ''" aria-describedby="total-help" [min]="0"> -->
             @if(isInvalid('total')) {
