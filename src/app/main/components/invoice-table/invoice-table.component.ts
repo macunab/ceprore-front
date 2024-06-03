@@ -20,5 +20,5 @@ export class InvoiceTableComponent {
   @Input() invoicedOrders: Array<Order> = [];
   @Input() loading: boolean = true;
   @Output('onAction') emitter = new EventEmitter();
-  filters: Array<string> = ['order.customer.name', 'order.factory.name', 'order.invoice.invoiceCode'];
+  filters: Array<string> = ['customer.name', 'factory.name', 'invoice.invoiceCode'];
 }
