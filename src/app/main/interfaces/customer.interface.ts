@@ -15,6 +15,10 @@ export interface Customer {
 export interface CustomerFactory {
     factory: Factory;
     delivery: Delivery;
-    discounts: Array<number>;
+    discounts: Array<number | DiscountForm>;
     cascadeDiscount: number;
+}
+
+export interface DiscountForm {
+    discount: number;
 }

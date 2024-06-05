@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { AfterContentChecked, AfterViewChecked, AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Factory } from '../../interfaces/factory.interface';
 import { Delivery } from '../../interfaces/delivery.interface';
@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
 import { FactoryService } from '../../services/factory.service';
 import { DeliveryService } from '../../services/delivery.service';
+import { CustomerFactory, DiscountForm } from '../../interfaces/customer.interface';
 
 //temporal fix
 export interface ArrayDiscount {
@@ -23,7 +24,7 @@ export interface ArrayDiscount {
   templateUrl: './customer-factory-dialog.component.html',
   styleUrl: './customer-factory-dialog.component.css'
 })
-export class CustomerFactoryDialogComponent implements OnInit{
+export class CustomerFactoryDialogComponent implements OnInit, OnChanges {
 
   @Output('onClose') emmiter = new EventEmitter();
   factoryDiscountForm: FormGroup = this.fb.group({
@@ -40,11 +41,28 @@ export class CustomerFactoryDialogComponent implements OnInit{
   deliveries: Array<Delivery> = [
     { _id: '1111', name: 'Transporte La Calera', address: 'Simon Bolivar 2321', email: 'transporteCalera@gmail.com' }
   ];
+  @Input() factoryDiscountUpdate: CustomerFactory | undefined;
 
   constructor(private fb: FormBuilder, private factoryService: FactoryService,
     private deliveryService: DeliveryService) {}
 
+  ngOnChanges(changes: SimpleChanges): void {
+    
+    // this.cleanForm();
+    if(changes['factoryDiscountUpdate'].currentValue) {
+      this.cleanForm();
+      this.factoryDiscountForm.patchValue(this.factoryDiscountUpdate!);
+      this.factoryDiscountUpdate?.discounts.forEach( value => {
+        const discount = value as DiscountForm;
+        this.discounts.push(this.createDiscount(discount.discount))
+      });
+    } else {
+      this.factoryDiscountForm.reset({ cascadeDiscount: 0 });
+    }
+  }
+
   ngOnInit(): void {
+
     this.factoryService.findAll()
       .subscribe({
         next: res => {
@@ -54,7 +72,6 @@ export class CustomerFactoryDialogComponent implements OnInit{
           console.error(err);
         }
       });
-
     this.deliveryService.findAll()
       .subscribe({
         next: res => {
@@ -70,9 +87,9 @@ export class CustomerFactoryDialogComponent implements OnInit{
     return <FormArray>this.factoryDiscountForm.get('discounts');
   }
 
-  createDiscount(): FormGroup {
+  createDiscount(discount?: number): FormGroup {
     return this.fb.group({
-      discount: [0, [Validators.required]]
+      discount: [discount ? discount : 0, [Validators.required]]
     });
   }
 
