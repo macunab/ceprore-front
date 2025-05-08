@@ -103,5 +103,22 @@
             }
         </div>
     </div>
-    <button pButton class="p-button-success mt-3" type="submit" [loading]="loadingButton">Guardar</button>
+
+    <!-- <p-toast />
+    <p-confirmPopup #confirmPopupRef>
+        <ng-template pTemplate="headless" let-message let-test>
+            <div class="border-round p-3">
+                <span>{{ message.message }}</span>
+                <div class="flex align-items-center gap-2 mt-3">
+                    <p-button (onClick)="accept()" label="Si" size="small" />
+                    <p-button (onClick)="reject()" label="No" [outlined]="true" size="small" />
+                </div>
+            </div>
+        </ng-template>
+    </p-confirmPopup>
+    <button pButton class="p-button-success mt-3" (click)="confirmInvoiceDuplicate($event)" [loading]="loadingButton">Guardar</button> -->
+    <p-toast />
+    <p-confirmDialog [style]="{ 'width': '400px'}" />
+    <p-button severity="success" [loading]="loadingButton" (onClick)="confirmDialog($event)" label="Guardar" [loading]="loadingButton" />
+    <!-- <button pButton class="p-button-success mt-3" type="submit" [loading]="loadingButton">Guardar</button> -->
 </form>

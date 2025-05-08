@@ -233,4 +233,21 @@ export class OrderService {
         })
       );
   }
+
+  FindByInvoiceNumber(invoiceNumber: string, factoryId: string): Observable<Array<Order>> {
+
+    const headers = new HttpHeaders()
+    .set('authorization', `Beared ${localStorage.getItem('token')}`);
+    const options = { params: new HttpParams()
+      .set('factory', factoryId)
+      .set('invoice', invoiceNumber), headers };
+    const url: string = `${this.baseUrl}/invoice`;
+
+    return this.http.get<Array<Order>>(url, options)
+      .pipe(
+        catchError(({error}) => {
+          return throwError(() => `Error: ${error}`)
+        })
+      );
+  }
 }

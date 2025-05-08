@@ -1,5 +1,11 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmPopup, ConfirmPopupModule } from 'primeng/confirmpopup';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmationService, MessageService } from 'primeng/api';
+
 import { Order } from '../../interfaces/order.interface';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
@@ -7,14 +13,16 @@ import { CommonModule } from '@angular/common';
 import { CalendarModule } from 'primeng/calendar';
 import { Invoice } from '../../interfaces/invoice.interface';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { OrderService } from '../../services/order.service';
 
 @Component({
   selector: 'app-invoice-form-dialog',
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, InputTextModule, ButtonModule, CommonModule,
-    CalendarModule, InputNumberModule],
+    CalendarModule, InputNumberModule, ToastModule, ConfirmPopupModule, ConfirmDialogModule],
   templateUrl: './invoice-form-dialog.component.html',
-  styleUrl: './invoice-form-dialog.component.css'
+  styleUrl: './invoice-form-dialog.component.css',
+  providers: [ConfirmationService, MessageService]
 })
 export class InvoiceFormDialogComponent implements OnChanges{
 
@@ -34,7 +42,9 @@ export class InvoiceFormDialogComponent implements OnChanges{
   @Output('onClose') emmiter = new EventEmitter();
   invoice: Invoice = {} as Invoice;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private confirmationService: ConfirmationService, private messageService: MessageService,
+    private orderService: OrderService
+  ) {}
   
   ngOnChanges(changes: SimpleChanges): void {
     this.invoiceForm.reset({ deliveryTerm: 30, paymentDeadline: 30 });
@@ -48,6 +58,47 @@ export class InvoiceFormDialogComponent implements OnChanges{
       this.invoiceForm.get('invoiceDate')?.setValue(formattedDate);
     }
   }
+
+  confirmDialog(event: Event) {
+
+    this.loadingButton = true;
+    console.log(this.order.factory!._id!);
+    this.orderService.FindByInvoiceNumber(this.invoiceForm.get('invoiceCode')?.value, this.order.factory!._id!)
+      .subscribe({
+        next: res => {
+          if(res.length > 0) {
+            console.log(res);
+            this.confirmationService.confirm({
+              target: event.target as EventTarget,
+              message: 'El numero de factura ya se encuentra registrado para esa representada, desea continuar igualmente?',
+              header: 'Confirmacion',
+              acceptIcon:"none",
+              acceptLabel: "Continuar",
+              rejectIcon:"none",
+              rejectButtonStyleClass:"p-button-text",
+              accept: () => {
+                  this.onSubmit();
+                  this.loadingButton = false;
+              },
+              reject: () => {
+                this.loadingButton = false;
+                  return;
+              }
+          });
+          } else {
+            this.onSubmit();
+            this.loadingButton = false;
+          }
+        },
+        error: () => {
+          this.messageService.add({ severity: 'error', summary: 'Error',
+             detail: 'Se ha producido un error al intentar comprobar el numero de factura.', life: 3000 });
+          this.loadingButton = false;
+        }
+      })
+    // Comprobar si el numero de factura ya existe...
+    
+}
 
   onSubmit(): void {
     if(this.invoiceForm.invalid) {

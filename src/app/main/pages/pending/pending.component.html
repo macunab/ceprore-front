@@ -4,7 +4,7 @@
     [loadingTable]="loadingTable"></app-pending-table>
 
 <p-dialog header="Crear Factura" [modal]="true" [(visible)]="showInvoiceForm"
-    [breakpoints]="{ '960px': '95vw' }" [style]="{ width: '60vw', height: '500px' }">
+    [breakpoints]="{ '960px': '95vw' }" [style]="{ width: '60vw', height: '550px' }">
     <app-invoice-form-dialog [order]="orderUpdate" (onClose)="onDialogClose($event)"
         [loadingButton]="loadingButton"></app-invoice-form-dialog>
 </p-dialog>
