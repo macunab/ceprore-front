@@ -50,6 +50,7 @@ export class CustomerFormComponent implements OnInit {
   showDialog: boolean = false;
   @ViewChild(CustomerFactoryDialogComponent) factoryDiscount!: CustomerFactoryDialogComponent;
   customer!: Customer;
+  customerFactoryUpdate: CustomerFactory | undefined;
 
   constructor(private fb: FormBuilder, private router: Router, 
       private messageService: MessageService, private priceListService: PriceListService,
@@ -116,6 +117,7 @@ export class CustomerFormComponent implements OnInit {
   }
 
   addFactoryDiscount() {
+    this.customerFactoryUpdate = undefined;
     this.showDialog = true;
     this.factoryDiscount.cleanForm();
   }
@@ -124,13 +126,15 @@ export class CustomerFormComponent implements OnInit {
     this.customerFactories = [...this.customerFactories.filter( val => val !== customerFactory)];
   }
 
-  onDialogClose(dialogData: DialogData<CustomerFactory>): void {
-    if(this.customerFactories.find( key => key.factory._id === dialogData.data.factory._id)) {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'La fabrica seleccionada ya fue cargada al cliente.' });
-      return;
-    }
-    this.customerFactories.push(dialogData.data);
+  onDialogSubmit(dialogData: DialogData<CustomerFactory>): void {
+    const index = this.customerFactories.findIndex(val => val.factory._id === dialogData.data.factory._id);
+    (index !== -1) ? this.customerFactories[index] = dialogData.data : this.customerFactories.push(dialogData.data);
+    this.customerFactories = [...this.customerFactories];
     this.showDialog = false;
+  }
+
+  onClose(): void {
+    this.factoryDiscount.cleanForm();
   }
 
   isValid(field: string): boolean | null {
@@ -140,5 +144,10 @@ export class CustomerFormComponent implements OnInit {
 
   cancelSubmit(): void {
     this.router.navigateByUrl('main/customers');
+  }
+  
+  editCustomerFactory(customerFactory: CustomerFactory): void {
+    this.customerFactoryUpdate = customerFactory;
+    this.showDialog = true;
   }
 }
